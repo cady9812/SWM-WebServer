@@ -7,9 +7,9 @@ from werkzeug.utils import redirect
 # 이름(main)은 나중에 함수명으로 url을 찾아주는 url_for 함수에서 사용할 예정 
 bp = Blueprint('main', __name__, url_prefix='/')
 
-@bp.route('/hello')
+@bp.route('/')
 def hello_app(): # annotation과 매핑되는 함수 = 라우트 함수
-    return "hello page!"
+    return "index page"
 
 # @bp.route('/')
 # def index():

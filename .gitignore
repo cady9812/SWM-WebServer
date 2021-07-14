@@ -230,8 +230,11 @@ cython_debug/
 project/private/
 project/migrations/
 
-.venv
 venv/
+.venv
+
+
+
 
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode

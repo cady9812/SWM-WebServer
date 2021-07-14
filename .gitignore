@@ -10,7 +10,7 @@ instance/*
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
-__pycache__/
+project/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -227,7 +227,12 @@ cython_debug/
 .ionide
 
 
-private/
-**/migrations/*
+project/private/
+project/migrations/
+
+.venv
+venv/
+
+
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode
 

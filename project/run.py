@@ -2,7 +2,7 @@ from app import create_app
 
 if __name__=="__main__":
     run_app = create_app()
-    run_app.run(host="0.0.0.0", debug=True)
+    run_app.run(host="0.0.0.0")
 
 #######################################
 ####실행 방법 

@@ -791,11 +791,15 @@
     $(function() {
         $('a#nextCVE').on('click', function(e) {
             e.preventDefault();
-            $.getJSON('/cve/filter',{dst_ip: $('#InputDstIP').val()},
+            $.getJSON('/cve/filter',{
+                    src_ip: $('#InputSrcIP').val(), 
+                    dst_ip: $('#InputDstIP').val()
+                    //buttonKinds: $(this).attr('id')
+                },
                 function(data) {
                     alert(data.hello);
               //do nothing
-            });
+                });
             return false;
           });
     });

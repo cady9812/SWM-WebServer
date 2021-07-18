@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>BAScope - Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -22,6 +22,9 @@
 	<script> 
 	var src_ip='';
 	</script>
+
+
+
 </head>
 
 <body id="page-top">
@@ -33,11 +36,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">BASCope<sup>^^</sup></div>
             </a>
 
             <!-- Divider -->
@@ -146,7 +149,7 @@
 
             <!-- Sidebar Message -->
             <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
+                <img class="sidebar-card-illustration mb-2" src="../static/img/undraw_rocket.svg" alt="...">
                 <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
             </div>
@@ -496,6 +499,36 @@
 
                                 <div class="card-body" >
                                     <!-- Here Add // form orignal is 'user'-->
+                                    <form class="p-5" id="doing_select" style='display:none;'> 
+                                        <div class="form-group">
+                                            <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
+                                                
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> Endpoint Seucirty
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">
+                                            Next
+                                        	</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="p-5" id="loading_page" style='display:none;'> 
+                                        <div class="form-group">
+                                                <div id='loadingImg'>
+                                                    <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
+                                                </div>
+                                                
+                                        </div>
+                                        
+                                    </form>
+
+
+
                                     <form class="p-5" id="form_ipInput" style='display:none;'> 
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
@@ -541,7 +574,7 @@
                                         </div>
 
                                     </form>
-                                    <form class="p-5" id="Confrim_attack_info" style='display:none;'>
+                                    <form class="p-5" id="Confirm_attack_info" style='display:none;'>
                                     	<div class="form-group">
 					<div align="center">Confrim attack information</div><br>
 					[*]	src is : asdfasdfasdfasdfasdf</br>
@@ -785,61 +818,81 @@
     <!-- Page level custom scripts -->
     <script src="../static/js/demo/chart-area-demo.js"></script>
     <script src="../static/js/demo/chart-pie-demo.js"></script>
-<script>
 
 
-    $(function() {
-        $('a#nextCVE').on('click', function(e) {
-            e.preventDefault();
-            $.getJSON('/cve/filter',{
-                    src_ip: $('#InputSrcIP').val(), 
-                    dst_ip: $('#InputDstIP').val()
-                    //buttonKinds: $(this).attr('id')
-                },
-                function(data) {
-                    alert(data.hello);
-              //do nothing
-                });
-            return false;
-          });
-    });
+    <script>
+        function checkOne(element) {
+        
+        const checkboxes 
+            = document.getElementsByName("doing");
+        
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        
+        element.checked = true;
+        }
+    
 
-	$('#nextInfo').click(function(){
-		$("#print_CVE_list").hide();	
-		$('#Confrim_attack_info').show()
+    
+        $('#nextInfo').click(function(){
+            $("#print_CVE_list").hide();	
+            $('#Confirm_attack_info').show()
+    
+        });
+        $('#nextIP').click(function(){
+            $('#doing_select').hide();
+            $("#form_ipInput").show(); 
+        });
 
-	});
-	$('#prevCVE').click(function() {
-		$('#print_CVE_list').hide();
-		$('#form_ipInput').show();
-		$('#InputSrcIP').val(src_ip);
-		$('#InputDstIP').val(dst_ip);
-		
-	});
-	$('#attackStart').click(function() { // init
-	    $("#InputInit").show();
-	    $("#form_ipInput").show();
-	 
-	});
-	
-	$('#nextCVE').click(function() {
-	src_ip = $('#InputSrcIP').val();
-	var dst_ip = $('#InputDstIP').val();
-	
-	
-	
-	var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-	 if (ipformat.test($('#InputSrcIP').val()) 
-		 && ipformat.test($('#InputDstIP').val())) {
-	 
-	 	$("#print_CVE_list").show();
-           	$("#form_ipInput").hide();
 
-	}else{
-		alert("nononono~");
-	}
-	});
-</script>
+        $('#prevCVE').click(function() {
+            $('#print_CVE_list').hide();
+            $('#form_ipInput').show();
+            $('#InputSrcIP').val(src_ip);
+            $('#InputDstIP').val(dst_ip);
+            
+        });
+
+        
+        $('#attackStart').click(function() { // init
+            $('#doing_select').show();
+            $("#InputInit").show();
+            //$("#form_ipInput").show(); //input src_ip, dst_ip
+         
+        });
+        
+
+        $(function() {
+            $('a#nextCVE').on('click', function(e) {
+                
+                var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+                if (ipformat.test($('#InputSrcIP').val()) 
+                    && ipformat.test($('#InputDstIP').val())) {
+                    
+                    $("#form_ipInput").hide();
+                    $('#loading_page').show();
+                    
+                    e.preventDefault();
+                    $.getJSON('/cve/filter',{
+                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        src_ip: $('#InputSrcIP').val(),
+                        dst_ip: $('#InputDstIP').val(),
+                    },
+                        function(attackList) {
+                            //alert(attackList);
+                            $("#print_CVE_list").show();
+                            $('#loading_page').hide();
+                    });
+                }else{
+                    alert("nono~");
+                    return false;
+                }
+              });
+        });
+    </script>
+    
 </body>
 
 </html>

@@ -68,7 +68,7 @@ bp = Blueprint('attack', __name__, url_prefix='/')
 #         }
 #     }
 #     """
-
+#1231231231
 # # attackStart 버튼 클릭했을때
 # @bp.route('/attack/start')
 # def attackStartButtonClicked():

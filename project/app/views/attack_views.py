@@ -11,6 +11,7 @@ bp = Blueprint('attack', __name__, url_prefix='/')
 
 MyIP = "192.168.0.221"
 
+
 # 메인페이지
 @bp.route('/')
 def index():

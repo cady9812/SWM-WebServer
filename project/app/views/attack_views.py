@@ -205,8 +205,6 @@ def commandToAgent(agentId):
         return {
             "type":"no command"
         }
-        
-
 
 # 공격 코드 다운받는 링크
 @bp.route('/download/<string:attackName>/', methods=['GET'])

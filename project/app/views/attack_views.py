@@ -9,47 +9,10 @@ import os
 
 from app.modules import crawler
 
-
-<<<<<<< HEAD
-#         }
-#     }
-#     """
-#123123123133
-# # attackStart 버튼 클릭했을때
-# @bp.route('/attack/start')
-# def attackStartButtonClicked():
-#     global command_json, agent_ip_dict
-#     # 프론트에서 받을 변수
-#     src_ip = ""
-#     dst_ip = ""
-#     attackIdx = "" # -> target_port, usage, attackName
-#     ################
-#     attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
-#     attackName = attackInfo.fileName
-#     target_port = attackInfo.port
-#     usage = attackInfo.usage
-#     download = f"http://172.30.1.9:5000/download/{attackName}"
-#     command_json[agent_ip_dict[src_ip]]={
-#             "type":"attack",
-#             "download": download,
-#             "target_ip": dst_ip,
-#             "target_port": target_port,
-#             "usage": usage
-#     }
-#testest123123123
-# @bp.route('/command/<int:agentId>')
-# def commandToAgent(agentId):
-#     global command_json
-#     if agentId in command_json:
-#         return command_json.pop(agentId, None)
-#     else:
-#         return {
-#             "type":"no command"
-#         }
-=======
 bp = Blueprint('attack', __name__, url_prefix='/')
 
->>>>>>> 0ea9ce2f1d047a16f8a81a3afd1385e6a57d88fe
+
+
 
 
 
@@ -65,6 +28,17 @@ def index():
     redis_client.set("flag", 0)
     return render_template('index.html')
 
+# Show MITRE ATT&CK matrix
+@bp.route('/matrix')
+def matrix():
+    return render_template('./matrix.html')
+
+@bp.route('/<string:html>')
+def convert_html(html):
+    print("[**]",html)
+    if ".html" in html:
+        return render_template(html.split('.')[0]+".html")
+    return render_template(html+".html")
 
 # 스캔 결과 받아서 공격 필터링
 @bp.route('/scan-result', methods=['GET', 'POST'])
@@ -124,47 +98,6 @@ def getAgentId():
 # nextCVE 버튼 클릭시 
 @bp.route('/cve/filter')
 def nextCVEButtonClicked():
-<<<<<<< HEAD
-    try:   
-        '''
-        # ❌ target 버튼이 체크되어있을 때만 -> 구현해야 함
-        src_ip = request.args.get('src_ip')
-        dst_ip = request.args.get('dst_ip')
-        # src_ip에게 dst_ip를 포트스캔하라 명령 저장
-        if redis_client.hget('agent_ip_list', src_ip) == None:
-            return "this src_ip is not stored in Redis"
-        src_ip_n = int(redis_client.hget('agent_ip_list', src_ip).decode())
-        redis_client.hmset(f'command{src_ip_n}', {
-            "type":"scan",
-            "ip":dst_ip
-        })
-        comm = redis_client.hgetall(f'command{src_ip_n}')
-        comm = { key.decode(): val.decode() for key, val in comm.items() }
-        #print(comm)
-        '''
-        return {
-                    "result" : [
-                                                {
-                                        "attackId":3,
-                                        "program":"bandi",
-                                        "version":"1.1",
-                                        "port":80,
-                                        "fileName":"bandi",
-                                        "usage":"fuck"
-                                    },
-                                                    {
-                                        "attackId":4,
-                                        "program":"alzip",
-                                        "version":"2.1",
-                                        "port":80,
-                                        "fileName":"alzip",
-                                        "usage": " i dont know"
-                                    },
-                    
-                                            ]
-                }
-        
-=======
     try:
         type = request.args.get('type') # 'product' or 'endpoint'
         src_ip = request.args.get('src_ip')
@@ -222,12 +155,12 @@ def nextCVEButtonClicked():
             # #print(comm)
             # return comm
             # return redirect(url_for('attack._list'))
->>>>>>> 0ea9ce2f1d047a16f8a81a3afd1385e6a57d88fe
     except Exception as e:
         print('/cve/filter Error : ', e)
         return {
             "status":"600"
         }
+
 
 # attackStart 버튼 클릭 시 
 @bp.route('/attack/start')

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Blank</title>
+    <title>SB Admin 2 - Border Utilities</title>
 
     <!-- Custom fonts for this template-->
     <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -23,6 +23,10 @@
 </head>
 
 <body id="page-top">
+    
+ 
+
+
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -73,18 +77,18 @@
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <li class="nav-item active">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Utilities</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseUtilities" class="collapse show" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
+                        <a class="collapse-item active" href="utilities-border.html">Borders</a>
                         <a class="collapse-item" href="utilities-animation.html">Animations</a>
                         <a class="collapse-item" href="utilities-other.html">Other</a>
                     </div>
@@ -100,14 +104,13 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
-                    aria-controls="collapsePages">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
                 </a>
-                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
                         <a class="collapse-item" href="login.html">Login</a>
@@ -116,7 +119,7 @@
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
                         <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item active" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="blank.html">Blank Page</a>
                     </div>
                 </div>
             </li>
@@ -360,7 +363,83 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+                    <h1 class="h3 mb-1 text-gray-800">MITRE ATT&CK matrix</h1>
+                    <p class="mb-4">test222222</p>
+
+                    <!-- Content Row -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary"> M A T R I X </h6>
+                        </div>
+
+                        
+
+                        <div class="card-body">
+                            
+                           <ul class="cateCols" style=" list-style:none; text-align: center;">
+                               <li><p>Reconnaissance </p></li>
+                               <li >
+                                <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"  value='1'>Active Scanning </a>
+                               </li>
+                               <li>
+                                <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg" value='2'>Vulnerability Scanning</a>
+                               </li>
+                               <li>
+                                <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg" vlaue='3'>Gather Victim Host<br>Information </a>
+                               </li>
+                               <li>
+                                <a   class="btn btn-default btn-lg"  data-toggle="modal">Gather Victim Network<br>Information </a>
+                               </li>
+                           </ul>
+                           <ul class="cateCols" style=" list-style:none; text-align: center;">
+                            <li><p>Initial Access</p></li>
+                            <li >
+                             <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"   >External Remote Services</a>
+                            </li>
+                            <li>
+                             <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"  >Default Accounts</a>
+                            </li>
+                            <li>
+                             <a id="task111" class="btn btn-default btn-lg"  data-toggle="modal">Domain Accounts </a>
+                            </li>
+                            <li>
+                             <a id="task111" class="btn btn-default btn-lg"   data-toggle="modal">Phishing </a>
+                            </li>
+                        </ul>
+                           <ul class="cateCols" style=" list-style:none; text-align: center">
+                                <li><p>Persistence</p></li>
+                                <li >
+                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Account Manipulation</a>
+                                </li>
+                                <li>
+                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Create Account</a>
+                                </li>
+                                <li>
+                                <a id="miter_list" class="btn btn-default btn-lg"   data-toggle="modal">Port Monitors </a>
+                                </li>
+                                <li>
+                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Plist Modification</a>
+                                </li>
+                            </ul>
+                            <ul class="cateCols" style=" list-style:none; text-align: center" >
+                                <li><p>Privilege Escalation</p></li>
+                                <li >
+                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Setuid and Setgid </a>
+                                </li>
+                                <li>
+                                <a id="miter_list" class="btn btn-default btn-lg"   data-toggle="modal">Access Token Manipulation </a>
+                                </li>
+                                <li>
+                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Create Process with Token </a>
+                                </li>
+                                <li>
+                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Boot or Logon <br>Initialization Scripts </a>
+                                </li>
+                            </ul>
+
+                        </ul>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
@@ -369,13 +448,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
-                    </div>
-                </div>
-            </footer>
+            
             <!-- End of Footer -->
 
         </div>
@@ -409,6 +482,28 @@
         </div>
     </div>
 
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
     <!-- Bootstrap core JavaScript-->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -418,7 +513,18 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
+    <script src="../static/js/bascope.js"></script>
 
 </body>
+
+<script>
+       $("#miter_list").click(function(){
+        
+        
+    });
+
+
+</script>
+
 
 </html>

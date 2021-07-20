@@ -28,6 +28,7 @@ def create_app(): # create_app 함수가 애플리케이션 팩토리
 
     # redis
     redis_client.init_app(app)
+    
     from . import models
 
     from .views import attack_views

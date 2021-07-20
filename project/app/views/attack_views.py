@@ -3,21 +3,30 @@ from flask.templating import render_template
 import time
 
 from app.models import Attack
-from app import db, redis_client
+from app import redis_client, MyIP, db
 
 import os
 
+from app.modules import crawler
+
+
 bp = Blueprint('attack', __name__, url_prefix='/')
 
-MyIP = "192.168.0.221"
+
 
 
 # 메인페이지
 @bp.route('/')
 def index():
-    redis_client.flushdb()
-    redis_client.set("n", 0)
+    # redis_client.flushdb()
+    # redis_client.set("n", 0)
+    redis_command_keys = redis_client.keys("command*")
+    redis_command_keys = [k.decode() for k in redis_command_keys]
+    for key in redis_command_keys:
+        redis_client.delete(key)
+    redis_client.set("flag", 0)
     return render_template('index.html')
+
 
 # 스캔 결과 받아서 공격 필터링
 @bp.route('/scan-result', methods=['GET', 'POST'])
@@ -226,13 +235,40 @@ def download_attack_code(attackName):
 def report(agentId):
     try:
         if request.method == 'POST':
-            print(f"agentId : {agentId}")
-            pkts = request.get_json()
-            print('pkts : ', pkts)
-            pkts = pkts["pkts"]
-            for p in pkts:
-                print(p)
+            data = request.get_json()
+            pkts = data["pkts"]
+            # pkts가 binary로 오던데 어떻게 받을 것인가. 오는 형태를 봐야할 듯.
+            attackName = data["attackName"]
+            print("agentId : ", agentId)
+            print("pkts : ", pkts)
+            print("attackName : ", attackName)
+
+            crawled_description = crawler.crawl(attackName)
+            if crawled_description == None:
+                return "crawling error!"
+            else:
+                return crawled_description
+            # 프론트로 어떻게 리턴할 것인지는 아직
         return
     except Exception as e:
         print('report Error : ',e)
         return
+
+
+####################################################################################
+############## FOR US ##############################################################
+@bp.route('/insert/db', methods=['POST'])
+def insert_into_db():
+    try:
+        if request.method=='POST':
+            data = request.get_json()
+            print(data)
+            print(data["program"], data["version"], data["port"], data["fileName"], data["usage"], data["description"])
+            attack = Attack(program=data["program"], version=data["version"], port=data["port"], fileName=data["fileName"], usage=data["usage"], description=data["description"])
+            db.session.add(attack)
+            db.session.commit()
+            return {"result":True}
+            
+    except Exception as e:
+        print('insert db Error : ', e)
+        return False

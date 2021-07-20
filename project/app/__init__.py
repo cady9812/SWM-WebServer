@@ -5,6 +5,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 from private import config
 
+import socket
+
+
+MyIP = socket.gethostbyname(socket.getfqdn())
+
 # 변수는 create_app 밖에서 선언해야 한다.
 db = SQLAlchemy()
 migrate = Migrate()

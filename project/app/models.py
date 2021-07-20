@@ -7,3 +7,4 @@ class Attack(db.Model):
     version = db.Column(db.String(20), nullable=False)
     port = db.Column(db.Integer, nullable=False)
     usage = db.Column(db.Text(), nullable=False)
+    description = db.Column(db.Text(), nullable=False)

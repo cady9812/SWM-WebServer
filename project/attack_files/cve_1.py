@@ -1,1 +1,0 @@
-print('hello i\'m cve_1')

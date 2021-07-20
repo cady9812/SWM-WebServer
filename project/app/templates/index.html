@@ -552,15 +552,11 @@
                                     </form>
                                     <form class="p-5" id="print_CVE_list" style='display:none;'>
                                     	<div class="form-group">
-                                    	<ul>
+                                    	<ul id="cve_form">
                                     	<!-- IPNUT CVE LIST -->
-                                    	{% for i in CVE_list %}
-                                    	<label><li>
-                                    	   <input type="checkbox" name="chkCVE"/>
-                                    	   {{i}}
-                                    	</li>
-                                    	{% endfor %}
-
+                                    	
+                                    	
+                                        
                                     	</ul>
                                     	</div>
                                     	<div class="form-group">
@@ -809,8 +805,17 @@
         
         element.checked = true;
         }
-    
-
+        function checkOne2(element) {
+        
+        const checkboxes 
+            = document.getElementsByName("chkCVE");
+        
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        
+        element.checked = true;
+        }
     
         $('#nextInfo').click(function(){
             $("#print_CVE_list").hide();	
@@ -836,15 +841,52 @@
             $('#doing_select').show();
             $("#main1").show();
             $("#main2").hide();
+            $("#form_ipInput").hide(); 
+            $("#print_CVE_list").hide();
+            $('#Confirm_attack_info').hide();
             //$("#form_ipInput").show(); //input src_ip, dst_ip
          
         });
         $('#attackReport').click(function() { 
             $("#main2").show();
             $("#main1").hide();
+            $("#form_ipInput").hide(); 
+            $("#print_CVE_list").hide();
          
         });
         ///////////////
+
+        $(function(){
+            $('a#letGO').on('click',function(e){ // Event final check click!!!
+            e.preventDefault();
+            $.getJSON('/attack/start',{
+                type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                src_ip: $('#InputSrcIP').val(),
+                dst_ip: $('#InputDstIP').val(),
+                cve_id : $("input:checkbox[name='chkCVE']:checked").val(),
+            
+                }, function(r){
+                    alert("success!");
+                    });
+            
+            });
+        });
+        function showCVE(arr){
+            arr.forEach(function(e){
+                
+                var temp = "<label>";
+                temp +="<li>";
+                temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
+                temp +="Program : " + e.program + " ";
+                temp +="Usage : " + e.usage;
+                temp +="</li>";
+                temp +="</label>";
+                temp +="<br>";
+                $('#cve_form').append(temp)
+            })
+
+        }
+
 
         $(function() {
             $('a#nextCVE').on('click', function(e) {
@@ -863,14 +905,17 @@
                         src_ip: $('#InputSrcIP').val(),
                         dst_ip: $('#InputDstIP').val(),
                     },
-                        function(attackList) {
+                        function(r) {
+                            alert("1231231");
+                            alert(r.result[0].program);
+                            showCVE(r.result);
                             //alert(attackList);
                             $("#print_CVE_list").show();
                             $('#loading_page').hide();
                     });
                 }else{
                     alert("nono~");
-                    return false;
+                    return false;   
                 }
               });
         });

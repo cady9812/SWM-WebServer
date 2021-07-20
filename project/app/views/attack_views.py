@@ -195,6 +195,7 @@ def getAgentId():
 @bp.route('/cve/filter')
 def nextCVEButtonClicked():
     try:   
+        '''
         # ❌ target 버튼이 체크되어있을 때만 -> 구현해야 함
         src_ip = request.args.get('src_ip')
         dst_ip = request.args.get('dst_ip')
@@ -209,7 +210,29 @@ def nextCVEButtonClicked():
         comm = redis_client.hgetall(f'command{src_ip_n}')
         comm = { key.decode(): val.decode() for key, val in comm.items() }
         #print(comm)
-        return comm
+        '''
+        return {
+                    "result" : [
+                                                {
+                                        "attackId":3,
+                                        "program":"bandi",
+                                        "version":"1.1",
+                                        "port":80,
+                                        "fileName":"bandi",
+                                        "usage":"fuck"
+                                    },
+                                                    {
+                                        "attackId":4,
+                                        "program":"alzip",
+                                        "version":"2.1",
+                                        "port":80,
+                                        "fileName":"alzip",
+                                        "usage": " i dont know"
+                                    },
+                    
+                                            ]
+                }
+        
     except Exception as e:
         print('/cve/filter Error : ', e)
         return {
@@ -253,6 +276,11 @@ def attackStartButtonClicked():
     comm = { key.decode(): val.decode() for key, val in comm.items() }
     # print(comm)
     return comm
+
+@bp.route('/utilities-other.html')
+def utilities():
+    return render_template('utilities-other.html')
+
 
 @bp.route('/command/<int:agentId>')
 def commandToAgent(agentId):

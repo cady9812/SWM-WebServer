@@ -1,7 +1,7 @@
 from flask import Blueprint, request, send_file
 from flask.templating import render_template
 import time
-
+from werkzeug.utils import secure_filename
 from app.models import Attack
 from app import redis_client, MyIP, db
 
@@ -29,9 +29,40 @@ def index():
     return render_template('index.html')
 
 # Show MITRE ATT&CK matrix
-@bp.route('/matrix')
+@bp.route('/upload')
 def matrix():
-    return render_template('./matrix.html')
+    return render_template('./upload-code.html')
+
+# Upload  Customed Attack file from User
+@bp.route('/upload/file',methods=['POST'])
+def upload():
+
+    if request.files['file'].filename == '':
+          return "no file"
+    params  = request.get_json()
+    
+    '''
+    params['fileName']
+    params['fileData']
+    params['targetName']
+    params['targetVersion']
+    params['targetPort']
+    params['targetUsage']
+    params['targetSummary']
+    '''
+
+    f = request.files['file']
+    
+    f.save(os.path.join('/attack_files/', secure_filename(f.filename))) #file save
+
+    # save db ( usage, filename)
+    query1 = Attack(program=params['targetName'], version=params['targetVersion'], port=params['targetPort'] ,
+                    fileName=params['fileName'], usage=params['targetUsage'], description=params['targetSummary'])
+    
+    db.session.add(query1)
+    db.session.commit()
+
+    return "[*] success"
 
 @bp.route('/<string:html>')
 def convert_html(html):

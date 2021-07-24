@@ -4,7 +4,6 @@ import time
 from werkzeug.utils import secure_filename
 from app.models import Attack
 from app import redis_client, MyIP, db
-
 import os
 
 from app.modules import crawler
@@ -13,14 +12,11 @@ bp = Blueprint('attack', __name__, url_prefix='/')
 
 
 
-
-
-
 # 메인페이지
 @bp.route('/')
 def index():
-    # redis_client.flushdb()
-    # redis_client.set("n", 0)
+    redis_client.flushdb()
+    redis_client.set("n", 0)
     redis_command_keys = redis_client.keys("command*")
     redis_command_keys = [k.decode() for k in redis_command_keys]
     for key in redis_command_keys:
@@ -36,37 +32,42 @@ def matrix():
 # Upload  Customed Attack file from User
 @bp.route('/upload/file',methods=['POST'])
 def upload():
+    if request.method == 'POST':
+        file = request.files['FILE_TAG']
+        fileName = file.filename
+        print("[**]     ", fileName)
+        targetName = request.form['targetName']
+        targetVersion = request.form['targetVersion']
+        targetPort = request.form['targetPort']
+        targetUsage = request.form['targetUsage']
+        targetSummary = request.form['targetSummary']
+        
+        print('[**]     ', targetName)
+        print('[**]     ', targetVersion)
+        print('[**]     ', targetPort)
+        print('[**]     ', targetUsage)
+        print('[**]     ', targetSummary)
 
-    if request.files['file'].filename == '':
-          return "no file"
-    params  = request.get_json()
-    
-    '''
-    params['fileName']
-    params['fileData']
-    params['targetName']
-    params['targetVersion']
-    params['targetPort']
-    params['targetUsage']
-    params['targetSummary']
-    '''
-
-    f = request.files['file']
-    
-    f.save(os.path.join('/attack_files/', secure_filename(f.filename))) #file save
-
-    # save db ( usage, filename)
-    query1 = Attack(program=params['targetName'], version=params['targetVersion'], port=params['targetPort'] ,
-                    fileName=params['fileName'], usage=params['targetUsage'], description=params['targetSummary'])
-    
-    db.session.add(query1)
-    db.session.commit()
-
-    return "[*] success"
+        if Attack.query.filter(Attack.fileName==fileName).first()==None:
+            file.save(os.path.join('./attack_files', fileName))
+            attack = Attack(program=targetName, version=targetVersion, port=targetPort, fileName=fileName, usage=targetUsage, description=targetSummary)
+            db.session.add(attack)
+            db.session.commit()
+            print('file upload success')
+            return {
+                "result":True
+            }
+        else:
+            print('file upload failed')
+            return {
+                "result":False
+            }
+        
+        
 
 @bp.route('/<string:html>')
 def convert_html(html):
-    print("[**]",html)
+    #print("[**]",html)
     if ".html" in html:
         return render_template(html.split('.')[0]+".html")
     return render_template(html+".html")
@@ -266,16 +267,18 @@ def commandToAgent(agentId):
         }
 
 # 공격 코드 다운받는 링크
-@bp.route('/download/<string:attackName>/', methods=['GET'])
-def download_attack_code(attackName):
+@bp.route('/download/<int:attackIdx>/', methods=['GET'])
+def download_attack_code(attackIdx):
+    attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
+    attackName = attackInfo.fileName
+
     pwd = os.getcwd()
-    file_name = f"{pwd}\\attack_files\\{attackName}.py" # 공격 파일 경로
+    file_name = f"{pwd}\\attack_files\\{attackName}" # 공격 파일 경로
     print('/download file_name : ', file_name)
     if os.path.isfile(file_name):
         return send_file(file_name,
-                        mimetype='text/x-python',
-                        attachment_filename=f"{attackName}.py",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
-                        as_attachment=True)
+            attachment_filename=f"{attackName}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
+            as_attachment=True)
     else:
         return "wrong attackName"
 
@@ -286,19 +289,28 @@ def report(agentId):
         if request.method == 'POST':
             data = request.get_json()
             pkts = data["pkts"]
-            # pkts가 binary로 오던데 어떻게 받을 것인가. 오는 형태를 봐야할 듯.
-            attackName = data["attackName"]
             print("agentId : ", agentId)
             print("pkts : ", pkts)
-            print("attackName : ", attackName)
+            # pkts가 binary로 오던데 어떻게 받을 것인가. 오는 형태를 봐야할 듯.
+            try:
+                link = data["link"]
+                print("link : ", link)
+                attackName = link.split('/')[-1]
+                attackName = attackName.split('.')[0]
 
-            crawled_description = crawler.crawl(attackName)
-            if crawled_description == None:
-                return "crawling error!"
-            else:
-                return crawled_description
+                crawled_description = crawler.crawl(attackName)
+                if crawled_description == None:
+                    #return "crawling error!"
+                    print("crawling error!")
+                    return {"result":"good"}
+                else:
+                    #return crawled_description
+                    print(crawled_description)
+                    return {"result":"good"}
+            except:
+                pass
             # 프론트로 어떻게 리턴할 것인지는 아직
-        return
+        return {"result":"good"}
     except Exception as e:
         print('report Error : ',e)
         return
@@ -321,3 +333,15 @@ def insert_into_db():
     except Exception as e:
         print('insert db Error : ', e)
         return False
+
+
+
+
+
+
+@bp.route('/duu', methods=['POST'])
+def dumm():
+    if request.method=='POST':
+        data = request.get_data()
+        print('data : ', data)
+        return

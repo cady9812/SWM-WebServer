@@ -394,15 +394,15 @@
 
                                 <div class="card-body" >
                                     <!-- Here Add // form orignal is 'user'-->
-                                    <form class="p-5" id="form_upload" method="post" enctype="multipart/form-data" action="" > 
+                                    <form class="p-5" id="form_upload" method="post" enctype="multipart/form-data"  > 
                                         <div class="form-group">
                                             <br>
                                             <h4>Input Contents </h4>
-                                            <input type="text" id="targetName" placeholder="Software name..." ><br>  
-                                            <input type="text" id="targetVersion" placeholder="Software version..." ><br>
-                                            <input type="text" id="targetPort" placeholder="port..."><br>
-                                            <input type="text" id="targetUsage" placeholder="(target ip) (target port) etc..." ><br>
-                                            <input type="text" id="targetSummary" placeholder="One line summary..." ><br>
+                                            <input type="text" id="targetName" name="targetName" placeholder="Software name..." ><br>  
+                                            <input type="text" id="targetVersion" name="targetVersion" placeholder="Software version..." ><br>
+                                            <input type="text" id="targetPort" name="targetPort" placeholder="port..."><br>
+                                            <input type="text" id="targetUsage" name="targetUsage" placeholder="(target ip) (target port) etc..." ><br>
+                                            <input type="text" id="targetSummary" name="targetSummary" placeholder="One line summary..." ><br>
                                             <input type="file" id="FILE_TAG" name="FILE_TAG"><br>
                                         </div>
                                         
@@ -479,34 +479,39 @@
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
     <script>
-    function uploadFile(){
-                    var form = $('#FILE_FORM')[0];
-                    var formData = new FormData(form);
-                    formData.append("fileObj", $("#FILE_TAG")[0].files[0]);
+     function uploadFile(){
                     
-                    var fileValue = $("#FILE_TAG").val().split("\\");
-                    var fileName = fileValue[fileValue.length-1]; // 파일명
+            //var pictureInput = document.getElementById("FILE_TAG");
+            
+            //var myFormData = new FormData();
+            //myFormData.append('fileObj', pictureInput.files[0]);
+            //var form = $('#form_upload')[0];
+            //var myFormData = new FormData(form)
+            //console.log('myFormData : ', myFormData);
+            var form = $('#form_upload')[0];
+            var formData = new FormData(form)
 
-
-    
-                    $.ajax({
-                        url: '/upload/'+fileName,
-                                processData: false,
-                                contentType: false,
-                                data: {targetName:fileName,
-                                    targetVersion:$("#targetVersion").val(),
-                                    targetPort:$("#targetPort").val(),
-                                    fileName:fileName,
-                                    targetUsage:$("#targetUsage").val(),
-                                    targetSummary:$("#targetSummary").val(),
-                                    fileData :formData
-                                },
-                                type: 'POST',
-                                success: function(result){
-                                    alert(result);
-                                }
-                        });
+            /*
+            var formData = new FormData();
+            formData.append("targetName", $("input[id=targetName]").val());
+            formData.append("targetPort", $("input[id=targetPort]").val());
+            formData.append("FILE_TAG", $("input[name=FILE_TAG]")[0].files[0]);
+            */
+            $.ajax({
+                url: '/upload/file',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                cache: false,
+                //dataType : 'json',
+                processData: false,
+                success: function (returndata) {
+                    console.log(returndata)
+                }
+            });
+            return false;
         }
+
 
 
 

@@ -577,15 +577,13 @@
                                     </form>
                                     <form class="p-5" id="Confirm_attack_info" style='display:none;'>
                                 	<div class="form-group">
-					<div align="center">Confrim attack information</div><br>
-					[*]	src is : asdfasdfasdfasdfasdf</br>
-					[*]	dst is : basdfasdfasdffafa</br>
-					[*]	CVE is : CVE-1998-0102</br>
-					<div align="center">
-						<script>
-						</script>
-					</div>
-					<a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
+                                        <p id="finalSrc">Confrim attack information</div><br>
+                                        <p id="finalDst"></p><br>
+                                        <p id="finalCVE"></p><br>
+                                        <div align="center">
+						
+					                </div>
+					                <a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
                                             let's go
                                         	</a>
                                     	</div>
@@ -620,99 +618,9 @@
                                     </div>
                                 </div>
                                 <div class="card-body" >
-                                    <!-- Here Add // form orignal is 'user'-->
-                                    <form class="p-5" id="doing_select" style='display:none;'> 
-                                        <div class="form-group">
-                                            <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
-                                                
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> Endpoint Seucirty
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">
-                                            Next
-                                        	</a>
-                                                
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                    <form class="p-5" id="loading_page" style='display:none;'> 
-                                        <div class="form-group">
-                                                <div id='loadingImg'>
-                                                    <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
-                                                </div>
-                                                
-                                        </div>
-                                        
-                                    </form>
-
-
-
-                                    <form class="p-5" id="form_ipInput" style='display:none;'> 
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                id="InputSrcIP" aria-describedby="emailHelp"
-                                                placeholder="Enter Source ip...">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                id="InputDstIP" placeholder="Enter Target ip...">
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextCVE">
-                                            Start
-                                        	</a>
-                                                
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form class="p-5" id="print_CVE_list" style='display:none;'>
-                                    	<div class="form-group">
-                                    	<ul>
-                                    	<!-- IPNUT CVE LIST -->
-                                    	{% for i in CVE_list %}
-                                    	<label><li>
-                                    	   <input type="checkbox" name="chkCVE"/>
-                                    	   {{i}}
-                                    	</li>
-                                    	{% endfor %}
-
-                                    	</ul>
-                                    	</div>
-                                    	<div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                            <a href="#" class="btn btn-primary btn-user btn-block" id="prevCVE">
-                                            Prev
-                                        	</a>
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextInfo">
-                                            Next
-                                        	</a>
-                                                
-                                            </div>
-                                        </div>
-
-                                    </form>
-                                    <form class="p-5" id="Confirm_attack_info" style='display:none;'>
-                                	<div class="form-group">
-					<div align="center">Confrim attack information</div><br>
-					[*]	src is : asdfasdfasdfasdfasdf</br>
-					[*]	dst is : basdfasdfasdffafa</br>
-					[*]	CVE is : CVE-1998-0102</br>
-					<div align="center">
-						<script>
-						</script>
-					</div>
-					<a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
-                                            let's go
-                                        	</a>
-                                    	</div>
-                                    	
-
-                                    </form>
+                                    
+                                    
+                                    
                                     
                                 </div>
                             </div>
@@ -815,8 +723,11 @@
         }
     
         $('#nextInfo').click(function(){
-            $("#print_CVE_list").hide();	
-            $('#Confirm_attack_info').show()
+            $("#print_CVE_list").hide();
+            document.getElementById('finalSrc').textContent = $('#InputSrcIP').val();
+            document.getElementById('finalDst').textContent = $('#InputDstIP').val();
+            document.getElementById('finalCVE').textContent = $("input:checkbox[name='chkCVE']:checked").val();
+            $('#Confirm_attack_info').show();
     
         });
         $('#nextIP').click(function(){
@@ -842,15 +753,6 @@
             $("#print_CVE_list").hide();
             $('#Confirm_attack_info').hide();
             //$("#form_ipInput").show(); //input src_ip, dst_ip
-         
-        });
-        $('#attackReport').click(function() { 
-            /*
-            $("#main2").show();
-            $("#main1").hide();
-            $("#form_ipInput").hide(); 
-            $("#print_CVE_list").hide();
-            */
          
         });
         ///////////////

@@ -394,21 +394,11 @@
                                 <div class="card-body" >
                                     <!-- Here Add // form orignal is 'user'-->
                                     <form class="p-5" id="doing_select" style='display:none;'> 
-                                        <div class="form-group">
+                                        <div class="form-group" id = "report_div">
                                             <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
-                                                
+
                                         </div>
-                                        <div class="form-group">
-                                            <input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> Endpoint Seucirty
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">
-                                            Next
-                                        	</a>
-                                                
-                                            </div>
-                                        </div>
+                                       
                                     </form>
 
                                     <form class="p-5" id="loading_page" style='display:none;'> 
@@ -543,5 +533,28 @@
     <script src="../static/js/sb-admin-2.min.js"></script>
 
 </body>
+<script>
+    function report_print(r){
+        var temp = "";
+        temp +="<div>";
+        temp +=r;
+        temp +="</div>";
+        $('#report_div').append(temp);
+    }
 
+    $(function(){
+            e.preventDefault();
+            $.getJSON('/report/',{ // asdfasdfasdfasdfasdf
+                type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                src_ip: $('#InputSrcIP').val(),
+            
+                }, function(r){
+                    report_print(r);
+                });
+            
+            });
+        });
+
+
+</script>
 </html>

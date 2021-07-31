@@ -22,6 +22,7 @@
 	<script> 
 	var src_ip='';
 	</script>
+    <script src="http://jsgetip.appspot.com/?getip" type="text/javascript"></script>
 
 
 
@@ -504,20 +505,25 @@
 
                                 <div class="card-body" >
                                     <!-- Here Add // form orignal is 'user'-->
+
+                                    <form class="p-5" id="malware_list" style='display:none;'  >  <!-- this is Agent list print form-->
+`                                       
+
+                                    </form>
+
                                     <form class="p-5" id="doing_select" style='display:none;'> 
                                         <div class="form-group">
                                             <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
-                                                
                                         </div>
                                         <div class="form-group">
                                             <input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> Endpoint Seucirty
                                         </div>
                                         <div class="form-group">
+                                            <input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> Malware
+                                        </div>
+                                        <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">
-                                            Next
-                                        	</a>
-                                                
+                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">Next</a>
                                             </div>
                                         </div>
                                     </form>
@@ -533,26 +539,38 @@
                                     </form>
 
 
-
-                                    <form class="p-5" id="form_ipInput" style='display:none;'> 
-                                        <div class="form-group">
+                                    <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
+                                        <div class="form-group" id="src_input" style='display:inline;'>
                                             <input type="text" class="form-control form-control-user"
                                                 id="InputSrcIP" aria-describedby="emailHelp"
                                                 placeholder="Enter Source ip...">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" >
                                             <input type="text" class="form-control form-control-user"
                                                 id="InputDstIP" placeholder="Enter Target ip...">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextCVE">
-                                            Start
-                                        	</a>
-                                                
+                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextCVE"> Start </a>
                                             </div>
                                         </div>
                                     </form>
+                                 
+                                    <form class="p-5" id="malware_input_form" style='display:none;'> <!-- THIS FORM IS check for Malware attack -->
+                                        <div class="form-group">
+                                            <input type="checkbox" name="malware_type" value="dwn_agent" onclick='checkOne3(this)'> Agent <-> Agent
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="malware_type" value="dwn_web" onclick='checkOne3(this)'> Web <-> Agent
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextMalware">Next2</a>
+                                            </div>
+                                        </div>
+                                    </form>
+
                                     <form class="p-5" id="print_CVE_list" style='display:none;'>
                                     	<div class="form-group">
                                     	<ul id="cve_form">
@@ -576,19 +594,14 @@
 
                                     </form>
                                     <form class="p-5" id="Confirm_attack_info" style='display:none;'>
-                                	<div class="form-group">
-                                        <p id="finalSrc">Confrim attack information</div><br>
-                                        <p id="finalDst"></p><br>
-                                        <p id="finalCVE"></p><br>
-                                        <div align="center">
-						
-					                </div>
-					                <a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
+                                	    <div class="form-group">
+                                            <p id="finalSrc">Confrim attack information<br>
+                                            <p id="finalDst"></p><br>
+                                            <p id="finalCVE"></p><br>
+					                    </div>
+					                    <a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
                                             let's go
                                         	</a>
-                                    	</div>
-                                    	
-
                                     </form>
                                     
                                 </div>
@@ -614,7 +627,6 @@
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
-                                        
                                     </div>
                                 </div>
                                 <div class="card-body" >
@@ -710,10 +722,22 @@
         
         element.checked = true;
         }
+        
         function checkOne2(element) {
         
         const checkboxes 
             = document.getElementsByName("chkCVE");
+        
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        
+        element.checked = true;
+        }
+        function checkOne3(element) {
+        
+        const checkboxes 
+            = document.getElementsByName("malware_type");
         
         checkboxes.forEach((cb) => {
             cb.checked = false;
@@ -730,10 +754,18 @@
             $('#Confirm_attack_info').show();
     
         });
-        $('#nextIP').click(function(){
-            $('#doing_select').hide();
+        
+      
+        
+
+        $('#nextMalware').click(function(){
+            if($("input:checkbox[name=malware_type]:checked").val() == "dwn_web") {
+                $('#src_input').hide();    
+            }
+            $('#malware_input_form').hide();
             $("#form_ipInput").show(); 
-        });
+        })
+
 
 
         $('#prevCVE').click(function() {
@@ -746,14 +778,16 @@
 
         /////////// main  bar clicked Event ~~~
         $('#attackStart').click(function() { // init
+            
             $('#doing_select').show();
             $("#main1").show();
             $("#main2").hide();
             $("#form_ipInput").hide(); 
             $("#print_CVE_list").hide();
             $('#Confirm_attack_info').hide();
-            //$("#form_ipInput").show(); //input src_ip, dst_ip
-         
+            $('#malware_input_form').hide();
+            $('#src_input').show();
+            
         });
         ///////////////
 
@@ -774,7 +808,6 @@
         });
         function showCVE(arr){
             arr.forEach(function(e){
-                
                 var temp = "<label>";
                 temp +="<li>";
                 temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
@@ -791,6 +824,13 @@
 
         $(function() {
             $('a#nextCVE').on('click', function(e) {
+                
+                if($("input:checkbox[name=doing]:checked").val() == "malware"){
+                    $.getJSON('https://api.ipify.org/?format=json', function(data){ 
+                        console.log(data.ip);
+                        $('#InputSrcIP').val(data.ip); 
+                    });
+                }
                 
                 var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
@@ -822,6 +862,46 @@
                 }
               });
         });
+        $('#nextIP').click(function(){
+            $('#doing_select').hide();
+            if($("input:checkbox[name=doing]:checked").val() == "malware") {
+                $('#malware_input_form').show();
+
+            }
+            else{
+                $("#form_ipInput").show(); 
+            }
+        });
+
+        $(function(){ // Get Agent list 
+            $('a#nextIP').on('click',function(e){ 
+            alert("1231231");
+            e.preventDefault();
+            $.getJSON('/agent/list',{
+                type: $("input:checkbox[name='doing']:checked").val(),
+            
+                }, function(r){
+                    // r에 agentlist들이 담겨있다.
+                    load_agent_list(r);
+                    
+                });
+            
+            });
+        });
+
+
+        function load_agent_list(agents){
+            var temp = "<ul>";
+            agents.forEach(function(e){
+                temp +="<li>";
+                //temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
+                temp += " " + e + " ";
+                temp +="</li>";
+            })
+            tmp +="</ul>";
+            $('#malware_list').append(temp);
+        }
+
     </script>
     
 </body>

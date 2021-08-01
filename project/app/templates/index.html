@@ -23,8 +23,83 @@
 	var src_ip='';
 	</script>
     <script src="http://jsgetip.appspot.com/?getip" type="text/javascript"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script> <!-- modify -->
+    <style type="text/css">
+        body,
+        html {
+          font: 10pt sans;
+          line-height: 1.5em;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+          color: #4d4d4d;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
+  
+        #header {
+          margin: 0;
+          padding: 10px;
+          box-sizing: border-box;
+        }
+  
+        #contents {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          position: relative;
+        }
+  
+        #left,
+        #right {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 10px;
+          box-sizing: border-box;
+          display: inline-block;
+        }
+  
+        #left {
+          top: 0;
+          left: 0;
+        }
+  
+        #right {
+          top: 0;
+          
+          
+        }
+  
+        #error {
+          color: red;
+        }
+  
+        #data {
+          width: 100%;
+          height: 100%;
+          border: 1px solid #d3d3d3;
+          box-sizing: border-box;
+          resize: none;
+        }
+  
+        #draw {
+          padding: 5px 15px;
+        }
+  
+        #mynetwork {
+          width: 100%;
+          height: 100%;
+          border: 1px solid #d3d3d3;
+          box-sizing: border-box;
+        }
+  
+      
+      </style>
 
 </head>
 
@@ -492,10 +567,12 @@
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">!!!YAS!!!
+
+                                            </a>
+                                            
                                             <a class="dropdown-item" href="#">Another action</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
                                         </div>
                                     </div>
                                 </div>
@@ -510,7 +587,7 @@
 `                                       
 
                                     </form>
-
+                                    
                                     <form class="p-5" id="doing_select" style='display:none;'> 
                                         <div class="form-group">
                                             <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
@@ -690,6 +767,124 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg show" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none; padding-right: 15px;">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+      
+            <div class="modal-header">
+              <h5 class="modal-title h4" id="myLargeModalLabel">Agent List Viewer</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div id="contents">
+                    <div ><!--style="text-align:'center';left:50%; top:50%; -->
+                      <textarea id="data" style='display:none;'>
+                        digraph {
+                          node [shape=circle fontsize=16]
+                          edge [length=100, color=gray, fontcolor=black]
+                        
+                          Manage -> Agent2
+                          Agent2 -> Agent5
+                          Manage -> Agent4
+                          Manage -> Agent3
+                        
+                          Manage [
+                            fontcolor=white,
+                            color=red,
+                          ]
+                        }
+                            
+                  </textarea
+                      >
+                    </div>
+                    <div id="right"><!--right-->
+                      <div id="mynetwork"></div>
+                    </div>
+                  </div>
+              
+                  <script type="text/javascript">
+                    // create a network
+                    var container = document.getElementById("mynetwork");
+                    var options = {
+                      physics: {
+                        stabilization: false,
+                        barnesHut: {
+                          springLength: 200,
+                        },
+                      },
+                    };
+                    var data = {};
+                    var network = new vis.Network(container, data, options);
+              
+                    $("#draw").click(draw);
+              
+                    $("a.example").click(function (event) {
+                      var url = $(event.target).data("url");
+                      $.get(url)
+                        .done(function (dotData) {
+                          $("#data").val(dotData);
+                          draw();
+                        })
+                        .fail(function () {
+                          $("#error").html(
+                            "Error: Cannot fetch the example data because of security restrictions in JavaScript. Run the example from a server instead of as a local file to resolve this problem. Alternatively, you can copy/paste the data of DOT graphs manually in the textarea below."
+                          );
+                          resize();
+                        });
+                    });
+              
+                    $(window).resize(resize);
+                    $(window).load(draw);
+              
+                    $("#data").keydown(function (event) {
+                      if (event.ctrlKey && event.keyCode === 13) {
+                        // Ctrl+Enter
+                        draw();
+                        event.stopPropagation();
+                        event.preventDefault();
+                      }
+                    });
+              
+                    function resize() {
+                      $("#contents").height($("body").height() - $("#header").height() - 200);
+                    }
+              
+                    function draw() {
+                      try {
+                        resize();
+                        $("#error").html("");
+              
+                        // Provide a string with data in DOT language
+                        data = vis.parseDOTNetwork($("#data").val());
+              
+                        network.setData(data);
+                      } catch (err) {
+                        // set the cursor at the position where the error occurred
+                        var match = /\(char (.*)\)/.exec(err);
+                        if (match) {
+                          var pos = Number(match[1]);
+                          var textarea = $("#data")[0];
+                          if (textarea.setSelectionRange) {
+                            textarea.focus();
+                            textarea.setSelectionRange(pos, pos);
+                          }
+                        }
+              
+                        // show an error message
+                        $("#error").html(err.toString());
+                      }
+                    }
+                  </script>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="../static/vendor/jquery/jquery.min.js"></script>

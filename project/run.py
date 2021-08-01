@@ -1,7 +1,23 @@
-from app import create_app
+from app import create_app, create_socket, sckt
+
+
+# LOGGING
+import json
+import logging
+import logging.config
+log_config = json.load(open('log_config.json'))
+logging.config.dictConfig(log_config)
+logger = logging.getLogger(__name__)
 
 if __name__=="__main__":
+    # APP
     run_app = create_app()
+    logger.info("[INIT] CREATED APP")
+    
+    # SOCKET
+    sckt = create_socket()
+    logger.info("[INIT] SOCKET CONNECTED")
+
     run_app.run(host="0.0.0.0")
 
 #######################################

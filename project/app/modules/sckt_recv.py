@@ -18,4 +18,4 @@ def recv_data(sckt):
     finally:
         sckt.setblocking(True)
     result = bson.loads(result)
-    return (sckt, result)
+    return result

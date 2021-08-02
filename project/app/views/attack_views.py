@@ -40,7 +40,7 @@ def attack_filter():
             }]
         }
         sckt.send(bson.dumps(command))
-        sckt, recvData = sckt_recv.recv_data(sckt)
+        recvData = sckt_recv.recv_data(sckt)
         filtered_attacks = parser.recv_to_json(recvData)
         return {"result":filtered_attacks}
 
@@ -56,16 +56,19 @@ def attack_start():
     except:
         pass
     attack_id_list = request.get_json()["cve_id"] # [attackId 리스트]
-    command = []
+
+    command = {"type":"web"}
+
     if attackType=="product": # (attack & defense) & remote malware
-        command = setter.product_command(src_ip, dst_ip, attack_id_list)
-        sckt.send(bson.dumps(command))
+        _command = setter.product_command(src_ip, dst_ip, attack_id_list)
     elif attackType=="endpoint": # target
-        command = setter.target_command(src_ip, dst_ip, attack_id_list)
-        sckt.send(bson.dumps(command))
+        _command = setter.target_command(src_ip, dst_ip, attack_id_list)
     elif attackType=="local_malware": # local malware
-        command = setter.malware_command(src_ip, attack_id_list)
-        sckt.send(bson.dumps(command))
+        _command = setter.malware_command(src_ip, attack_id_list)
+    
+    command["command"]=_command
+    sckt.send(bson.dumps(command))
+
     return
 
 # 공격 코드 다운받는 링크

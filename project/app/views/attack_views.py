@@ -1,4 +1,5 @@
 from flask import Blueprint, request, send_file
+
 from app.models import Attack
 from app import sckt
 import os, bson
@@ -50,12 +51,19 @@ def attack_filter():
 @bp.route('/start')
 def attack_start():
     attackType = request.args.get('type') # 'product' or 'endpoint'
+    print('attackType :', attackType)
+    logger.info(f"[**] attackType : {attackType}")
     src_ip = request.args.get('src_ip')
+    # getData = request.get_json()
+    # attackType=getData["type"]
+    # src_ip = getData["src_ip"]
     try:
         dst_ip = request.args.get('dst_ip')
     except:
         pass
-    attack_id_list = request.get_json()["cve_id"] # [attackId 리스트]
+    # attack_id_list = request.args.get("cve_id") # [attackId 리스트]
+    attack_id_list = [request.args.get("cve_id")]
+    logger.info(f"[ATTACK] /start - attackInfo : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
 
     command = {"type":"web"}
 
@@ -67,6 +75,10 @@ def attack_start():
         _command = setter.malware_command(src_ip, attack_id_list)
     
     command["command"]=_command
+
+    logger.info(f"[ATTACK] /start - command : {command}")
+
+
     sckt.send(bson.dumps(command))
 
     return
@@ -79,7 +91,7 @@ def attack_download_enc(attackIdx):
     file_name = attackInfo.fileName
 
     pwd = os.getcwd()
-    file_route = f"{pwd}\\attack_files\\{file_name}" # 공격 파일 경로
+    file_route = f"{pwd}/attack_files/{file_name}" # 공격 파일 경로
     logger.info(f"[ATTACK] File Route : {file_route}")
     
     file_bytes = bytearray(open(file_route, 'rb').read())
@@ -90,7 +102,7 @@ def attack_download_enc(attackIdx):
         encoded[i] = file_bytes[i]^ord('X')
     logger.info(f"[ATTACK] Encoded File : {encoded}")
 
-    return {"encrypted":encoded}
+    return encoded
 
 
 # 공격 코드 다운받는 링크
@@ -101,7 +113,7 @@ def attack_download(attackIdx):
     file_name = attackInfo.fileName
 
     pwd = os.getcwd()
-    file_name = f"{pwd}\\attack_files\\{file_name}" # 공격 파일 경로
+    file_name = f"{pwd}/attack_files/{file_name}" # 공격 파일 경로
     if os.path.isfile(file_name):
         return send_file(file_name,
             attachment_filename=f"{file_name}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?

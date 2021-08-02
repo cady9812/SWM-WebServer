@@ -619,12 +619,12 @@
                                     <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
                                         <div class="form-group" id="src_input" style='display:inline;'>
                                             <input type="text" class="form-control form-control-user"
-                                                id="InputSrcIP" aria-describedby="emailHelp"
+                                                id="InputSrcIP" value="192.168.0.200" aria-describedby="emailHelp"
                                                 placeholder="Enter Source ip...">
                                         </div>
                                         <div class="form-group" >
                                             <input type="text" class="form-control form-control-user"
-                                                id="InputDstIP" placeholder="Enter Target ip...">
+                                                id="InputDstIP" value="192.168.0.153" placeholder="Enter Target ip...">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -1003,11 +1003,12 @@
         });
         function showCVE(arr){
             arr.forEach(function(e){
+                console.log('e : ',e.usage);
                 var temp = "<label>";
                 temp +="<li>";
                 temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
                 temp +="Program : " + e.program + " ";
-                temp +="Usage : " + e.usage;
+                temp +="Usage : " + (e.usage).toString();
                 temp +="</li>";
                 temp +="</label>";
                 temp +="<br>";
@@ -1036,7 +1037,7 @@
                     $('#loading_page').show();
                     
                     e.preventDefault();
-                    $.getJSON('/cve/filter',{
+                    $.getJSON('/attack/filter',{
                         type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
                         src_ip: $('#InputSrcIP').val(),
                         dst_ip: $('#InputDstIP').val(),

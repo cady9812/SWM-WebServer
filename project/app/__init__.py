@@ -8,7 +8,10 @@ from private import config
 # SOCKET
 import socket
 sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-MyIP = socket.gethostbyname(socket.getfqdn())
+
+
+# MyIP = socket.gethostbyname(socket.getfqdn())
+MyIP = "192.168.0.144"
 
 
 db = SQLAlchemy()
@@ -45,7 +48,7 @@ def create_socket():
     sckt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     while True:
         try:
-            sckt.connect(('127.0.0.1', 8000))
+            sckt.connect(('192.168.0.163', 9000))
             break
         except ConnectionRefusedError as e:
             continue

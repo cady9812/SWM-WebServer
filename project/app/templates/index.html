@@ -1001,13 +1001,21 @@
             
             });
         });
+        function escape_filtering(data){
+            data.replace(/&/g, '&amp;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/</g, '&lt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&apos;');
+            return data;
+        }
         function showCVE(arr){
             arr.forEach(function(e){
                 var temp = "<label>";
                 temp +="<li>";
                 temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
                 temp +="Program : " + e.program + " ";
-                temp +="Usage : " + e.usage;
+                temp +="Usage : " + escape_filtering(e.usage);
                 temp +="</li>";
                 temp +="</label>";
                 temp +="<br>";
@@ -1018,12 +1026,11 @@
 
 
         $(function() {
-            $('a#nextCVE').on('click', function(e) {
-                
+            $('a#nextCVE').on('click', function(e) {                
                 if($("input:checkbox[name=doing]:checked").val() == "malware"){
                     $.getJSON('https://api.ipify.org/?format=json', function(data){ 
                         console.log(data.ip);
-                        $('#InputSrcIP').val(data.ip); 
+                        $('#InputSrcIP').val('127.0.0.1'); 
                     });
                 }
                 
@@ -1036,7 +1043,7 @@
                     $('#loading_page').show();
                     
                     e.preventDefault();
-                    $.getJSON('/cve/filter',{
+                    $.getJSON('/attack/filter',{
                         type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
                         src_ip: $('#InputSrcIP').val(),
                         dst_ip: $('#InputDstIP').val(),

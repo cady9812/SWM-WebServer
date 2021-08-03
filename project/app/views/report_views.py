@@ -29,14 +29,16 @@ def report_pkt():
     recv_ip = data["recv_ip"]
     send_pkt = data["send"]
     recv_pkt = data["recv"]
-    logger.info("[REPORT] Packet Recv")
-    logger.info(f"attack_ip : {attack_id} / port : {port} / send_ip : {send_ip} \
+
+    logger.info(f"[REPORT] /pkt - attack_ip : {attack_id} / port : {port} / send_ip : {send_ip} \
 / recv_ip : {recv_ip} / send_pkt : {send_pkt} / recv_pkt :{recv_pkt}")
+
     for s in send_pkt:
-        print('[decoded] s : ', base64.b64decode(s))
+        logger.info(f'[decoded] s : {base64.b64decode(s)}')
     for r in recv_pkt:
-        print('[decoded] r : ', base64.b64decode(r))
+        logger.info(f'[decoded] r : {base64.b64decode(r)}')
     return
+
 
 @bp.route('/target', methods=['POST'])
 def report_target():
@@ -46,5 +48,5 @@ def report_target():
     data = request.get_json()
     attack_id = data["attack_id"]
     pkt = data["pkt"]
-    logger.info("[REPORT] Target Recv")
+    logger.info(f"[REPORT] /target - attack_id : {attack_id}, pkt : {pkt}")
     return

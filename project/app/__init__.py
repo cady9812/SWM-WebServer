@@ -5,14 +5,16 @@ from flask_sqlalchemy import SQLAlchemy
 
 from private import config
 
+from app.modules import sckt_utils
+
 # SOCKET
 import socket
 sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 # MyIP = socket.gethostbyname(socket.getfqdn())
-MyIP = "192.168.0.144"
-
+# MyIP = "192.168.0.144"
+MyIP = sckt_utils.get_local_ip()
 
 db = SQLAlchemy()
 migrate = Migrate()

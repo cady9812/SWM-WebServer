@@ -1,5 +1,4 @@
-from app import create_app, create_socket, sckt
-
+from app import create_app, create_socket
 
 # LOGGING
 import json
@@ -12,11 +11,13 @@ logger = logging.getLogger(__name__)
 if __name__=="__main__":
     # APP
     run_app = create_app()
-    logger.info("[INIT] CREATED APP")
+    logger.info("[INIT] APP CONNECTED")
     
+
     # SOCKET
     sckt = create_socket()
     logger.info("[INIT] SOCKET CONNECTED")
+
 
     run_app.run(host="0.0.0.0")
 

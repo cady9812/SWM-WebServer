@@ -31,7 +31,7 @@ def index():
     #     redis_client.delete(key)
     # redis_client.set("flag", 0)
     # return render_template('index.html')
-    logger.info("[MAIN] Index Page")
+    logger.info("[MAIN] / - Index Page")
     return render_template('index.html')
 
 # Show MITRE ATT&CK matrix

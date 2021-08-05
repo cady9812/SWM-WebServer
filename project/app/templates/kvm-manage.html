@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Animation Utilities</title>
+    <title>SB Admin 2 - Blank</title>
 
     <!-- Custom fonts for this template-->
     <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -61,31 +61,31 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Pages</span>
+                    <span>Components</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="report.html">Report</a>
-                        <a class="collapse-item" href="matrix.html">Mitre Attack</a>
-                        <a class="collapse-item" href="upload-code.html">Upload Code</a>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div>
             </li>
+
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Utilities</span>
                 </a>
-                <div id="collapseUtilities" class="collapse show" aria-labelledby="headingUtilities"
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <a class="collapse-item" href="utilities-color.html">Colors</a>
                         <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item active" href="utilities-animation.html">Animations</a>
+                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
                         <a class="collapse-item" href="utilities-other.html">Other</a>
                     </div>
                 </div>
@@ -100,13 +100,14 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
+            <li class="nav-item active">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
+                    aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
                         <a class="collapse-item" href="login.html">Login</a>
@@ -115,7 +116,7 @@
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
                         <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item active" href="blank.html">Blank Page</a>
                     </div>
                 </div>
             </li>
@@ -359,20 +360,19 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-1 text-gray-800">Upload Exploit Code</h1>
-                    <p class="mb-4">Bootstrap's default utility classes can be found on the official <a
-                            href="https://getbootstrap.com/docs">Bootstrap Documentation</a> page. The custom utilities
-                        below were created to extend this theme past the default utility classes built into Bootstrap's
-                        framework.</p>
+                    <h1 class="h3 mb-1 text-gray-800">KVM Manage</h1>
+                    <p class="mb-4">KVM Manage page</p>
 
                     <!-- Content Row -->
                     <div class="row">
-                        <div class="col-xl-8_ col-lg-7" id = 'main1'  >
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-8_ col-lg-7" id = 'main1' ><!-- style='display:none;'-->
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Upload Exploit Code </h6>
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> KVM Controller </h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -394,32 +394,38 @@
 
                                 <div class="card-body" >
                                     <!-- Here Add // form orignal is 'user'-->
-                                    <form class="p-5" id="form_upload" method="post" enctype="multipart/form-data"  > 
+                                  
+                                    <form class="p-5" id="doing_select" > 
                                         <div class="form-group">
-                                            <br>
-                                            <h4>Input Contents </h4>
-                                            <input type="text" id="targetName" name="targetName" placeholder="Software name..." ><br>  
-                                            <input type="text" id="targetVersion" name="targetVersion" placeholder="Software version..." ><br>
-                                            <input type="text" id="targetPort" name="targetPort" placeholder="port..."><br>
-                                            <input type="text" id="targetUsage" name="targetUsage" placeholder="(target ip) (target port) etc..." ><br>
-                                            <input type="text" id="targetSummary" name="targetSummary" placeholder="One line summary..." ><br>
-                                            <input type="file" id="FILE_TAG" name="FILE_TAG"><br>
+                                            <input type="checkbox" name="vmcommand" value="vm_start" onclick='checkOne(this)'> VM Start
                                         </div>
-                                        
+                                        <div class="form-group">
+                                            <input type="checkbox" name="vmcommand" value="vm_shutdown" onclick='checkOne(this)'> VM Shutdown
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="vmcommand" value="vm_restart" onclick='checkOne(this)'> VM Restart
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="vmcommand" value="vm_restore" onclick='checkOne(this)'> VM Restore
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" name="vmcommand" value="vm_save" onclick='checkOne(this)'> VM Save
+                                        </div>
+
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" onclick='uploadFile()' class="btn btn-primary btn-user btn-block" id="nextIP">
-                                            Send
-                                        	</a>
-                                                
+                                                <a href="#" class="btn btn-primary btn-user btn-block" id="execute">Execute</a>
                                             </div>
                                         </div>
                                     </form>
-
+                              
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Pie Chart -->
                         
+                        </div>
                     </div>
 
                 </div>
@@ -479,38 +485,37 @@
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
     <script>
-     function uploadFile(){
-                    
-            //var pictureInput = document.getElementById("FILE_TAG");
-            
-            //var myFormData = new FormData();
-            //myFormData.append('fileObj', pictureInput.files[0]);
-            //var form = $('#form_upload')[0];
-            //var myFormData = new FormData(form)
-            //console.log('myFormData : ', myFormData);
-            var form = $('#form_upload')[0];
-            var formData = new FormData(form)
-
-            /*
-            var formData = new FormData();
-            formData.append("targetName", $("input[id=targetName]").val());
-            formData.append("targetPort", $("input[id=targetPort]").val());
-            formData.append("FILE_TAG", $("input[name=FILE_TAG]")[0].files[0]);
-            */
-            $.ajax({
-                url: '/upload/file',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                cache: false,
-                //dataType : 'json',
-                processData: false,
-                success: function (returndata) {
-                    console.log(returndata)
-                }
-            });
-            return false;
+        function checkOne(element) {
+        
+        const checkboxes 
+            = document.getElementsByName("vmcommand");
+        
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        
+        element.checked = true;
         }
+
+
+
+        $(function(){
+            $('a#execute').on('click',function(e){ // Event final check click!!!
+            e.preventDefault();
+            $.getJSON('/manage/kvm',{
+                command: $("input:checkbox[name='vmcommand']:checked").val(),
+                }, function(r){
+                    alert("success!");
+                    document.location.href = '/kvm-manage.html';
+                });
+            
+            });
+        });
+
+
+  
+
+
 
 
 

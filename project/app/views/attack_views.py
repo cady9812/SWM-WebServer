@@ -1,7 +1,7 @@
-from flask import Blueprint, request, send_file
+from flask import Blueprint, request, send_file, current_app
 
 from app.models import Attack
-from app import sckt
+# from app import sckt
 import os, bson
 
 import json
@@ -13,6 +13,7 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 logger = logging.getLogger(__name__)
 
+from flask_mail import Mail, Message
 
 from app.modules import parser, sckt_utils, cmd_setter
 
@@ -21,7 +22,7 @@ bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 @bp.route('/filter')
 def attack_filter():
-    global sckt
+    # global sckt
     type = request.args.get('type') # 'product' or 'endpoint'
     src_ip = request.args.get('src_ip')
     dst_ip = request.args.get('dst_ip')
@@ -30,6 +31,7 @@ def attack_filter():
         all_attacks = parser.query_to_json(attacks)
         return {"result":all_attacks}
     elif type=='endpoint':
+        sckt = sckt_utils.create_socket()
         command = {
             "type":"web",
             "command":[{
@@ -40,6 +42,7 @@ def attack_filter():
         }
         sckt.send(bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
+        sckt.close()
         filtered_attacks = parser.recv_to_json(recvData)
         return {"result":filtered_attacks}
 
@@ -70,9 +73,9 @@ def attack_start():
 
     logger.info(f"[ATTACK] /start - command : {command}")
 
-
+    sckt = sckt_utils.create_socket()
     sckt.send(bson.dumps(command))
-
+    sckt.close()
     return
 
 
@@ -117,3 +120,40 @@ def attack_download(attackIdx):
             as_attachment=True)
     else:
         return "wrong file_name"
+
+
+@bp.route('/mail', methods=['POST'])
+def attack_mail():
+    if request.method=='GET':
+        logger.warning("[ATTACK] /mail - NOT GET Method")
+        return
+    sender_email = request.form['sender_email']
+    sender_pw = request.form['sender_pw']
+    recver_email = request.form['recver_email']
+    file = request.files['FILE_TAG']
+    fileName = file.filename
+
+    smtp_type = sender_email.split('@')[1]
+
+    # sender_email 파싱해서 수정 필요
+    current_app.config['MAIL_SERVER']=f"smtp.{smtp_type}" # smtp.naver.com / smtp.gmail.com / smtp.daum.net
+    current_app.config['MAIL_PORT']=465
+    current_app.config['MAIL_USERNAME']=sender_email
+    current_app.config['MAIL_PASSWORD']=sender_pw
+    current_app.config['MAIL_USE_TLS']=False
+    current_app.config['MAIL_USE_SSL']=True
+
+    mail = Mail(current_app)
+
+    msg = Message('Hello', sender=sender_email, recipients=[recver_email])
+
+    with current_app.open_resource(f"../attack_files/{fileName}") as fp:
+        msg.attach(f"{fileName}", "text/x-python", fp.read())
+
+    # msg.body = "hello I'm from flask"
+    mail.send(msg)
+    return
+
+
+
+    

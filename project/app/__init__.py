@@ -7,13 +7,6 @@ from private import config
 
 from app.modules import sckt_utils
 
-# SOCKET
-import socket
-sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-
-# MyIP = socket.gethostbyname(socket.getfqdn())
-# MyIP = "192.168.0.144"
 MyIP = sckt_utils.get_local_ip()
 
 db = SQLAlchemy()
@@ -46,12 +39,12 @@ def create_app():
 
     return app
 
-def create_socket():
-    sckt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    while True:
-        try:
-            sckt.connect(('192.168.0.163', 9000))
-            break
-        except ConnectionRefusedError as e:
-            continue
-    return sckt
+# def create_socket():
+#     sckt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#     while True:
+#         try:
+#             sckt.connect(('192.168.0.163', 9000))
+#             break
+#         except ConnectionRefusedError as e:
+#             continue
+#     return sckt

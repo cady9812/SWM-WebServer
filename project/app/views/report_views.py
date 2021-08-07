@@ -40,13 +40,13 @@ def report_pkt():
     return
 
 
-@bp.route('/target', methods=['POST'])
+@bp.route('/malware', methods=['POST'])
 def report_target():
     if request.method=='POST':
         logger.warning("[REPORT] /target - NOT GET Method")
         return
     data = request.get_json()
     attack_id = data["attack_id"]
-    pkt = data["pkt"]
-    logger.info(f"[REPORT] /target - attack_id : {attack_id}, pkt : {pkt}")
+    infected = data["infected"]
+    logger.info(f"[REPORT] /target - attack_id : {attack_id}, infected : {infected}")
     return

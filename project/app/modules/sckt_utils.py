@@ -1,8 +1,19 @@
 import bson
 import socket
+import time
 
 BUFSIZE = 0x1000
 
+def create_socket():
+    sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    while True:
+        try:
+            sckt.connect(('192.168.0.163', 9000))
+            break
+        except ConnectionRefusedError as e:
+            time.sleep(1)
+            continue
+    return sckt
 
 def recv_data(sckt):
     result = sckt.recv(1)

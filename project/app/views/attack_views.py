@@ -135,6 +135,8 @@ def attack_mail():
 
     smtp_type = sender_email.split('@')[1]
 
+    logger.info(f"[ATTACK] /mail - sender_email:{sender_email}, sender_pw:{sender_pw}, recver_email:{recver_email}, fileName:{fileName}, smtp_type:{smtp_type}")
+
     # sender_email 파싱해서 수정 필요
     current_app.config['MAIL_SERVER']=f"smtp.{smtp_type}" # smtp.naver.com / smtp.gmail.com / smtp.daum.net
     current_app.config['MAIL_PORT']=465

@@ -151,6 +151,7 @@
                         <a class="collapse-item" href="matrix.html">Mitre Attack</a>
                         <a class="collapse-item" href="upload-code.html">Upload Code</a>
                         <a class="collapse-item" href="kvm-manage.html">VM</a>
+                        <a class="collapse-item" href="mail.html">Mail</a>
                     </div>
                 </div>
             </li>
@@ -920,17 +921,7 @@
         element.checked = true;
         }
         
-        function checkOne2(element) {
-        
-        const checkboxes 
-            = document.getElementsByName("chkCVE");
-        
-        checkboxes.forEach((cb) => {
-            cb.checked = false;
-        })
-        
-        element.checked = true;
-        }
+  
         function checkOne3(element) {
         
         const checkboxes 
@@ -1015,7 +1006,7 @@
             arr.forEach(function(e){
                 var temp = "<label>";
                 temp +="<li>";
-                temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
+                temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
                 temp +="Program : " + e.program + " ";
                 temp +="Usage : " + escape_filtering(e.usage);
                 temp +="</li>";

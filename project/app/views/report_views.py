@@ -37,7 +37,7 @@ def report_pkt():
         logger.info(f'[decoded] s : {base64.b64decode(s)}')
     for r in recv_pkt:
         logger.info(f'[decoded] r : {base64.b64decode(r)}')
-    return
+    return "OK"
 
 
 @bp.route('/malware', methods=['POST'])

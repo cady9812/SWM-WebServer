@@ -21,7 +21,7 @@ def add_agent():
     agent_ip = request.get_json()['ip']
     redis_client.sadd("agents",agent_ip)
     logger.info(f"[AGENT] ADD - IP :{agent_ip}")
-    return {'agent_ip':agent_ip}
+    return 'OK'
 
 @bp.route('/del', methods=['POST'])
 def del_agent():
@@ -31,7 +31,7 @@ def del_agent():
     agent_ip = request.get_json()['ip']
     redis_client.srem("agents", agent_ip)
     logger.info(f"[AGENT] DEL - IP :{agent_ip}")
-    return
+    return 'OK'
 
 
 @bp.route('/show')
@@ -41,7 +41,7 @@ def show_agent():
     all_agents = [a.decode() for a in all_agents]
     # ['2.2.2.2', '1.1.1.1']
     logger.info(f'[AGENT] SHOW - {all_agents}')
-    return
+    return 'OK'
 
 
     

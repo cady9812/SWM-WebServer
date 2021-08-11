@@ -17,6 +17,7 @@ from flask_mail import Mail, Message
 
 from app.modules import parser, sckt_utils, cmd_setter
 
+
 bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 
@@ -29,6 +30,9 @@ def attack_filter():
     if type=='product':
         attacks = Attack.query.all()
         all_attacks = parser.query_to_json(attacks)
+
+        logger.info(f"[ATTACK] [*] product  /filter - \"result\" : {all_attacks}")
+        
         return {"result":all_attacks}
     elif type=='endpoint':
         sckt = sckt_utils.create_socket()
@@ -42,11 +46,15 @@ def attack_filter():
         }
         sckt.send(bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
-        print("!", recvData)  #TODO
+
+        logger.info(f"[ATTACK] [*] endpoint  /filter - \"scan_result\" : {recvData}")
+        
         sckt.close()
         filtered_attacks = parser.recv_to_json(recvData)
         res = {"result":filtered_attacks}
-        print('[!!] res : ', res)
+        
+        logger.info(f"[ATTACK] [*] endpoint /filter - \"filtered_attacks\" : {res}")
+        
         return {"result":filtered_attacks}
 
 
@@ -61,8 +69,6 @@ def attack_start():
     # attack_id_list = request.args.get("cve_id") # [attackId 리스트]
     attack_id_list = [request.args.get("cve_id")]
 
-    logger.info(f"[ATTACK] /start - attackInfo : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
-
     command = {"type":"web"}
 
     if attackType=="product": # (attack & defense) & remote malware
@@ -74,12 +80,13 @@ def attack_start():
     
     command["command"]=_command
 
+    logger.info(f"[ATTACK] /start - attackInfo : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
     logger.info(f"[ATTACK] /start - command : {command}")
 
     sckt = sckt_utils.create_socket()
     sckt.send(bson.dumps(command))
     sckt.close()
-    return
+    return "OK"
 
 
 # 암호화 된
@@ -157,7 +164,7 @@ def attack_mail():
 
     # msg.body = "hello I'm from flask"
     mail.send(msg)
-    return
+    return "OK"
 
 
 

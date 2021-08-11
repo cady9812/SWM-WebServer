@@ -619,12 +619,12 @@
                                     <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
                                         <div class="form-group" id="src_input" style='display:inline;'>
                                             <input type="text" class="form-control form-control-user"
-                                                id="InputSrcIP" value="192.168.0.200" aria-describedby="emailHelp"
+                                                id="InputSrcIP" aria-describedby="emailHelp"
                                                 placeholder="Enter Source ip...">
                                         </div>
                                         <div class="form-group" >
                                             <input type="text" class="form-control form-control-user"
-                                                id="InputDstIP" value="192.168.0.153" placeholder="Enter Target ip...">
+                                                id="InputDstIP" placeholder="Enter Target ip...">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -1044,8 +1044,8 @@
                     },
                         function(r) {
 
-                            alert("1231231");
-                            alert(r.result[0].program);
+                            
+                            
 
                             showCVE(r.result);
                             //alert(attackList);
@@ -1071,7 +1071,7 @@
 
         $(function(){ // Get Agent list 
             $('a#nextIP').on('click',function(e){ 
-            alert("1231231");
+            
             e.preventDefault();
             $.getJSON('/agent/list',{
                 type: $("input:checkbox[name='doing']:checked").val(),

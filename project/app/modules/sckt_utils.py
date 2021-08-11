@@ -8,7 +8,7 @@ def create_socket():
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            sckt.connect(('192.168.0.163', 9000))
+            sckt.connect(('192.168.0.154', 9000))
             break
         except ConnectionRefusedError as e:
             time.sleep(1)

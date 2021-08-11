@@ -42,8 +42,11 @@ def attack_filter():
         }
         sckt.send(bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
+        print("!", recvData)  #TODO
         sckt.close()
         filtered_attacks = parser.recv_to_json(recvData)
+        res = {"result":filtered_attacks}
+        print('[!!] res : ', res)
         return {"result":filtered_attacks}
 
 

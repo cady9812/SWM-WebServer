@@ -22,7 +22,7 @@ def recv_to_json(recvData):
     ports = recvData["ports"]
     for _port in ports:
         try:
-            attacks = Attack.query.filter(Attack.program==_port["service_product"]).all()
+            attacks = Attack.query.filter(Attack.program==_port["service_name"]).all()
         except:
             continue
         sub_filtered_attacks= query_to_json(attacks)

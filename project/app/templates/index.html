@@ -142,13 +142,16 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Pages</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="report.html">Report</a>
+                        <a class="collapse-item" href="matrix.html">Mitre Attack</a>
+                        <a class="collapse-item" href="upload-code.html">Upload Code</a>
+                        <a class="collapse-item" href="kvm-manage.html">VM</a>
+                        <a class="collapse-item" href="mail.html">Mail</a>
                     </div>
                 </div>
             </li>
@@ -567,7 +570,7 @@
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">!!!YAS!!!
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Agent List View
 
                                             </a>
                                             
@@ -918,17 +921,7 @@
         element.checked = true;
         }
         
-        function checkOne2(element) {
-        
-        const checkboxes 
-            = document.getElementsByName("chkCVE");
-        
-        checkboxes.forEach((cb) => {
-            cb.checked = false;
-        })
-        
-        element.checked = true;
-        }
+  
         function checkOne3(element) {
         
         const checkboxes 
@@ -1001,14 +994,22 @@
             
             });
         });
+        function escape_filtering(data){
+            data.replace(/&/g, '&amp;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/</g, '&lt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&apos;');
+            return data;
+        }
         function showCVE(arr){
             arr.forEach(function(e){
                 console.log('e : ',e.usage);
                 var temp = "<label>";
                 temp +="<li>";
-                temp +="<input type='checkbox' name='chkCVE' onclick='checkOne2(this)' value="+e.attackId+" />";
+                temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
                 temp +="Program : " + e.program + " ";
-                temp +="Usage : " + (e.usage).toString();
+                temp +="Usage : " + escape_filtering(e.usage);
                 temp +="</li>";
                 temp +="</label>";
                 temp +="<br>";
@@ -1019,12 +1020,11 @@
 
 
         $(function() {
-            $('a#nextCVE').on('click', function(e) {
-                
+            $('a#nextCVE').on('click', function(e) {                
                 if($("input:checkbox[name=doing]:checked").val() == "malware"){
                     $.getJSON('https://api.ipify.org/?format=json', function(data){ 
                         console.log(data.ip);
-                        $('#InputSrcIP').val(data.ip); 
+                        $('#InputSrcIP').val('127.0.0.1'); 
                     });
                 }
                 

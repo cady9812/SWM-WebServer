@@ -61,13 +61,14 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Pages</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="report.html">Report</a>
+                        <a class="collapse-item" href="matrix.html">Mitre Attack</a>
+                        <a class="collapse-item" href="upload-code.html">Upload Code</a>
                     </div>
                 </div>
             </li>
@@ -359,8 +360,8 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-1 text-gray-800">MITRE ATT&CK matrix</h1>
-                    <p class="mb-4">test222222</p>
+                    <h1 class="h3 mb-1 text-gray-800">Attack Result Report</h1>
+                    <p class="mb-4">attac result report</p>
 
                     <!-- Content Row -->
                     <div class="row">
@@ -371,7 +372,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Attack Start </h6>
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Report </h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -393,84 +394,16 @@
 
                                 <div class="card-body" >
                                     <!-- Here Add // form orignal is 'user'-->
-                                    <form class="p-5" id="doing_select" style='display:none;'> 
-                                        <div class="form-group" id = "report_div">
-                                            <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
-
+                                   
+                                  
+                                        <div class="chart-pie pt-4">
+                                            <canvas id="myPieChart"></canvas>
                                         </div>
-                                       
-                                    </form>
+                                        <hr>
+                                        Styling for the donut chart can be found in the
+                                        <code>/js/demo/chart-pie-demo.js</code> file.
 
-                                    <form class="p-5" id="loading_page" style='display:none;'> 
-                                        <div class="form-group">
-                                                <div id='loadingImg'>
-                                                    <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
-                                                </div>
-                                                
-                                        </div>
-                                        
-                                    </form>
-
-
-
-                                    <form class="p-5" id="form_ipInput" style='display:none;'> 
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                id="InputSrcIP" aria-describedby="emailHelp"
-                                                placeholder="Enter Source ip...">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                id="InputDstIP" placeholder="Enter Target ip...">
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextCVE">
-                                            Start
-                                        	</a>
-                                                
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form class="p-5" id="print_CVE_list" style='display:none;'>
-                                    	<div class="form-group">
-                                    	<ul id="cve_form">
-                                    	<!-- IPNUT CVE LIST -->
-                                    	
-                                    	
-                                        
-                                    	</ul>
-                                    	</div>
-                                    	<div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                            <a href="#" class="btn btn-primary btn-user btn-block" id="prevCVE">
-                                            Prev
-                                        	</a>
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextInfo">
-                                            Next
-                                        	</a>
-                                                
-                                            </div>
-                                        </div>
-
-                                    </form>
-                                    <form class="p-5" id="Confirm_attack_info" style='display:none;'>
-                                	<div class="form-group">
-					<div align="center">Confrim attack information</div><br>
-					[*]	src is : asdfasdfasdfasdfasdf</br>
-					[*]	dst is : basdfasdfasdffafa</br>
-					[*]	CVE is : CVE-1998-0102</br>
-					<div align="center">
-						<script>
-						</script>
-					</div>
-					<a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
-                                            let's go
-                                        	</a>
-                                    	</div>
-                                    	
-
-                                    </form>
+                              
                                     
                                 </div>
                             </div>
@@ -552,9 +485,30 @@
                     report_print(r);
                 });
             
-            });
-        });
+    });
+
 
 
 </script>
+<!--                          /js/demo/chart-pie-                      -->
+<!--                          /js/demo/chart-pie-                      -->
+<!--                          /js/demo/chart-pie-                      -->
+<!--                          /js/demo/chart-pie-                      -->
+<script src="../static/vendor/jquery/jquery.min.js"></script>
+<script src="../staticvendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../staticvendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../static/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../static/vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../static/js/demo/chart-area-demo.js"></script>
+<script src="../static/js/demo/chart-pie-demo.js"></script>
+<script src="../static/js/demo/chart-bar-demo.js"></script>
+
 </html>

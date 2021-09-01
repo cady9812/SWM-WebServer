@@ -42,36 +42,35 @@ def matrix():
 # Upload  Customed Attack file from User
 @bp.route('/upload/file',methods=['POST'])
 def upload():
-    if request.method == 'POST':
-        file = request.files['FILE_TAG']
-        fileName = file.filename
-        print("[**]     ", fileName)
-        targetName = request.form['targetName']
-        targetVersion = request.form['targetVersion']
-        targetPort = request.form['targetPort']
-        targetUsage = request.form['targetUsage']
-        targetSummary = request.form['targetSummary']
-        
-        print('[**]     ', targetName)
-        print('[**]     ', targetVersion)
-        print('[**]     ', targetPort)
-        print('[**]     ', targetUsage)
-        print('[**]     ', targetSummary)
+    if request.method == 'GET':
+        logger.warning("[MAIN] /upload/code - NOT GET Method")
+        return
+    
+    file = request.files['FILE_TAG']
+    fileName = file.filename
+    targetName = request.form['targetName']
+    targetVersion = request.form['targetVersion']
+    targetPort = request.form['targetPort']
+    targetUsage = request.form['targetUsage']
+    targetSummary = request.form['targetSummary']
+    # attackType = request.form["attackType"]
+    # temporary hard coding
+    attackType = "cve" # or mal
 
-        if Attack.query.filter(Attack.fileName==fileName).first()==None:
-            file.save(os.path.join('./attack_files', fileName))
-            attack = Attack(program=targetName, version=targetVersion, port=targetPort, fileName=fileName, usage=targetUsage, description=targetSummary)
-            db.session.add(attack)
-            db.session.commit()
-            print('file upload success')
-            return {
-                "result":True
-            }
-        else:
-            print('file upload failed')
-            return {
-                "result":False
-            }
+    logger.info(f"[MAIN] /upload/code\nfileName : {fileName}\ntargetName : {targetName}\ntargetVersion : {targetVersion}\ntargetPort : {targetPort}\ntargetUsage : {targetUsage}\ntargetSummary : {targetSummary}\nattackType : {attackType}")
+
+    if Attack.query.filter(Attack.fileName==fileName).first()==None:
+        file.save(os.path.join(os.getcwd(), "attack_files", f"{fileName}"))
+        
+        attack = Attack(fileName=fileName, program=targetName, version=targetVersion, port=targetPort, usage=targetUsage, description=targetSummary, type=attackType)
+        db.session.add(attack)
+        db.session.commit()
+        logger.info('[MAIN] /upload/code - upload file SUCCESS')
+        return "OK"
+    else:
+        logger.warning("[MAIN] /upload/code - upload file FAIL")
+        return "FAIL"
+        
         
         
 

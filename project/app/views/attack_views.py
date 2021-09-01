@@ -17,6 +17,8 @@ from flask_mail import Mail, Message
 
 from app.modules import parser, sckt_utils, cmd_setter
 
+from private import email_info
+
 
 bp = Blueprint('attack', __name__, url_prefix='/attack')
 
@@ -137,17 +139,26 @@ def attack_mail():
     if request.method=='GET':
         logger.warning("[ATTACK] /mail - NOT GET Method")
         return
-    sender_email = request.form['sender_email']
-    sender_pw = request.form['sender_pw']
-    recver_email = request.form['recver_email']
-    file = request.files['FILE_TAG']
-    fileName = file.filename
+    
+    sender_email = email_info.email
+    sender_pw = email_info.passwd
 
+    logger.info(f"[ATTACK] /mail - sender_email :{sender_email}, sender_pw :{sender_pw}")
+    # logger.info(f"[ATTACK] /mail - request.form : {request.form}")
+    # logger.info(f"[ATTACK] /mail - request.files : {request.files}")
+    
+    recver_email = request.form.getlist('recver_email')[0]
+    file_title = request.form.getlist('title')[0]
+    file_body = request.form.getlist('body')[0]
+    file_name = request.files.getlist('attachment')[0]
+    fileName = file_name.filename
+    
+    logger.info(f"[ATTACK] /mail - recver_email : {recver_email}, file_title : {file_title}, file_body : {file_body}, fileName : {fileName}")
+    
+
+    # hard coding OK...
     smtp_type = sender_email.split('@')[1]
 
-    logger.info(f"[ATTACK] /mail - sender_email:{sender_email}, sender_pw:{sender_pw}, recver_email:{recver_email}, fileName:{fileName}, smtp_type:{smtp_type}")
-
-    # sender_email 파싱해서 수정 필요
     current_app.config['MAIL_SERVER']=f"smtp.{smtp_type}" # smtp.naver.com / smtp.gmail.com / smtp.daum.net
     current_app.config['MAIL_PORT']=465
     current_app.config['MAIL_USERNAME']=sender_email
@@ -156,13 +167,10 @@ def attack_mail():
     current_app.config['MAIL_USE_SSL']=True
 
     mail = Mail(current_app)
-
-    msg = Message('Hello', sender=sender_email, recipients=[recver_email])
-
+    msg = Message(subject=file_title, sender=sender_email, recipients=[recver_email])
+    msg.body = f"{file_body}"
     with current_app.open_resource(f"../attack_files/{fileName}") as fp:
-        msg.attach(f"{fileName}", "text/x-python", fp.read())
-
-    # msg.body = "hello I'm from flask"
+        msg.attach(f"{fileName}", "text/plain", fp.read())
     mail.send(msg)
     return "OK"
 

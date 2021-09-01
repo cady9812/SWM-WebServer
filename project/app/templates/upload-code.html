@@ -398,6 +398,9 @@
                                         <div class="form-group">
                                             <br>
                                             <h4>Input Contents </h4>
+                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="CVE">cve   
+                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="malware" checked="checked">malware
+                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="etc">etc<br>
                                             <input type="text" id="targetName" name="targetName" placeholder="Software name..." ><br>  
                                             <input type="text" id="targetVersion" name="targetVersion" placeholder="Software version..." ><br>
                                             <input type="text" id="targetPort" name="targetPort" placeholder="port..."><br>
@@ -517,5 +520,21 @@
 
     </script>
 </body>
+
+<script>
+    function checkOne(element) {
+        
+        const checkboxes 
+            = document.getElementsByName("attackType");
+        
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        
+        element.checked = true;
+        }
+
+
+</script>
 
 </html>

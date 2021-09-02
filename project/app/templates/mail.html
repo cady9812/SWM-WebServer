@@ -580,27 +580,27 @@
                     
             </div>
             <!-- End of Main Content -->
-            <form id="form_mail">
+            <form id="form_mail" enctype="multipart/form-data">
             <main>
                 <p class="text-center">New Message</p>
                 <form>
                     <div class="form-row mb-3">
-                        <label for="to" class="col-2 col-sm-1 col-form-label" style="text-align:right">To:</label>
+                        <label for="to" class="col-2 col-sm-1 col-form-label" style="text-align:right">To</label>
                         <div class="col-10 col-sm-11">
-                            <input type="email" style="width:90%" class="form-control" id="to" placeholder="Type email">
+                            <input type="email" style="width:90%" class="form-control" id="to" placeholder="receiver email">
                         </div>
                     </div>
                     
                     <div class="form-row mb-3">
                         <label for="bcc" class="col-2 col-sm-1 col-form-label" style="text-align:right">Subject</label>
                         <div class="col-10 col-sm-11">
-                            <input type="email" style="width:90%" class="form-control" id="subject" placeholder="Input Subject...">
+                            <input type="text" style="width:90%" class="form-control" id="subject" placeholder="email subject">
                         </div>
                     </div>
                     <div class="form-row mb-3">
-                        <label for="to" class="col-2 col-sm-1 col-form-label" style="text-align:right">Attachment:</label>
+                        <label for="to" class="col-2 col-sm-1 col-form-label" style="text-align:right">Attachment</label>
                         <div class="col-10 col-sm-11">
-                            <input type="file" id="to" placeholder="Type email">
+                            <input type="file" id="attachment" name="attachment" placeholder="Type email">
                         </div>
                     </div>
                 </form>
@@ -663,11 +663,11 @@
                         </div>
                         
                         <div class="form-group mt-4">
-                            <textarea style="width:90%" class="form-control" id="message" name="body" rows="12" placeholder="Click here to reply"></textarea>
+                            <textarea style="width:90%" class="form-control" id="message" name="body" rows="12" placeholder="message"></textarea>
                         </div>
                         
                         <div class="form-group">
-                            <button onclick='uploadFile()' name="send" class="btn btn-success">Send</button>
+                            <button onclick='sendMail()' name="send" class="btn btn-success">Send</button>
                             <button type="submit" class="btn btn-danger">Discard</button>
                         </div>
                     </div>
@@ -717,12 +717,16 @@
     </div>
 
     <script>
-      function uploadFile(){
+      function sendMail(){
             var form = $('#form_mail')[0];
             var formData = new FormData(form)
+            
+            formData.append("recver_email", $("#to").val())
+            formData.append("title", $("#subject").val())
+            formData.append("file_name", $("#attachment")[0].files[0])
 
             $.ajax({
-                url: '/mail/send',
+                url: '/attack/mail',
                 type: 'POST',
                 data: formData,
                 contentType: false,

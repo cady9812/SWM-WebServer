@@ -13,6 +13,14 @@ def create_socket():
         except ConnectionRefusedError as e:
             time.sleep(1)
             continue
+    
+    # 본인이 웹임을 알리기 위해서
+    introduce = {
+        "type": "introduce",
+        "detail": "web",
+    }
+    sckt.send(bson.dumps(introduce))
+    
     return sckt
 
 def recv_data(sckt):

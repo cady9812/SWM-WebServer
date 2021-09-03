@@ -38,13 +38,3 @@ def create_app():
     app.register_blueprint(report_views.bp)
 
     return app
-
-# def create_socket():
-#     sckt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-#     while True:
-#         try:
-#             sckt.connect(('192.168.0.163', 9000))
-#             break
-#         except ConnectionRefusedError as e:
-#             continue
-#     return sckt

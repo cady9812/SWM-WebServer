@@ -11,9 +11,10 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 logger = logging.getLogger(__name__)
 
+from private.ports import WEB_SERVER_PORT
 
 
-downloadURL = f"http://{MyIP}:5000/attack/download"
+downloadURL = f"http://{MyIP}:{WEB_SERVER_PORT}/attack/download"
 
 
 def file_size(file_route):

@@ -8,10 +8,6 @@ log_config = json.load(open('log_config.json'))
 logging.config.dictConfig(log_config)
 logger = logging.getLogger(__name__)
 
-import logstash
-
-logger.addHandler(logstash.TCPLogstashHandler('localhost', 5601, version=1))
-
 
 if __name__=="__main__":
     # APP

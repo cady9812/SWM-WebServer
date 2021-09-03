@@ -2,13 +2,15 @@ import bson
 import socket
 import time
 
+from private.ports import SOCKET_PORT
+
 BUFSIZE = 0x1000
 
 def create_socket():
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            sckt.connect(('0.0.0.0', 9000))
+            sckt.connect(('0.0.0.0', SOCKET_PORT))
             break
         except ConnectionRefusedError as e:
             time.sleep(1)

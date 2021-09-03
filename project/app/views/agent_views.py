@@ -1,14 +1,18 @@
 from flask import Blueprint, request
 from app import redis_client
 
-import json
-import logging
-import logging.config
-import pathlib
-log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-config = json.load(open(str(log_config)))
-logging.config.dictConfig(config)
-logger = logging.getLogger(__name__)
+# import json
+# import logging
+# import logging.config
+# import pathlib
+# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
+# config = json.load(open(str(log_config)))
+# logging.config.dictConfig(config)
+# logger = logging.getLogger(__name__)
+
+
+from app.modules import loggers
+logger = loggers.create_logger(__name__)
 
 
 bp = Blueprint('agent', __name__, url_prefix='/agent')

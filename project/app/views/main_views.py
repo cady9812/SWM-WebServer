@@ -4,15 +4,21 @@ from app.models import Attack
 from app import redis_client, db
 import os
 
-import json
-import logging
-import logging.config
-import pathlib
-log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-config = json.load(open(str(log_config)))
-logging.config.dictConfig(config)
-logger = logging.getLogger(__name__)
 
+### local logger
+# import json
+# import logging
+# import logging.config
+# import pathlib
+# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
+# config = json.load(open(str(log_config)))
+# logging.config.dictConfig(config)
+# logger = logging.getLogger(__name__)
+
+
+### logstash logger
+from app.modules import loggers
+logger = loggers.create_logger(__name__)
 
 
 BUFSIZE = 0x1000
@@ -37,6 +43,7 @@ def index():
 # Show MITRE ATT&CK matrix
 @bp.route('/upload')
 def matrix():
+    # logger.info("[MAIN] /upload - page access") # for test
     return render_template('./upload-code.html')
 
 # Upload  Customed Attack file from User

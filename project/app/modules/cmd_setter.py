@@ -36,7 +36,7 @@ def product_command(src_ip, dst_ip, attack_id_list):
         usage = attackInfo.usage
         type = attackInfo.type
 
-        logger.info(f"[CMD_SETTER] product - file_name : {file_name},\
+        logger.info(f"\n[CMD_SETTER] product - file_name : {file_name},\
 dst_port :{dst_port}, usage : {usage}, type:{type}")
 
         if type=="malware":
@@ -48,7 +48,7 @@ dst_port :{dst_port}, usage : {usage}, type:{type}")
         down_route = f"{downloadURL}/crypt/{attack_id}"
         f_size = file_size(file_route)
 
-        logger.info("[CMD_SETTER] product - file_route : {file_route},\
+        logger.info("\n[CMD_SETTER] product - file_route : {file_route},\
 down_route : {down_route}, f_size : {f_size}")
 
         command.append({
@@ -85,14 +85,14 @@ def target_command(src_ip, dst_ip, attack_id_list):
         dst_port = attackInfo.port
         usage = attackInfo.usage
         
-        logger.info(f"[CMD_SETTER] target - file_name : {file_name},\
+        logger.info(f"\n[CMD_SETTER] target - file_name : {file_name},\
 dst_port :{dst_port}, usage : {usage}")
 
         file_route = f"{pwd}/attack_files/{file_name}"
         down_route = f"{downloadURL}/crypt/{attack_id}"
         f_size = file_size(file_route)
 
-        logger.info("[CMD_SETTER] target - file_route : {file_route},\
+        logger.info("\n[CMD_SETTER] target - file_route : {file_route},\
 down_route : {down_route}, f_size : {f_size}")
 
         command.append({
@@ -121,13 +121,13 @@ def malware_command(src_ip, attack_id_list):
         file_name = attackInfo.fileName
         usage = attackInfo.usage
 
-        logger.info(f"[CMD_SETTER] malware - file_name : {file_name}, usage : {usage}")
+        logger.info(f"\n[CMD_SETTER] malware - file_name : {file_name}, usage : {usage}")
 
         file_route = f"{pwd}/attack_files/{file_name}"
         down_route = f"{downloadURL}/{attack_id}"
         f_size = file_size(file_route)
 
-        logger.info("[CMD_SETTER] target - file_route : {file_route},\
+        logger.info("\n[CMD_SETTER] target - file_route : {file_route},\
 down_route : {down_route}, f_size : {f_size}")
 
         command.append({

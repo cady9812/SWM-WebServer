@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 if __name__=="__main__":
     # APP
     run_app = create_app()
-    logger.info("[INIT] APP CONNECTED")
+    logger.info("\n[INIT] APP CONNECTED")
     
     run_app.run(host="0.0.0.0")
 

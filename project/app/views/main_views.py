@@ -37,7 +37,7 @@ def index():
     #     redis_client.delete(key)
     # redis_client.set("flag", 0)
     # return render_template('index.html')
-    logger.info("[MAIN] / - Index Page")
+    logger.info("\n[MAIN] / - Index Page")
     return render_template('index.html')
 
 # Show MITRE ATT&CK matrix
@@ -50,7 +50,7 @@ def matrix():
 @bp.route('/upload/file',methods=['POST'])
 def upload():
     if request.method == 'GET':
-        logger.warning("[MAIN] /upload/code - NOT GET Method")
+        logger.warning("\n[MAIN] /upload/code - NOT GET Method")
         return
     
     file = request.files['FILE_TAG']
@@ -64,7 +64,7 @@ def upload():
     # temporary hard coding
     attackType = "cve" # or mal
 
-    logger.info(f"[MAIN] /upload/code\nfileName : {fileName}\ntargetName : {targetName}\ntargetVersion : {targetVersion}\ntargetPort : {targetPort}\ntargetUsage : {targetUsage}\ntargetSummary : {targetSummary}\nattackType : {attackType}")
+    logger.info(f"\n[MAIN] /upload/code\nfileName : {fileName}\ntargetName : {targetName}\ntargetVersion : {targetVersion}\ntargetPort : {targetPort}\ntargetUsage : {targetUsage}\ntargetSummary : {targetSummary}\nattackType : {attackType}")
 
     if Attack.query.filter(Attack.fileName==fileName).first()==None:
         file.save(os.path.join(os.getcwd(), "attack_files", f"{fileName}"))
@@ -72,10 +72,10 @@ def upload():
         attack = Attack(fileName=fileName, program=targetName, version=targetVersion, port=targetPort, usage=targetUsage, description=targetSummary, type=attackType)
         db.session.add(attack)
         db.session.commit()
-        logger.info('[MAIN] /upload/code - upload file SUCCESS')
+        logger.info('\n[MAIN] /upload/code - upload file SUCCESS')
         return "OK"
     else:
-        logger.warning("[MAIN] /upload/code - upload file FAIL")
+        logger.warning("\n[MAIN] /upload/code - upload file FAIL; that filename already exists")
         return "FAIL"
         
         

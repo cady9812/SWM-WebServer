@@ -37,17 +37,16 @@ def attack_filter():
         attacks = Attack.query.all()
         all_attacks = parser.query_to_json(attacks)
 
-        logger.info(f"[ATTACK] [*] product  /filter - \"result\" : {all_attacks}")
+        logger.info(f"\n[ATTACK] [*] product  /filter - \"result\" : {all_attacks}")
         
         return {"result":all_attacks}
     elif type=='endpoint':
-        attacks = Attack.query.all()
-        all_attacks = parser.query_to_json(attacks)
+        # attacks = Attack.query.all()
+        # all_attacks = parser.query_to_json(attacks)
 
-        logger.info(f"[ATTACK] [*] endpoint  /filter - \"result\" : {all_attacks}")
+        # logger.info(f"[ATTACK] [*] endpoint  /filter - \"result\" : {all_attacks}")
         
-        return {"result":all_attacks}
-        """
+        # return {"result":all_attacks}
         sckt = sckt_utils.create_socket()
         command = {
             "type":"web",
@@ -60,21 +59,20 @@ def attack_filter():
         sckt.send(bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
 
-        logger.info(f"[ATTACK] [*] endpoint  /filter - \"scan_result\" : {recvData}")
+        logger.info(f"\n[ATTACK] [*] endpoint /filter - \"scan_result\" : {recvData}")
         
         sckt.close()
         filtered_attacks = parser.recv_to_json(recvData)
         res = {"result":filtered_attacks}
         
-        logger.info(f"[ATTACK] [*] endpoint /filter - \"filtered_attacks\" : {res}")
+        logger.info(f"\n[ATTACK] [*] endpoint /filter - \"filtered_attacks\" : {res}")
         
         return {"result":filtered_attacks}
-        """
     elif type=="malware":
         attacks = Attack.query.filter(Attack.type=="mal").all()
         all_attacks = parser.query_to_json(attacks)
 
-        logger.info(f"[ATTACK] [*] malware  /filter - \"result\" : {all_attacks}")
+        logger.info(f"\n[ATTACK] [*] malware  /filter - \"result\" : {all_attacks}")
         
         return {"result":all_attacks}
 
@@ -85,7 +83,7 @@ def attack_start():
     getFromFront = request.get_data().decode()
     getFromFront = json.loads(getFromFront)
 
-    print("getFromFront : ", getFromFront)
+    logger.info(f"\n[ATTACK] /start - getFromFront : {getFromFront}")
 
     attackType = getFromFront['type'] # 'product' or 'endpoint'
     src_ip = getFromFront['src_ip']
@@ -106,8 +104,8 @@ def attack_start():
     
     command["command"]=_command
 
-    logger.info(f"[ATTACK] /start - attackInfo : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
-    logger.info(f"[ATTACK] /start - command : {command}")
+    logger.info(f"\n[ATTACK] /start - attackInfo : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
+    logger.info(f"\n[ATTACK] /start - command : {command}")
 
     sckt = sckt_utils.create_socket()
     sckt.send(bson.dumps(command))
@@ -124,7 +122,7 @@ def attack_download_enc(attackIdx):
     pwd = os.getcwd()
     file_route = f"{pwd}/attack_files/{f_name}" # 공격 파일 경로
 
-    logger.info(f"[ATTACK] /download/crypt/{attackIdx} - File Route : {file_route}")
+    logger.info(f"\n[ATTACK] /download/crypt/{attackIdx} - File Route : {file_route}")
     
     file_bytes = bytearray(open(file_route, 'rb').read())
     f_size = cmd_setter.file_size(file_route)
@@ -133,7 +131,7 @@ def attack_download_enc(attackIdx):
     for i in range(f_size):
         encoded[i] = file_bytes[i]^ord('X')
     
-    logger.info(f"[ATTACK] /download/crypt/{attackIdx} - Encoded File : {encoded}")
+    logger.info(f"\n[ATTACK] /download/crypt/{attackIdx} - Encoded File : {encoded}")
 
     return encoded
 
@@ -148,7 +146,7 @@ def attack_download(attackIdx):
     pwd = os.getcwd()
     file_name = f"{pwd}/attack_files/{file_name}" # 공격 파일 경로
 
-    logger.info(f"[ATTACK] /download/{attackIdx} - File Name : {file_name}")
+    logger.info(f"\n[ATTACK] /download/{attackIdx} - File Name : {file_name}")
 
     if os.path.isfile(file_name):
         return send_file(file_name,
@@ -161,13 +159,13 @@ def attack_download(attackIdx):
 @bp.route('/mail', methods=['POST'])
 def attack_mail():
     if request.method=='GET':
-        logger.warning("[ATTACK] /mail - NOT GET Method")
+        logger.warning("\n[ATTACK] /mail - NOT GET Method")
         return
     
     sender_email = email_info.email
     sender_pw = email_info.passwd
 
-    logger.info(f"[ATTACK] /mail - sender_email :{sender_email}, sender_pw :{sender_pw}")
+    logger.info(f"\n[ATTACK] /mail - sender_email :{sender_email}, sender_pw :{sender_pw}")
     # logger.info(f"[ATTACK] /mail - request.form : {request.form}")
     # logger.info(f"[ATTACK] /mail - request.files : {request.files}")
     
@@ -177,7 +175,7 @@ def attack_mail():
     file_name = request.files.getlist('attachment')[0]
     fileName = file_name.filename
     
-    logger.info(f"[ATTACK] /mail - recver_email : {recver_email}, file_title : {file_title}, file_body : {file_body}, fileName : {fileName}")
+    logger.info(f"\n[ATTACK] /mail - recver_email : {recver_email}, file_title : {file_title}, file_body : {file_body}, fileName : {fileName}")
     
 
     # hard coding OK...

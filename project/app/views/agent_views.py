@@ -20,21 +20,21 @@ bp = Blueprint('agent', __name__, url_prefix='/agent')
 @bp.route('/add', methods=['POST'])
 def add_agent():
     if request.method=='GET':
-        logger.warning('[AGENT] /add - NOT GET Method')
+        logger.warning('\n[AGENT] /add - NOT GET Method')
         return
     agent_ip = request.get_json()['ip']
     redis_client.sadd("agents",agent_ip)
-    logger.info(f"[AGENT] ADD - IP :{agent_ip}")
+    logger.info(f"\n[AGENT] ADD - IP :{agent_ip}")
     return 'OK'
 
 @bp.route('/del', methods=['POST'])
 def del_agent():
     if request.method=='GET':
-        logger.warning('[AGENT] /del - Not GET Method')
+        logger.warning('\n[AGENT] /del - Not GET Method')
         return
     agent_ip = request.get_json()['ip']
     redis_client.srem("agents", agent_ip)
-    logger.info(f"[AGENT] DEL - IP :{agent_ip}")
+    logger.info(f"\n[AGENT] DEL - IP :{agent_ip}")
     return 'OK'
 
 
@@ -44,7 +44,7 @@ def show_agent():
     # all_agents = {b'2.2.2.2', b'1.1.1.1'}
     all_agents = [a.decode() for a in all_agents]
     # ['2.2.2.2', '1.1.1.1']
-    logger.info(f'[AGENT] SHOW - {all_agents}')
+    logger.info(f'\n[AGENT] SHOW - {all_agents}')
     return 'OK'
 
 

@@ -45,7 +45,7 @@ def report_pkt():
 
 @bp.route('/malware', methods=['POST'])
 def report_target():
-    if request.method=='POST':
+    if request.method=='GET':
         logger.warning("[REPORT] /target - NOT GET Method")
         return
     data = request.get_json()

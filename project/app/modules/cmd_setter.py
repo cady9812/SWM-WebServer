@@ -27,6 +27,7 @@ def product_command(src_ip, dst_ip, attack_id_list):
     
     command = []
     for attack_id in attack_id_list:
+        attack_id = int(attack_id)
         # file_name, dst_port, usage, type = Attack.query.filter(Attack.attackId==attack_id).with_entities(Attack.fileName, Attack.port, Attack.usage, Attack.type).first()
         attackInfo = Attack.query.filter(Attack.attackId==attack_id).first()
         
@@ -76,6 +77,7 @@ def target_command(src_ip, dst_ip, attack_id_list):
     command = []
     pwd = os.getcwd()
     for attack_id in attack_id_list:
+        attack_id = int(attack_id)
         # file_name, dst_port, usage = Attack.query.filter(Attack.attackId==attack_id).with_entities(Attack.fileName, Attack.port, Attack.usage).first()
         attackInfo = Attack.query.filter(Attack.attackId==attack_id).first()
         
@@ -111,6 +113,7 @@ def malware_command(src_ip, attack_id_list):
     command = []
     pwd = os.getcwd()
     for attack_id in attack_id_list:
+        attack_id = int(attack_id)
         # file_name, usage = Attack.query.filter(Attack.attackId==attack_id).with_entities(Attack.fileName, Attack.port, Attack.usage).first()
         
         attackInfo = Attack.query.filter(Attack.attackId==attack_id).first()

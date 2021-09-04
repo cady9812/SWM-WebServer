@@ -2,16 +2,20 @@ from flask import Blueprint, request, send_file, current_app
 
 from app.models import Attack
 # from app import sckt
-import os, bson
+import os, bson, json
 
-import json
-import logging
-import logging.config
-import pathlib
-log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-config = json.load(open(str(log_config)))
-logging.config.dictConfig(config)
-logger = logging.getLogger(__name__)
+# import json
+# import logging
+# import logging.config
+# import pathlib
+# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
+# config = json.load(open(str(log_config)))
+# logging.config.dictConfig(config)
+# logger = logging.getLogger(__name__)
+
+from app.modules import loggers
+logger = loggers.create_logger(__name__)
+
 
 from flask_mail import Mail, Message
 
@@ -37,6 +41,13 @@ def attack_filter():
         
         return {"result":all_attacks}
     elif type=='endpoint':
+        attacks = Attack.query.all()
+        all_attacks = parser.query_to_json(attacks)
+
+        logger.info(f"[ATTACK] [*] endpoint  /filter - \"result\" : {all_attacks}")
+        
+        return {"result":all_attacks}
+        """
         sckt = sckt_utils.create_socket()
         command = {
             "type":"web",
@@ -58,18 +69,31 @@ def attack_filter():
         logger.info(f"[ATTACK] [*] endpoint /filter - \"filtered_attacks\" : {res}")
         
         return {"result":filtered_attacks}
+        """
+    elif type=="malware":
+        attacks = Attack.query.filter(Attack.type=="mal").all()
+        all_attacks = parser.query_to_json(attacks)
+
+        logger.info(f"[ATTACK] [*] malware  /filter - \"result\" : {all_attacks}")
+        
+        return {"result":all_attacks}
 
 
-@bp.route('/start')
+
+@bp.route('/start', methods=['POST'])
 def attack_start():
-    attackType = request.args.get('type') # 'product' or 'endpoint'
-    src_ip = request.args.get('src_ip')
+    getFromFront = request.get_data().decode()
+    getFromFront = json.loads(getFromFront)
+
+    print("getFromFront : ", getFromFront)
+
+    attackType = getFromFront['type'] # 'product' or 'endpoint'
+    src_ip = getFromFront['src_ip']
     try:
-        dst_ip = request.args.get('dst_ip')
+        dst_ip = getFromFront['dst_ip']
     except:
         pass
-    # attack_id_list = request.args.get("cve_id") # [attackId 리스트]
-    attack_id_list = [request.args.get("cve_id")]
+    attack_id_list = getFromFront["cve_id"]
 
     command = {"type":"web"}
 
@@ -77,8 +101,8 @@ def attack_start():
         _command = cmd_setter.product_command(src_ip, dst_ip, attack_id_list)
     elif attackType=="endpoint": # target
         _command = cmd_setter.target_command(src_ip, dst_ip, attack_id_list)
-    elif attackType=="local_malware": # local malware
-        _command = cmd_setter.malware_command(src_ip, attack_id_list)
+    elif attackType=="malware": # local malware
+        _command = cmd_setter.malware_command(dst_ip, attack_id_list)
     
     command["command"]=_command
 

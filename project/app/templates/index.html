@@ -595,13 +595,13 @@
                                     
                                     <form class="p-5" id="doing_select" style='display:none;'> 
                                         <div class="form-group">
-                                            <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
+                                            <h1><input type="checkbox" name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검</h1>
                                         </div>
                                         <div class="form-group">
-                                            <input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> Endpoint Seucirty
+                                            <h1><input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검</h1>
                                         </div>
                                         <div class="form-group">
-                                            <input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> Malware
+                                            <h1><input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검</h1>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -981,21 +981,30 @@
         });
         ///////////////
 
-        $(function(){
+        $(function(){ // final start event
+
             $('a#letGO').on('click',function(e){ // Event final check click!!!
-            e.preventDefault();
-            $.getJSON('/attack/start',{
-                type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
-                src_ip: $('#InputSrcIP').val(),
-                dst_ip: $('#InputDstIP').val(),
-                cve_id : $("input:checkbox[name='chkCVE']:checked").val(),
+
+                e.preventDefault();
+                var arTest = [];
+                $("input[name='chkCVE']:checked").each(function(){
+                    arTest.push($(this).val());
+                });
             
-                }, function(r){
-                    alert("success!");
-                    });
-            
+                $.post('/attack/start', JSON.stringify({
+                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        src_ip: $('#InputSrcIP').val(),
+                        dst_ip: $('#InputDstIP').val(),
+                        cve_id : arTest,
+                    }), function(r){
+                        alert("success!");
+                    }, 'json');
+                
             });
+            
         });
+
+
         function escape_filtering(data){
             data.replace(/&/g, '&amp;')
                       .replace(/>/g, '&gt;')
@@ -1024,10 +1033,7 @@
         $(function() {
             $('a#nextCVE').on('click', function(e) {                
                 if($("input:checkbox[name=doing]:checked").val() == "malware"){
-                    $.getJSON('https://api.ipify.org/?format=json', function(data){ 
-                        console.log(data.ip);
-                        $('#InputSrcIP').val('127.0.0.1'); 
-                    });
+                    $('#InputSrcIP').val('127.0.0.1'); 
                 }
                 
                 var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;

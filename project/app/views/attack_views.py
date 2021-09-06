@@ -266,10 +266,27 @@ def commandToAgent(agentId):
             "type":"no command"
         }
 
+# # 공격 코드 다운받는 링크
+# @bp.route('/download/<int:attackIdx>/', methods=['GET'])
+# def download_attack_code(attackIdx):
+#     attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
+#     attackName = attackInfo.fileName
+
+#     pwd = os.getcwd()
+#     file_name = f"{pwd}\\attack_files\\{attackName}" # 공격 파일 경로
+#     print('/download file_name : ', file_name)
+#     if os.path.isfile(file_name):
+#         return send_file(file_name,
+#             attachment_filename=f"{attackName}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
+#             as_attachment=True)
+#     else:
+#         return "wrong attackName"
+
+
 # 공격 코드 다운받는 링크
-@bp.route('/download/<int:attackIdx>/', methods=['GET'])
-def download_attack_code(attackIdx):
-    attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
+@bp.route('/download/<string:attackName>/', methods=['GET'])
+def download_attack_code(attackName):
+    attackInfo = Attack.query.filter(Attack.fileName==attackName).first()
     attackName = attackInfo.fileName
 
     pwd = os.getcwd()

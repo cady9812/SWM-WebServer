@@ -21,6 +21,7 @@
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
 	<script> 
 	var src_ip='';
+    var isVisit = 0;
 	</script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -979,14 +980,18 @@
         });
         ///////////////
 
-        $(function(){
+        $(function(){ // final start event
+            var arTest = [];
+            $("input[name='chkCVE']:checked").each(function(){
+                arTest.push($(this).val());
+            });
             $('a#letGO').on('click',function(e){ // Event final check click!!!
             e.preventDefault();
             $.getJSON('/attack/start',{
                 type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
                 src_ip: $('#InputSrcIP').val(),
                 dst_ip: $('#InputDstIP').val(),
-                cve_id : $("input:checkbox[name='chkCVE']:checked").val(),
+                cve_id : arTest,
             
                 }, function(r){
                     alert("success!");
@@ -1002,19 +1007,24 @@
                       .replace(/'/g, '&apos;');
             return data;
         }
-        function showCVE(arr){
-            arr.forEach(function(e){
-                var temp = "<label>";
-                temp +="<li>";
-                temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
-                temp +="Program : " + e.program + " ";
-                temp +="Usage : " + escape_filtering(e.usage);
-                temp +="</li>";
-                temp +="</label>";
-                temp +="<br>";
-                $('#cve_form').append(temp)
-            })
+        
 
+        
+        function showCVE(arr){
+            if(isVisit == 0){
+                isVisit = 1;
+                arr.forEach(function(e){
+                    var temp = "<label>";
+                    temp +="<li>";
+                    temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
+                    temp +="Program : " + e.program + " ";
+                    temp +="Usage : " + escape_filtering(e.usage);
+                    temp +="</li>";
+                    temp +="</label>";
+                    temp +="<br>";
+                    $('#cve_form').append(temp)
+                })
+            }
         }
 
 

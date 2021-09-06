@@ -3,6 +3,7 @@ from app import db
 
 class Attack(db.Model):
     attackId = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(100), nullable=False)
     fileName = db.Column(db.String(100), nullable=False)
     program = db.Column(db.String(200), nullable=False)
     version = db.Column(db.String(20), nullable=False)

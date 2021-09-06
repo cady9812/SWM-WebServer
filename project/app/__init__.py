@@ -5,34 +5,36 @@ from flask_sqlalchemy import SQLAlchemy
 
 from private import config
 
-import socket
+from app.modules import sckt_utils
 
+MyIP = sckt_utils.get_local_ip()
 
-MyIP = socket.gethostbyname(socket.getfqdn())
-
-# 변수는 create_app 밖에서 선언해야 한다.
 db = SQLAlchemy()
 migrate = Migrate()
 redis_client = FlaskRedis()
 
 
-# 애플리케이션 팩토리 사용
-def create_app(): # create_app 함수가 애플리케이션 팩토리
+# APPLICATION FACTORY
+def create_app():
     app = Flask(__name__)
 
     app.config.from_object(config)
+
 
     # ORM
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # redis
+    # REDIS
     redis_client.init_app(app)
     
     from . import models
 
-    from .views import attack_views
+    # BLUEPRINT
+    from .views import main_views, attack_views, agent_views, report_views
+    app.register_blueprint(main_views.bp)
     app.register_blueprint(attack_views.bp)
-
+    app.register_blueprint(agent_views.bp)
+    app.register_blueprint(report_views.bp)
 
     return app

@@ -20,10 +20,9 @@
     <!-- Custom styles for this template-->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
 	<script> 
-	var src_ip='';
-    var isVisit = 0;
+	    var src_ip='';
+        var isVisit = 0;
 	</script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script> <!-- modify -->
     <style type="text/css">
@@ -117,7 +116,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">BASCope<sup>^^</sup></div>
+                <div class="sidebar-brand-text mx-3">BASCope</div>
             </a>
 
             <!-- Divider -->
@@ -594,13 +593,13 @@
                                     
                                     <form class="p-5" id="doing_select" style='display:none;'> 
                                         <div class="form-group">
-                                            <input type="checkbox" name="doing" value="product" onclick='checkOne(this)'> Product Security 
+                                            <h1><input type="checkbox" name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검</h1>
                                         </div>
                                         <div class="form-group">
-                                            <input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> Endpoint Seucirty
+                                            <h1><input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검</h1>
                                         </div>
                                         <div class="form-group">
-                                            <input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> Malware
+                                            <h1><input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검</h1>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -912,27 +911,26 @@
     <script>
         function checkOne(element) {
         
-        const checkboxes 
-            = document.getElementsByName("doing");
-        
-        checkboxes.forEach((cb) => {
-            cb.checked = false;
-        })
-        
-        element.checked = true;
+            const checkboxes 
+                = document.getElementsByName("doing");
+            
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+            })
+            
+            element.checked = true;
         }
         
   
         function checkOne3(element) {
-        
-        const checkboxes 
-            = document.getElementsByName("malware_type");
-        
-        checkboxes.forEach((cb) => {
-            cb.checked = false;
-        })
-        
-        element.checked = true;
+            const checkboxes 
+                = document.getElementsByName("malware_type");
+            
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+            })
+            
+            element.checked = true;
         }
     
         $('#nextInfo').click(function(){
@@ -953,7 +951,7 @@
             }
             $('#malware_input_form').hide();
             $("#form_ipInput").show(); 
-        })
+        });
 
 
 
@@ -997,8 +995,20 @@
                     alert("success!");
                     });
             
+                $.post('/attack/start', JSON.stringify({
+                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        src_ip: $('#InputSrcIP').val(),
+                        dst_ip: $('#InputDstIP').val(),
+                        cve_id : arTest,
+                    }), function(r){
+                        alert("success!");
+                    }, 'json');
+                
             });
+            
         });
+
+
         function escape_filtering(data){
             data.replace(/&/g, '&amp;')
                       .replace(/>/g, '&gt;')
@@ -1007,9 +1017,22 @@
                       .replace(/'/g, '&apos;');
             return data;
         }
-        
 
-        
+        function showCVE(arr){
+            arr.forEach(function(e){
+                console.log('e : ',e.usage);
+                var temp = "<label>";
+                temp +="<li>";
+                temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
+                temp +="Program : " + e.program + " ";
+                temp +="Usage : " + escape_filtering(e.usage);
+                temp +="</li>";
+                temp +="</label>";
+                temp +="<br>";
+                $('#cve_form').append(temp)
+            })
+
+        }
         function showCVE(arr){
             if(isVisit == 0){
                 isVisit = 1;
@@ -1031,10 +1054,7 @@
         $(function() {
             $('a#nextCVE').on('click', function(e) {                
                 if($("input:checkbox[name=doing]:checked").val() == "malware"){
-                    $.getJSON('https://api.ipify.org/?format=json', function(data){ 
-                        console.log(data.ip);
-                        $('#InputSrcIP').val('127.0.0.1'); 
-                    });
+                    $('#InputSrcIP').val('127.0.0.1'); 
                 }
                 
                 var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -1053,8 +1073,8 @@
                     },
                         function(r) {
 
-                            alert("1231231");
-                            alert(r.result[0].program);
+                            
+                            
 
                             showCVE(r.result);
                             //alert(attackList);
@@ -1080,7 +1100,7 @@
 
         $(function(){ // Get Agent list 
             $('a#nextIP').on('click',function(e){ 
-            alert("1231231");
+            
             e.preventDefault();
             $.getJSON('/agent/list',{
                 type: $("input:checkbox[name='doing']:checked").val(),

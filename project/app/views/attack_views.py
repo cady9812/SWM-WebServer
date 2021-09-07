@@ -21,7 +21,7 @@ from flask_mail import Mail, Message
 
 from app.modules import parser, sckt_utils, cmd_setter
 
-from private import email_info
+#from private import email_info
 
 
 bp = Blueprint('attack', __name__, url_prefix='/attack')

@@ -11,9 +11,9 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 logger = logging.getLogger(__name__)
 
-from private.ports import WEB_SERVER_PORT
+#from private.ports import WEB_SERVER_PORT
 
-
+WEB_SERVER_PORT = 1010
 downloadURL = f"http://{MyIP}:{WEB_SERVER_PORT}/attack/download"
 
 

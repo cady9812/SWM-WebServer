@@ -636,17 +636,17 @@
                                         </div>
                                     </form>
                                  
-                                    <form class="p-5" id="malware_input_form" style='display:none;'> <!-- THIS FORM IS check for Malware attack -->
+                                    <form class="p-5" id="security_equipment" style='display:none;'> <!-- THIS FORM IS check for Malware attack -->
                                         <div class="form-group">
-                                            <input type="checkbox" name="malware_type" value="dwn_agent" onclick='checkOne3(this)'> Agent <-> Agent
+                                            <input type="checkbox" name="attack_type" value="atk_packet" onclick='checkOne3(this)'> 패킷
                                         </div>
                                         <div class="form-group">
-                                            <input type="checkbox" name="malware_type" value="dwn_web" onclick='checkOne3(this)'> Web <-> Agent
+                                            <input type="checkbox" name="attack_type" value="atk_malware" onclick='checkOne3(this)'> 악성코드
                                         </div>
                                         
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextMalware">Next2</a>
+                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextAttackType">Next</a>
                                             </div>
                                         </div>
                                     </form>
@@ -924,7 +924,7 @@
   
         function checkOne3(element) {
             const checkboxes 
-                = document.getElementsByName("malware_type");
+                = document.getElementsByName("attack_type");
             
             checkboxes.forEach((cb) => {
                 cb.checked = false;
@@ -945,12 +945,12 @@
       
         
 
-        $('#nextMalware').click(function(){
-            if($("input:checkbox[name=malware_type]:checked").val() == "dwn_web") {
+        $('#nextAttackType').click(function(){
+            if($("input:checkbox[name=attack_type]:checked").val() == "atk_malware") {
                 $('#src_input').hide();    
             }
-            $('#malware_input_form').hide();
             $("#form_ipInput").show(); 
+            $('#security_equipment').hide();
         });
 
 
@@ -972,42 +972,44 @@
             $("#form_ipInput").hide(); 
             $("#print_CVE_list").hide();
             $('#Confirm_attack_info').hide();
-            $('#malware_input_form').hide();
+            $('#security_equipment').hide();
             $('#src_input').show();
+            $('#loading_page').hide();
             
+            $('#InputSrcIP').val('');
+            $('#InputDstIP').val('');
         });
         ///////////////
-
+        
         $(function(){ // final start event
+
+        $('a#letGO').on('click',function(e){ // Event final check click!!!
+            alert("[*]  let's start!");
+            e.preventDefault();
             var arTest = [];
             $("input[name='chkCVE']:checked").each(function(){
                 arTest.push($(this).val());
             });
-            $('a#letGO').on('click',function(e){ // Event final check click!!!
-            e.preventDefault();
-            $.getJSON('/attack/start',{
-                type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
-                src_ip: $('#InputSrcIP').val(),
-                dst_ip: $('#InputDstIP').val(),
-                cve_id : arTest,
-            
-                }, function(r){
-                    alert("success!");
-                    });
-            
-                $.post('/attack/start', JSON.stringify({
-                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
-                        src_ip: $('#InputSrcIP').val(),
-                        dst_ip: $('#InputDstIP').val(),
-                        cve_id : arTest,
-                    }), function(r){
-                        alert("success!");
-                    }, 'json');
-                
-            });
+
+            $.post('/attack/start', JSON.stringify({
+                    type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                    src_ip: $('#InputSrcIP').val(),
+                    dst_ip: $('#InputDstIP').val(),
+                    cve_id : arTest,
+                }), function(r){
+                    go_to_report();
+                }, 'json');
             
         });
 
+        });
+
+        function go_to_report(){
+            if(confirm("공격 리포트를 확인하시겠습니까?")){
+                location.href="./report";
+            }
+        }
+        
 
         function escape_filtering(data){
             data.replace(/&/g, '&amp;')
@@ -1017,7 +1019,7 @@
                       .replace(/'/g, '&apos;');
             return data;
         }
-
+        /*
         function showCVE(arr){
             arr.forEach(function(e){
                 console.log('e : ',e.usage);
@@ -1033,6 +1035,7 @@
             })
 
         }
+        */
         function showCVE(arr){
             if(isVisit == 0){
                 isVisit = 1;
@@ -1090,8 +1093,10 @@
         $('#nextIP').click(function(){
             $('#doing_select').hide();
             if($("input:checkbox[name=doing]:checked").val() == "malware") {
-                $('#malware_input_form').show();
-
+                $('#src_input').hide();    
+            }
+            if($("input:checkbox[name=doing]:checked").val() == "product") {
+                $('#security_equipment').show();   
             }
             else{
                 $("#form_ipInput").show(); 

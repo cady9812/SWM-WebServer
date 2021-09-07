@@ -1,9 +1,10 @@
 from app.models import Attack
 from app import MyIP
 
-from private.ports import WEB_SERVER_PORT
-downloadURL = f"https://{MyIP}:{WEB_SERVER_PORT}/attack/download/"
-# downloadURL = f"http://{MyIP}:9000/attack/download/"
+#from private.ports import WEB_SERVER_PORT
+
+#downloadURL = f"https://{MyIP}:{WEB_SERVER_PORT}/attack/download/"
+downloadURL = f"http://{MyIP}:9000/attack/download/"
 
 def query_to_json(attacks):
     filtered_attacks=[]

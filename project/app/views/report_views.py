@@ -28,7 +28,7 @@ def report_pkt():
     data = request.get_json()
     attack_id = data["attack_id"]
     port = data["port"]
-    send_ip = data["send_ip"]
+    send_ip = data["send_rrip"]
     recv_ip = data["recv_ip"]
     send_pkt = data["send"]
     recv_pkt = data["recv"]

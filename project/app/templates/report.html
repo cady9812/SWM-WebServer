@@ -399,8 +399,9 @@
                                         <div class="chart-pie pt-4">
                                             <canvas id="myPieChart"></canvas>
                                         </div>
-                                        <hr>
-                                        Styling for the donut chart can be found in the
+                                        <div id="report_div"></div>
+                                        
+                                        <br>
                                         <code>/js/demo/chart-pie-demo.js</code> file.
 
                               
@@ -467,24 +468,22 @@
 
 </body>
 <script>
-    function report_print(r){
-        var temp = "";
-        temp +="<div>";
-        temp +=r;
-        temp +="</div>";
-        $('#report_div').append(temp);
+    function report_print(data){
+        var tmp ="<br><br><br><h5>* Attack Result Report *<br><br><br></h5>";
+        tmp += data ; 
+        $('#report_div').append(tmp);
     }
 
     $(function(){
+            
             e.preventDefault();
-            $.getJSON('/report/',{ // asdfasdfasdfasdfasdf
+            $.getJSON('/report/pkt',{ // asdfasdfasdfasdfasdf
                 type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
                 src_ip: $('#InputSrcIP').val(),
             
                 }, function(r){
                     report_print(r);
                 });
-            
     });
 
 

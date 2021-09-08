@@ -22,6 +22,7 @@ def create_socket():
         "detail": "web",
     }
     sckt.send(bson.dumps(introduce))
+    time.sleep(1)
     
     return sckt
 

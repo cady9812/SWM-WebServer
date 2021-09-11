@@ -2,17 +2,9 @@ from flask import Blueprint, request
 
 import base64
 
-# import json
-# import logging
-# import logging.config
-# import pathlib
-# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-# config = json.load(open(str(log_config)))
-# logging.config.dictConfig(config)
-# logger = logging.getLogger(__name__)
 
 from app.models import Report
-from app.modules import json_parser, loggers, statusCode
+from app.modules import parser, loggers, statusCode
 from app import db
 
 logger = loggers.create_logger(__name__)
@@ -25,9 +17,10 @@ bp = Blueprint('report', __name__, url_prefix='/report')
 @bp.route('/')
 def get_all_reports():
     reports = Report.query.with_entities(Report.no, Report.startTime).distinct().order_by(Report.no.desc())
-    arranged_reports = json_parser.report_query_to_json(reports)
+    arranged_reports = parser.report_query_to_json(reports)
+    logger.info(f"[REPORT] GET ALL REPORTS")
     return {
-        "status": statusCode.OK
+        "data": arranged_reports
     }
 
 @bp.route('/<int:reportNo>')
@@ -41,8 +34,9 @@ def show_one_report(reportNo):
             "time":report.startTime,
             "log":report.log
         })
+    logger.info(f"[REPORT] ONE REPORT IN DETAIL")
     return {
-        "status":statusCode.SERVER_ERROR
+        "data":arranged_reports
     }
 
 

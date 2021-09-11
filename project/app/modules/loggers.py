@@ -10,6 +10,15 @@ logging.config.dictConfig(config)
 
 from private.ports import LOGSTASH_PORT
 
+END = "\033[0m"
+YELLOW = "\033[33m"
+MAGENT = "\033[35m"
+GREEN = "\033[32m"
+BLUE = "\033[34m"
+CYAN = "\033[36m"
+RED = "\033[31m"
+
+
 def create_logger(logger_name):
     logger = logging.getLogger(logger_name)
     # logger.addHandler(logstash.TCPLogstashHandler('localhost', 5001, version=1))

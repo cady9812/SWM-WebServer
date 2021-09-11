@@ -1,17 +1,15 @@
 from flask import Blueprint, request, send_file, current_app
-
 from app.models import Attack, Report
+from flask_mail import Mail, Message
+from private import email_info
 
 import os, bson, json
 import time
 import datetime
 
-from app.modules import loggers, statusCode, json_parser, sckt_utils, cmd_setter
+from app.modules import loggers, statusCode, parser, sckt_utils, cmd_setter
 logger = loggers.create_logger(__name__)
 
-
-from flask_mail import Mail, Message
-from private import email_info
 
 
 bp = Blueprint('attack', __name__, url_prefix='/attack')
@@ -19,16 +17,13 @@ bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 @bp.route('/filter')
 def attack_filter():
-    # global sckt
     type = request.args.get('type') # 'product' or 'endpoint'
     src_ip = request.args.get('src_ip')
     dst_ip = request.args.get('dst_ip')
     if type=='product':
         attacks = Attack.query.all()
-        all_attacks = json_parser.attack_query_to_json(attacks)
-
-        logger.info(f"\n[ATTACK] [*] product  /filter - \"result\" : {all_attacks}")
-        
+        all_attacks = parser.attack_query_to_json(attacks)
+        logger.info(f"[ATTACK] PRODUCT : {all_attacks}")
         return {"result":all_attacks}
     elif type=='endpoint':
         sckt = sckt_utils.create_socket()
@@ -43,20 +38,18 @@ def attack_filter():
         sckt.send(bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
 
-        logger.info(f"\n[ATTACK] [*] endpoint /filter - \"scan_result\" : {recvData}")
+        logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
         
         sckt.close()
-        filtered_attacks = json_parser.recv_to_json(recvData)
+        filtered_attacks = parser.recv_to_json(recvData)
         res = {"result":filtered_attacks}
-        
-        logger.info(f"\n[ATTACK] [*] endpoint /filter - \"filtered_attacks\" : {res}")
-        
+        # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
         return {"result":filtered_attacks}
     elif type=="malware":
         attacks = Attack.query.filter(Attack.type=="mal").all()
-        all_attacks = json_parser.attack_query_to_json(attacks)
+        all_attacks = parser.attack_query_to_json(attacks)
 
-        logger.info(f"\n[ATTACK] [*] malware  /filter - \"result\" : {all_attacks}")
+        logger.info(f"[ATTACK] MALWARE \"result\" : {all_attacks}")
         
         return {"result":all_attacks}
 
@@ -67,7 +60,7 @@ def attack_start():
     getFromFront = request.get_data().decode()
     getFromFront = json.loads(getFromFront)
 
-    logger.info(f"\n[ATTACK] /start - getFromFront : {getFromFront}")
+    logger.info(f"[ATTACK] data from front : {getFromFront}")
 
     attackType = getFromFront['type'] # 'product' or 'endpoint'
     src_ip = getFromFront['src_ip']
@@ -89,8 +82,8 @@ def attack_start():
     
     command["command"]=_command
 
-    logger.info(f"\n[ATTACK] /start - attackInfo : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
-    logger.info(f"\n[ATTACK] /start - command : {command}")
+    logger.info(f"[ATTACK] attack info : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
+    logger.info(f"[ATTACK] command : {command}")
 
     sckt = sckt_utils.create_socket()
     sckt.send(bson.dumps(command)) # send command to tcp server
@@ -104,9 +97,9 @@ def attack_start():
 
     for i in range(attack_cnt): # recv reports from tcp server
         reportData = sckt_utils.recv_data(sckt) # json
-        to_MySQL_result = json_parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
+        to_MySQL_result = parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
         if to_MySQL_result == "Insert ERROR":
-            logger.warning("\n[ATTACK] /start - ERROR while Insert Report into MySQL")
+            logger.warning(f"{loggers.RED}[ATTACK] ERROR while inserting report into MySQL{loggers.END}")
         time.sleep(1)
     sckt.close()
 
@@ -127,7 +120,7 @@ def attack_download_enc(attackIdx):
     pwd = os.getcwd()
     file_route = f"{pwd}/attack_files/{f_name}" # 공격 파일 경로
 
-    logger.info(f"\n[ATTACK] /download/crypt/{attackIdx} - File Route : {file_route}")
+    logger.info(f"[ATTACK] local file route : {file_route}")
     
     file_bytes = bytearray(open(file_route, 'rb').read())
     f_size = cmd_setter.file_size(file_route)
@@ -136,7 +129,7 @@ def attack_download_enc(attackIdx):
     for i in range(f_size):
         encoded[i] = file_bytes[i]^ord('X')
     
-    logger.info(f"\n[ATTACK] /download/crypt/{attackIdx} - Encoded File : {encoded}")
+    logger.info(f"[ATTACK] encoded content of encrypted file({attackIdx}) : {encoded}")
 
     return encoded
 
@@ -149,13 +142,13 @@ def attack_download(attackIdx):
     file_name = attackInfo.fileName
 
     pwd = os.getcwd()
-    file_name = f"{pwd}/attack_files/{file_name}" # 공격 파일 경로
+    file_route = f"{pwd}/attack_files/{file_name}" # 공격 파일 경로
 
-    logger.info(f"\n[ATTACK] /download/{attackIdx} - File Name : {file_name}")
+    logger.info(f"[ATTACK] local file route : {file_route}")
 
-    if os.path.isfile(file_name):
-        return send_file(file_name,
-            attachment_filename=f"{file_name}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
+    if os.path.isfile(file_route):
+        return send_file(file_route,
+            attachment_filename=f"{file_route}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
             as_attachment=True)
     else:
         return {"status":statusCode.SERVER_ERROR}
@@ -164,13 +157,13 @@ def attack_download(attackIdx):
 @bp.route('/mail', methods=['POST'])
 def attack_mail():
     if request.method=='GET':
-        logger.warning("\n[ATTACK] /mail - NOT GET Method")
+        logger.warning(f"{loggers.RED}[ATTACK] NOT GET{loggers.END}")
         return {"status":statusCode.METHOD_ERROR}
     
     sender_email = email_info.email
     sender_pw = email_info.passwd
 
-    logger.info(f"\n[ATTACK] /mail - sender_email :{sender_email}, sender_pw :{sender_pw}")
+    logger.info(f"[ATTACK] sender_email :{sender_email}, sender_pw :{sender_pw}")
     # logger.info(f"[ATTACK] /mail - request.form : {request.form}")
     # logger.info(f"[ATTACK] /mail - request.files : {request.files}")
     
@@ -180,7 +173,7 @@ def attack_mail():
     file_name = request.files.getlist('attachment')[0]
     fileName = file_name.filename
     
-    logger.info(f"\n[ATTACK] /mail - recver_email : {recver_email}, file_title : {file_title}, file_body : {file_body}, fileName : {fileName}")
+    logger.info(f"[ATTACK] recver_email : {recver_email}, file_title : {file_title}, file_body : {file_body}, fileName : {fileName}")
     
 
     # hard coding OK...

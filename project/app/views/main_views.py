@@ -4,22 +4,8 @@ from app.models import Attack
 from app import redis_client, db
 import os
 
-
-### local logger
-# import json
-# import logging
-# import logging.config
-# import pathlib
-# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-# config = json.load(open(str(log_config)))
-# logging.config.dictConfig(config)
-# logger = logging.getLogger(__name__)
-
-
-### logstash logger
 from app.modules import loggers, statusCode
 logger = loggers.create_logger(__name__)
-
 
 BUFSIZE = 0x1000
 
@@ -37,20 +23,18 @@ def index():
     #     redis_client.delete(key)
     # redis_client.set("flag", 0)
     # return render_template('index.html')
-    logger.info("\n[MAIN] / - Index Page")
     return render_template('index.html')
 
 # Show MITRE ATT&CK matrix
 @bp.route('/upload')
 def matrix():
-    # logger.info("[MAIN] /upload - page access") # for test
     return render_template('./upload-code.html')
 
 # Upload  Customed Attack file from User
 @bp.route('/upload/file',methods=['POST'])
 def upload():
     if request.method == 'GET':
-        logger.warning("\n[MAIN] /upload/code - NOT GET Method")
+        logger.warning(f"{loggers.RED}[MAIN] NOT GET{loggers.END}")
         return {"status":statusCode.METHOD_ERROR}
     
     file = request.files['FILE_TAG']
@@ -64,7 +48,7 @@ def upload():
     # temporary hard coding
     attackType = "cve" # or mal
 
-    logger.info(f"\n[MAIN] /upload/code\nfileName : {fileName}\ntargetName : {targetName}\ntargetVersion : {targetVersion}\ntargetPort : {targetPort}\ntargetUsage : {targetUsage}\ntargetSummary : {targetSummary}\nattackType : {attackType}")
+    logger.info(f"[MAIN] {fileName}\ntargetName : {targetName}\ntargetVersion : {targetVersion}\ntargetPort : {targetPort}\ntargetUsage : {targetUsage}\ntargetSummary : {targetSummary}\nattackType : {attackType}")
 
     if Attack.query.filter(Attack.fileName==fileName).first()==None:
         file.save(os.path.join(os.getcwd(), "attack_files", f"{fileName}"))
@@ -72,10 +56,10 @@ def upload():
         attack = Attack(fileName=fileName, program=targetName, version=targetVersion, port=targetPort, usage=targetUsage, description=targetSummary, type=attackType)
         db.session.add(attack)
         db.session.commit()
-        logger.info('\n[MAIN] /upload/code - upload file SUCCESS')
+        logger.info('[MAIN] UPLOAD SUCCESS')
         return {"status":statusCode.OK}
     else:
-        logger.warning("\n[MAIN] /upload/code - upload file FAIL; that filename already exists")
+        logger.warning("{RED}[MAIN] UPLOAD FAIL; that filename already exists{END}")
         return {"status":statusCode.SERVER_ERROR}
         
         

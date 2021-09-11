@@ -17,7 +17,7 @@ import os
 
 
 ### logstash logger
-from app.modules import loggers
+from app.modules import loggers, statusCode
 logger = loggers.create_logger(__name__)
 
 
@@ -51,7 +51,7 @@ def matrix():
 def upload():
     if request.method == 'GET':
         logger.warning("\n[MAIN] /upload/code - NOT GET Method")
-        return
+        return {"status":statusCode.METHOD_ERROR}
     
     file = request.files['FILE_TAG']
     fileName = file.filename
@@ -73,10 +73,10 @@ def upload():
         db.session.add(attack)
         db.session.commit()
         logger.info('\n[MAIN] /upload/code - upload file SUCCESS')
-        return "OK"
+        return {"status":statusCode.OK}
     else:
         logger.warning("\n[MAIN] /upload/code - upload file FAIL; that filename already exists")
-        return "FAIL"
+        return {"status":statusCode.SERVER_ERROR}
         
         
         
@@ -92,39 +92,6 @@ def convert_html(html):
 @bp.route('/utilities-other.html')
 def utilities():
     return render_template('utilities-other.html')
-
-
-# @bp.route('/report/<int:agentId>', methods=["POST"])
-# def report(agentId):
-#     try:
-#         if request.method == 'POST':
-#             data = request.get_json()
-#             pkts = data["pkts"]
-#             print("agentId : ", agentId)
-#             print("pkts : ", pkts)
-#             # pkts가 binary로 오던데 어떻게 받을 것인가. 오는 형태를 봐야할 듯.
-#             try:
-#                 link = data["link"]
-#                 print("link : ", link)
-#                 attackName = link.split('/')[-1]
-#                 attackName = attackName.split('.')[0]
-
-#                 crawled_description = crawler.crawl(attackName)
-#                 if crawled_description == None:
-#                     #return "crawling error!"
-#                     print("crawling error!")
-#                     return {"result":"good"}
-#                 else:
-#                     #return crawled_description
-#                     print(crawled_description)
-#                     return {"result":"good"}
-#             except:
-#                 pass
-#             # 프론트로 어떻게 리턴할 것인지는 아직
-#         return {"result":"good"}
-#     except Exception as e:
-#         print('report Error : ',e)
-#         return
 
 
 

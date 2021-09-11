@@ -997,7 +997,10 @@
                     dst_ip: $('#InputDstIP').val(),
                     cve_id : arTest,
                 }), function(r){
-                    go_to_report();
+                    alert('r.status is ', r.status);
+                    if(r.status==200){
+                        go_to_report();
+                    }
                 }, 'json');
             
         });

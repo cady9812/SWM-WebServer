@@ -1,26 +1,16 @@
 from flask import Blueprint, request, send_file, current_app
 
-from app.models import Attack
-# from app import sckt
+from app.models import Attack, Report
+
 import os, bson, json
+import time
+import datetime
 
-# import json
-# import logging
-# import logging.config
-# import pathlib
-# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-# config = json.load(open(str(log_config)))
-# logging.config.dictConfig(config)
-# logger = logging.getLogger(__name__)
-
-from app.modules import loggers
+from app.modules import loggers, statusCode, json_parser, sckt_utils, cmd_setter
 logger = loggers.create_logger(__name__)
 
 
 from flask_mail import Mail, Message
-
-from app.modules import parser, sckt_utils, cmd_setter
-
 from private import email_info
 
 
@@ -35,18 +25,12 @@ def attack_filter():
     dst_ip = request.args.get('dst_ip')
     if type=='product':
         attacks = Attack.query.all()
-        all_attacks = parser.query_to_json(attacks)
+        all_attacks = json_parser.attack_query_to_json(attacks)
 
         logger.info(f"\n[ATTACK] [*] product  /filter - \"result\" : {all_attacks}")
         
         return {"result":all_attacks}
     elif type=='endpoint':
-        # attacks = Attack.query.all()
-        # all_attacks = parser.query_to_json(attacks)
-
-        # logger.info(f"[ATTACK] [*] endpoint  /filter - \"result\" : {all_attacks}")
-        
-        # return {"result":all_attacks}
         sckt = sckt_utils.create_socket()
         command = {
             "type":"web",
@@ -62,7 +46,7 @@ def attack_filter():
         logger.info(f"\n[ATTACK] [*] endpoint /filter - \"scan_result\" : {recvData}")
         
         sckt.close()
-        filtered_attacks = parser.recv_to_json(recvData)
+        filtered_attacks = json_parser.recv_to_json(recvData)
         res = {"result":filtered_attacks}
         
         logger.info(f"\n[ATTACK] [*] endpoint /filter - \"filtered_attacks\" : {res}")
@@ -70,7 +54,7 @@ def attack_filter():
         return {"result":filtered_attacks}
     elif type=="malware":
         attacks = Attack.query.filter(Attack.type=="mal").all()
-        all_attacks = parser.query_to_json(attacks)
+        all_attacks = json_parser.attack_query_to_json(attacks)
 
         logger.info(f"\n[ATTACK] [*] malware  /filter - \"result\" : {all_attacks}")
         
@@ -92,6 +76,7 @@ def attack_start():
     except:
         pass
     attack_id_list = getFromFront["cve_id"]
+    attack_cnt = len(attack_id_list)
 
     command = {"type":"web"}
 
@@ -108,9 +93,29 @@ def attack_start():
     logger.info(f"\n[ATTACK] /start - command : {command}")
 
     sckt = sckt_utils.create_socket()
-    sckt.send(bson.dumps(command))
+    sckt.send(bson.dumps(command)) # send command to tcp server
+    
+    try:
+        pre_no = Report.query.order_by(Report.no.desc()).first().no
+    except:
+        pre_no = -1
+    now = datetime.datetime.now()
+    attack_start_time = now.strftime('%Y-%m-%d %H:%M:%S')
+
+    for i in range(attack_cnt): # recv reports from tcp server
+        reportData = sckt_utils.recv_data(sckt) # json
+        to_MySQL_result = json_parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
+        if to_MySQL_result == "Insert ERROR":
+            logger.warning("\n[ATTACK] /start - ERROR while Insert Report into MySQL")
+        time.sleep(1)
     sckt.close()
-    return "OK"
+
+    ### popup alert
+
+    return {
+        "status": statusCode.OK
+    }
+
 
 
 # 암호화 된
@@ -153,14 +158,14 @@ def attack_download(attackIdx):
             attachment_filename=f"{file_name}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
             as_attachment=True)
     else:
-        return "wrong file_name"
+        return {"status":statusCode.SERVER_ERROR}
 
 
 @bp.route('/mail', methods=['POST'])
 def attack_mail():
     if request.method=='GET':
         logger.warning("\n[ATTACK] /mail - NOT GET Method")
-        return
+        return {"status":statusCode.METHOD_ERROR}
     
     sender_email = email_info.email
     sender_pw = email_info.passwd
@@ -194,7 +199,7 @@ def attack_mail():
     with current_app.open_resource(f"../attack_files/{fileName}") as fp:
         msg.attach(f"{fileName}", "text/plain", fp.read())
     mail.send(msg)
-    return "OK"
+    return {"status":statusCode.OK}
 
 
 

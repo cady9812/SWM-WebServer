@@ -45,8 +45,9 @@ def upload():
     targetUsage = request.form['targetUsage']
     targetSummary = request.form['targetSummary']
     # attackType = request.form["attackType"]
+    attackType_dict = {"cve":"cve", "malware":"mal", "etc":"etc"}
+    attackType = attackType_dict[request.form["attackType"]]
     # temporary hard coding
-    attackType = "cve" # or mal
 
     logger.info(f"[MAIN] {fileName}\ntargetName : {targetName}\ntargetVersion : {targetVersion}\ntargetPort : {targetPort}\ntargetUsage : {targetUsage}\ntargetSummary : {targetSummary}\nattackType : {attackType}")
 

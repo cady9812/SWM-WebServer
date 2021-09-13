@@ -8,7 +8,8 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 #logger = logging.getLogger(__name__)
 
-from private.ports import LOGSTASH_PORT
+#from private.ports import LOGSTASH_PORT
+LOGSTASH_PORT = 901
 
 END = "\033[0m"
 YELLOW = "\033[33m"
@@ -21,6 +22,6 @@ RED = "\033[31m"
 
 def create_logger(logger_name):
     logger = logging.getLogger(logger_name)
-    # logger.addHandler(logstash.TCPLogstashHandler('localhost', 5001, version=1))
-    logger.addHandler(logstash.TCPLogstashHandler('localhost', LOGSTASH_PORT, version=1))
+    logger.addHandler(logstash.TCPLogstashHandler('localhost', 5001, version=1))
+    #logger.addHandler(logstash.TCPLogstashHandler('localhost', LOGSTASH_PORT, version=1))
     return logger

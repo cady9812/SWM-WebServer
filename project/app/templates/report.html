@@ -9,16 +9,19 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Border Utilities</title>
+    <title>SB Admin 2 - Tables</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template -->
     <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="../static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -61,31 +64,30 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Pages</span>
+                    <span>Components</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="report.html">Report</a>
-                        <a class="collapse-item" href="matrix.html">Mitre Attack</a>
-                        <a class="collapse-item" href="upload-code.html">Upload Code</a>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Utilities</span>
                 </a>
-                <div id="collapseUtilities" class="collapse show" aria-labelledby="headingUtilities"
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item active" href="utilities-border.html">Borders</a>
+                        <a class="collapse-item" href="utilities-border.html">Borders</a>
                         <a class="collapse-item" href="utilities-animation.html">Animations</a>
                         <a class="collapse-item" href="utilities-other.html">Other</a>
                     </div>
@@ -129,7 +131,7 @@
             </li>
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
@@ -156,9 +158,11 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
 
                     <!-- Topbar Search -->
                     <form
@@ -360,58 +364,51 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-1 text-gray-800">Attack Result Report</h1>
-                    <p class="mb-4">attac result report</p>
+                    <h1 class="h3 mb-2 text-gray-800">Attack Report</h1>
+                    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+                        For more information about DataTables, please visit the <a target="_blank"
+                            href="https://datatables.net">official DataTables documentation</a>.</p>
 
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <!-- Area Chart -->
-                        <div class="col-xl-8_ col-lg-7" id = 'main1' ><!-- style='display:none;'-->
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Report </h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <!-- ADD script -->
-                           
-
-                                <div class="card-body" >
-                                    <!-- Here Add // form orignal is 'user'-->
-                                   
-                                  
-                                        <div class="chart-pie pt-4">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                        <div id="report_div"></div>
-                                        
-                                        <br>
-                                        <code>/js/demo/chart-pie-demo.js</code> file.
-
-                              
-                                    
-                                </div>
-                            </div>
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Attack Result Matrix</h6>
                         </div>
-
-                        <!-- Pie Chart -->
-                        
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Attack Count</th>
+                                            <th>Attack Start Time</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        {% for data in sql_data['data'] %}
+                                            {% set a = data['no'] %}
+                                        <tr>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
+                                                id="miter_list" href="/report/{{data['no']}}">{{data['no']}}</a></td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
+                                                id="miter_list" href="/report/{{data['no']}}">{{ data['attack_id']|join('|') }}</a></td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
+                                                id="miter_list" href="/report/{{data['no']}}">{{data['start_time']}}</a></td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -422,7 +419,13 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
             <!-- End of Footer -->
 
         </div>
@@ -456,6 +459,32 @@
         </div>
     </div>
 
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="wirte-body">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
     <!-- Bootstrap core JavaScript-->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -466,48 +495,44 @@
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
 
+    <!-- Page level plugins -->
+    <script src="../static/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../static/js/demo/datatables-demo.js"></script>
+
+    <script>
+        function write_func(number){
+            alert(number);
+            $("#wirte-body *").remove();
+            $.getJSON('/report/'+number,{
+                }, function(data){
+                    write_to_tag(data);
+                }
+            );
+        }
+
+
+        function write_to_tag(arr){
+            arr['data'].forEach(function(msg){
+                var tmp = "<p>"
+                tmp +=msg.no;
+                tmp +=":            ";
+                tmp +=msg.attack_id;
+                tmp +=",     ";
+                tmp +=msg.time;
+                tmp +=",     ";
+                tmp +=msg.log;
+                tmp +="</p><hr><br>";
+                $('#wirte-body').append(tmp);
+            })
+        }
+
+
+        
+    </script>
+
 </body>
-<script>
-    function report_print(data){
-        var tmp ="<br><br><br><h5>* Attack Result Report *<br><br><br></h5>";
-        tmp += data ; 
-        $('#report_div').append(tmp);
-    }
-
-    $(function(){
-            
-            e.preventDefault();
-            $.getJSON('/report/pkt',{ // asdfasdfasdfasdfasdf
-                type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
-                src_ip: $('#InputSrcIP').val(),
-            
-                }, function(r){
-                    report_print(r);
-                });
-    });
-
-
-
-</script>
-<!--                          /js/demo/chart-pie-                      -->
-<!--                          /js/demo/chart-pie-                      -->
-<!--                          /js/demo/chart-pie-                      -->
-<!--                          /js/demo/chart-pie-                      -->
-<script src="../static/vendor/jquery/jquery.min.js"></script>
-<script src="../staticvendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="../staticvendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="../static/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="../static/vendor/chart.js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="../static/js/demo/chart-area-demo.js"></script>
-<script src="../static/js/demo/chart-pie-demo.js"></script>
-<script src="../static/js/demo/chart-bar-demo.js"></script>
 
 </html>

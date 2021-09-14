@@ -63,7 +63,26 @@ def upload():
         logger.warning("{RED}[MAIN] UPLOAD FAIL; that filename already exists{END}")
         return {"status":statusCode.SERVER_ERROR}
         
-        
+ 
+@bp.route('/report')
+def report():
+    print("in here~~~")
+    a = {
+	"data":[{
+			"no":1,      
+			"attack_id":[1,2], 
+			"start_time":"2019-1-1"
+		},
+		{
+			"no":2,
+			"attack_id":[3,6],
+			"start_time":"20189"
+		}]
+}
+    return render_template("report.html", sql_data = a)
+
+
+       
         
 
 @bp.route('/<string:html>')

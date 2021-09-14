@@ -11,7 +11,6 @@ from app.modules import loggers, statusCode, parser, sckt_utils, cmd_setter
 logger = loggers.create_logger(__name__)
 
 
-
 bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 

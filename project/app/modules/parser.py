@@ -23,21 +23,6 @@ def attack_query_to_json(attacks):
     return filtered_attacks
 
 
-# for report main page
-def report_query_to_json(reports):
-    arranged_reports = []
-    for report in reports:
-        report_no = report[0]
-        report_startTime = report[1]
-        attackId_db = Report.query.with_entities(Report.attackId).filter(Report.no==report_no)
-        attackId_list = [int(i[0]) for i in attackId_db]
-        _report = {
-            "no":report_no,
-            "attack_id":attackId_list,
-            "start_time":report_startTime
-        }
-        arranged_reports.append(_report)
-    return arranged_reports
 
 
 def recv_to_json(recvData):
@@ -51,7 +36,6 @@ def recv_to_json(recvData):
         sub_filtered_attacks= attack_query_to_json(attacks)
         filtered_attacks.extend(sub_filtered_attacks)
     return filtered_attacks
-
 
 
 def save_report_to_MySQL(pre_no, attack_start_time, reportData):

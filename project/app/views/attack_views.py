@@ -16,15 +16,18 @@ bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 @bp.route('/filter')
 def attack_filter():
-    type = request.args.get('type') # 'product' or 'endpoint'
+    type = request.args.get('type') # main category
+    # middle category
     src_ip = request.args.get('src_ip')
     dst_ip = request.args.get('dst_ip')
-    if type=='product':
+
+    if type=='product':### 보안 장비 점검
         attacks = Attack.query.all()
         all_attacks = parser.attack_query_to_json(attacks)
         logger.info(f"[ATTACK] PRODUCT : {all_attacks}")
         return {"result":all_attacks}
-    elif type=='endpoint':
+
+    elif type=='endpoint':### 타겟 점검
         sckt = sckt_utils.create_socket()
         command = {
             "type":"web",
@@ -36,15 +39,16 @@ def attack_filter():
         }
         sckt.send(bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
-
         logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
-        
         sckt.close()
+
+        # filter by middle category in MySQL
         filtered_attacks = parser.recv_to_json(recvData)
-        res = {"result":filtered_attacks}
+        # res = {"result":filtered_attacks}
         # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
         return {"result":filtered_attacks}
-    elif type=="malware":
+
+    elif type=="malware":### endpoint 솔루션
         attacks = Attack.query.filter(Attack.type=="mal").all()
         all_attacks = parser.attack_query_to_json(attacks)
 

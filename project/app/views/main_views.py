@@ -78,7 +78,26 @@ def upload():
         logger.warning("\n[MAIN] /upload/code - upload file FAIL; that filename already exists")
         return "FAIL"
         
-        
+ 
+@bp.route('/report')
+def report():
+    print("in here~~~")
+    a = {
+	"data":[{
+			"no":1,      
+			"attack_id":[1,2], 
+			"start_time":"2019-1-1"
+		},
+		{
+			"no":2,
+			"attack_id":[3,6],
+			"start_time":"20189"
+		}]
+}
+    return render_template("report.html", sql_data = a)
+
+
+       
         
 
 @bp.route('/<string:html>')
@@ -92,6 +111,8 @@ def convert_html(html):
 @bp.route('/utilities-other.html')
 def utilities():
     return render_template('utilities-other.html')
+
+
 
 
 # @bp.route('/report/<int:agentId>', methods=["POST"])

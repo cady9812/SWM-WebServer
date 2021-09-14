@@ -23,10 +23,6 @@
 </head>
 
 <body id="page-top">
-    
- 
-
-
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -364,81 +360,77 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-1 text-gray-800">MITRE ATT&CK matrix</h1>
-                    <p class="mb-4">test222222</p>
+                    <h1 class="h3 mb-1 text-gray-800">Attack Result Report</h1>
+                    <p class="mb-4">attac result report</p>
 
                     <!-- Content Row -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"> M A T R I X </h6>
+                    <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-8_ col-lg-7" id = 'main1' ><!-- style='display:none;'-->
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Report </h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <!-- ADD script -->
+                           
+
+                                <div class="card-body" >
+                                    <!-- Here Add // form orignal is 'user'-->
+                                   
+                                  
+                                        <div class="chart-pie pt-4">
+                                            <canvas id="myPieChart"></canvas>
+                                        </div>
+                                        <br><br><br>
+                                        <table border="2" style="text-align:'center';" >
+                                            <tr>
+                                                <td>No</td>
+                                                <td>Attack Count</td>
+                                                <td>Attack Start Time</td>
+                                            </tr>
+                                            {% for data in sql_data['data'] %}
+                                                <tr>
+                                                    <a href="/report/{{data['no']}}">
+                                                        <td>{{data['no']}}</td>
+                                                        <td>{{ data['attack_id']|join('|') }}</td>
+                                                        <td>{{data['start_time']}}</td>
+                                                    </a>
+                                                </tr>
+
+                                            {% endfor %}
+                                            
+                                        </form>
+                                        
+                                        
+                                        <br>
+                                    <!-- <code>/js/demo/chart-pie-demo.js</code> file. -->
+
+                              
+                                    
+                                </div>
+                            </div>
                         </div>
 
+                        <!-- Pie Chart -->
                         
-
-                        <div class="card-body">
-                            
-                           <ul class="cateCols" style=" list-style:none; text-align: center;">
-                               <li><p>Reconnaissance </p></li>
-                               <li >
-                                    <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"  value='1'>Active Scanning </a>
-                               </li>
-                               <li>
-                                    <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg" value='2'>Vulnerability Scanning</a>
-                               </li>
-                               <li>
-                                    <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg" vlaue='3'>Gather Victim Host<br>Information </a>
-                               </li>
-                               <li>
-                                    <a class="btn btn-default btn-lg"  data-toggle="modal">Gather Victim Network<br>Information </a>
-                               </li>
-                           </ul>
-                           <ul class="cateCols" style=" list-style:none; text-align: center;">
-                            <li><p>Initial Access</p></li>
-                            <li >
-                             <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"   >External Remote Services</a>
-                            </li>
-                            <li>
-                             <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"  >Default Accounts</a>
-                            </li>
-                            <li>
-                             <a id="task111" class="btn btn-default btn-lg"  data-toggle="modal">Domain Accounts </a>
-                            </li>
-                            <li>
-                             <a id="task111" class="btn btn-default btn-lg"   data-toggle="modal">Phishing </a>
-                            </li>
-                        </ul>
-                           <ul class="cateCols" style=" list-style:none; text-align: center">
-                                <li><p>Persistence</p></li>
-                                <li >
-                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Account Manipulation</a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Create Account</a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg"   data-toggle="modal">Port Monitors </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Plist Modification</a>
-                                </li>
-                            </ul>
-                            <ul class="cateCols" style=" list-style:none; text-align: center" >
-                                <li><p>Privilege Escalation</p></li>
-                                <li >
-                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Setuid and Setgid </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg"   data-toggle="modal">Access Token Manipulation </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Create Process with Token </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Boot or Logon <br>Initialization Scripts </a>
-                                </li>
-                            </ul>
-
-                        </ul>
                         </div>
                     </div>
 
@@ -483,28 +475,6 @@
         </div>
     </div>
 
-   <!-- Modal -->
-   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body">
-        
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-    </div>
-    </div>
-    </div>
-
-
     <!-- Bootstrap core JavaScript-->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -514,18 +484,49 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
-    <script src="../static/js/bascope.js"></script>
 
 </body>
-
 <script>
-       $("#miter_list").click(function(){
-        
-        
+    function report_print(data){
+        var tmp ="<br><br><br><h5>* Attack Result Report *<br><br><br></h5>";
+        tmp += data ; 
+        $('#report_div').append(tmp);
+    }
+
+    $(function(){
+            
+            e.preventDefault();
+            $.getJSON('/report/pkt',{ // asdfasdfasdfasdfasdf
+                type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                src_ip: $('#InputSrcIP').val(),
+            
+                }, function(r){
+                    report_print(r);
+                });
     });
 
 
-</script>
 
+</script>
+<!--                          /js/demo/chart-pie-                      -->
+<!--                          /js/demo/chart-pie-                      -->
+<!--                          /js/demo/chart-pie-                      -->
+<!--                          /js/demo/chart-pie-                      -->
+<script src="../static/vendor/jquery/jquery.min.js"></script>
+<script src="../staticvendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="../staticvendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../static/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="../static/vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../static/js/demo/chart-area-demo.js"></script>
+<script src="../static/js/demo/chart-pie-demo.js"></script>
+<script src="../static/js/demo/chart-bar-demo.js"></script>
 
 </html>

@@ -11,7 +11,7 @@ BUFSIZE = 0x1000
 SOCKET_PORT = 9000
 def send_with_size(sock: socket.socket, msg):
     payload = p32(len(msg)) + msg
-    sock.send(payload)
+    sock.sendall(payload)
 
 
 def create_socket():

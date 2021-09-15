@@ -37,7 +37,7 @@ def attack_filter():
                 "dst_ip":dst_ip
             }]
         }
-        sckt.send(bson.dumps(command))
+        sckt_utils.send_with_size(sckt, bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
         logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
         sckt.close()
@@ -89,7 +89,8 @@ def attack_start():
     logger.info(f"[ATTACK] command : {command}")
 
     sckt = sckt_utils.create_socket()
-    sckt.send(bson.dumps(command)) # send command to tcp server
+    # send command to tcp server
+    sckt_utils.send_with_size(sckt, bson.dumps(command))
     
     try:
         pre_no = Report.query.order_by(Report.no.desc()).first().no

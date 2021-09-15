@@ -1,6 +1,9 @@
 import bson
 import socket
 import time
+import struct
+p32 = lambda x: struct.pack("<I", x)
+u32 = lambda x: struct.unpack("<I", x)[0]
 
 #from private.ports import SOCKET_PORT
 
@@ -26,22 +29,40 @@ def create_socket():
     
     return sckt
 
+# 앞의 4바이트는 데이터 사이즈를 뜻함
 def recv_data(sckt):
-    result = sckt.recv(1)
-    sckt.setblocking(False)
-    try:
-        while True:
-            tmp = sckt.recv(BUFSIZE)
-            if not tmp:
-                break
-            result += tmp
-    except BlockingIOError as e:
-        # EAGAIN
-        pass
-    finally:
-        sckt.setblocking(True)
-    result = bson.loads(result)
+    result = b''
+
+    total_length = u32(sckt.recv(4))
+    BUF_SIZE = 4096
+    while True:
+        tmp = sckt.recv(BUF_SIZE)
+        if not tmp:
+            break
+        result += tmp
+        if total_length == len(result):
+            break
+
+    assert total_length == len(result)
     return result
+
+# # Not Working :(
+# def recv_data(sckt):
+#     result = sckt.recv(1)
+#     sckt.setblocking(False)
+#     try:
+#         while True:
+#             tmp = sckt.recv(BUFSIZE)
+#             if not tmp:
+#                 break
+#             result += tmp
+#     except BlockingIOError as e:
+#         # EAGAIN
+#         pass
+#     finally:
+#         sckt.setblocking(True)
+#     result = bson.loads(result)
+#     return result
 
 def get_local_ip(server_ip="8.8.8.8"):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

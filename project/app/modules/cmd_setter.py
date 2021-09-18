@@ -47,7 +47,7 @@ def product_command(src_ip, dst_ip, attack_id_list):
                 "src_ip":dst_ip,
                 "download": down_route,
                 "attack_id":attack_id,
-                "fize_size":f_size
+                "file_size":f_size
             })
         else:
             command.append({

@@ -658,12 +658,14 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
+                                                        <th></th>
                                                         <th>공격번호</th>
                                                         <th>프로그램</th>
                                                         <th>사용법</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="cve_form">
+                                                
 
                                                 </tbody>
                                             </table>
@@ -1059,11 +1061,14 @@
                 isVisit = 1;
                 arr.forEach(function(e){
                     var temp = "<tr>";
-                    temp += `<input type="checkbox" name="chkCVE"  value="${e.attackId}"/>`;
-                    temp += `<th>${e.attackId}</th>`
-                    temp += `<th>${e.program}</th>`;
-                    var usage = escape_filtering(e.usage);
-                    temp += `<th>${usage}</th>`;
+                    temp += `<td><input type="checkbox" name="chkCVE"  value="${e.attackId}"/></td>`;
+                    temp += `<td>${e.attackId}</td>`
+                    temp += `<td>${e.program}</td>`;
+                    //var usage = escape_filtering(e.usage);
+                    var usage = e.usage;
+                    usage.replace(/>/g, '&gt;')
+                        .replace(/</g, '&lt;');
+                    temp += `<td>${usage}</td>`;
                     temp += `</tr>`;
                     $('#cve_form').append(temp);
                 })

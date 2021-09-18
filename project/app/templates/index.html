@@ -1071,11 +1071,11 @@
                     
                     $("#form_ipInput").hide();
                     $('#loading_page').show();
-                    
+
                     e.preventDefault();
                     $.getJSON('/attack/filter',{
-                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
-                        tye2: $("input:checkbox[name=attack_type]:checked").val(),
+                        type1: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        type2: $("input:checkbox[name=attack_type]:checked").val(),
                         src_ip: $('#InputSrcIP').val(),
                         dst_ip: $('#InputDstIP').val(),
                     },

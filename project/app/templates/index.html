@@ -658,7 +658,7 @@
                                     <form class="p-5" id="print_CVE_list" style='display:none;'>
                                     	<div class="form-group">
                                     	<ul id="cve_form">
-                                    	<!-- IPNUT CVE LIST -->
+                                    	<!-- INPUT CVE LIST -->
                                     	
                                     	
                                         
@@ -1001,7 +1001,10 @@
                     dst_ip: $('#InputDstIP').val(),
                     cve_id : arTest,
                 }), function(r){
-                    go_to_report();
+                    alert('r.status is ', r.status);
+                    if(r.status==200){
+                        go_to_report();
+                    }
                 }, 'json');
             
         });
@@ -1072,11 +1075,11 @@
                     
                     $("#form_ipInput").hide();
                     $('#loading_page').show();
-                    
+
                     e.preventDefault();
                     $.getJSON('/attack/filter',{
-                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
-                        tye2: $("input:checkbox[name=attack_type]:checked").val(),
+                        type1: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        type2: $("input:checkbox[name=attack_type]:checked").val(),
                         src_ip: $('#InputSrcIP').val(),
                         dst_ip: $('#InputDstIP').val(),
                     },

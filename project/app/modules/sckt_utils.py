@@ -1,11 +1,19 @@
 import bson
 import socket
 import time
+import struct
+p32 = lambda x: struct.pack("<I", x)
+u32 = lambda x: struct.unpack("<I", x)[0]
 
 #from private.ports import SOCKET_PORT
 
 BUFSIZE = 0x1000
 SOCKET_PORT = 9000
+def send_with_size(sock: socket.socket, msg):
+    payload = p32(len(msg)) + msg
+    sock.sendall(payload)
+
+
 def create_socket():
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
@@ -21,26 +29,45 @@ def create_socket():
         "type": "introduce",
         "detail": "web",
     }
-    sckt.send(bson.dumps(introduce))
+    send_with_size(sckt, bson.dumps(introduce))
+    time.sleep(1)
     
     return sckt
 
+# 앞의 4바이트는 데이터 사이즈를 뜻함
 def recv_data(sckt):
-    result = sckt.recv(1)
-    sckt.setblocking(False)
-    try:
-        while True:
-            tmp = sckt.recv(BUFSIZE)
-            if not tmp:
-                break
-            result += tmp
-    except BlockingIOError as e:
-        # EAGAIN
-        pass
-    finally:
-        sckt.setblocking(True)
-    result = bson.loads(result)
+    result = b''
+
+    total_length = u32(sckt.recv(4))
+    BUF_SIZE = 4096
+    while True:
+        tmp = sckt.recv(BUF_SIZE)
+        if not tmp:
+            break
+        result += tmp
+        if total_length == len(result):
+            break
+
+    assert total_length == len(result)
     return result
+
+# # Not Working :(
+# def recv_data(sckt):
+#     result = sckt.recv(1)
+#     sckt.setblocking(False)
+#     try:
+#         while True:
+#             tmp = sckt.recv(BUFSIZE)
+#             if not tmp:
+#                 break
+#             result += tmp
+#     except BlockingIOError as e:
+#         # EAGAIN
+#         pass
+#     finally:
+#         sckt.setblocking(True)
+#     result = bson.loads(result)
+#     return result
 
 def get_local_ip(server_ip="8.8.8.8"):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

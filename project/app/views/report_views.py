@@ -1,55 +1,57 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 
 import base64
 
-# import json
-# import logging
-# import logging.config
-# import pathlib
-# log_config = (pathlib.Path(__file__).parent.resolve().parents[1].joinpath("log_config.json"))
-# config = json.load(open(str(log_config)))
-# logging.config.dictConfig(config)
-# logger = logging.getLogger(__name__)
 
+from app.models import Report
+from app.modules import parser, loggers, statusCode
+from app import db
 
-from app.modules import loggers
 logger = loggers.create_logger(__name__)
+
 
 
 bp = Blueprint('report', __name__, url_prefix='/report')
 
 
-@bp.route('/pkt', methods=['POST'])
-def report_pkt():
-    if request.method=='GET':
-        logger.warning("\n[REPORT] /pkt - NOT GET Method")
-        return
-    # 일단 받아놓기만 하기
-    data = request.get_json()
-    attack_id = data["attack_id"]
-    port = data["port"]
-    send_ip = data["send_rrip"]
-    recv_ip = data["recv_ip"]
-    send_pkt = data["send"]
-    recv_pkt = data["recv"]
+@bp.route('/')
+def report():
+    reports = Report.query.with_entities(Report.no, Report.attackId, Report.startTime).order_by(Report.no.desc())
+    dict_report = {}
+    for report in reports:
+        report_no = report[0]
+        report_attackId = report[1]
+        report_startTime = report[2]
+        if report_no not in dict_report.keys():
+            dict_report[report_no]=[[report_attackId], report_startTime]
+        else:
+            dict_report[report_no][0].append(report_attackId)
+    arranged_reports = []
+    for d in dict_report.keys():
+        arranged_reports.append({
+            "no":d,
+            "attack_id":dict_report[d][0],
+            "start_time":dict_report[d][1]
+        })
+    # print(arranged_reports)
+    logger.info(f"[REPORT] GET ALL REPORTS")
+    return render_template("report.html", sql_data = {
+	    "data":arranged_reports
+    })
 
-    logger.info(f"\n[REPORT] /pkt - attack_ip : {attack_id} / port : {port} / send_ip : {send_ip} \
-/ recv_ip : {recv_ip} / send_pkt : {send_pkt} / recv_pkt :{recv_pkt}")
 
-    for s in send_pkt:
-        logger.info(f'\n[decoded] s : {base64.b64decode(s)}')
-    for r in recv_pkt:
-        logger.info(f'\n[decoded] r : {base64.b64decode(r)}')
-    return "OK"
-
-
-@bp.route('/malware', methods=['POST'])
-def report_target():
-    if request.method=='GET':
-        logger.warning("\n[REPORT] /target - NOT GET Method")
-        return
-    data = request.get_json()
-    attack_id = data["attack_id"]
-    infected = data["infected"]
-    logger.info(f"\n[REPORT] /target - attack_id : {attack_id}, infected : {infected}")
-    return
+@bp.route('/<int:reportNo>')
+def show_one_report(reportNo):
+    reports = Report.query.filter(Report.no==reportNo).all()
+    arranged_reports = []
+    for report in reports:
+        arranged_reports.append({
+            "no":report.no,
+            "attack_id":report.attackId,
+            "time":report.startTime,
+            "log":report.log
+        })
+    logger.info(f"[REPORT] ONE REPORT IN DETAIL")
+    return {
+        "data":arranged_reports
+    }

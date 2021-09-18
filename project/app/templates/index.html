@@ -1029,7 +1029,7 @@
         
         
         function escape_filtering(data){
-            data.replace(/&/g, '&amp;')
+            data = data.replace(/&/g, '&amp;')
                       .replace(/>/g, '&gt;')
                       .replace(/</g, '&lt;')
                       .replace(/"/g, '&quot;')
@@ -1064,10 +1064,8 @@
                     temp += `<td><input type="checkbox" name="chkCVE"  value="${e.attackId}"/></td>`;
                     temp += `<td>${e.attackId}</td>`
                     temp += `<td>${e.program}</td>`;
-                    //var usage = escape_filtering(e.usage);
-                    var usage = e.usage;
-                    usage.replace(/>/g, '&gt;')
-                        .replace(/</g, '&lt;');
+                    var usage = escape_filtering(e.usage);
+                    console.log(usage)
                     temp += `<td>${usage}</td>`;
                     temp += `</tr>`;
                     $('#cve_form').append(temp);

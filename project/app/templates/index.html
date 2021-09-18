@@ -109,7 +109,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" >
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -532,20 +532,22 @@
                                     </form>
                                     
                                     <form class="p-5" id="doing_select" style='display:none;'> 
+                                        <h2>
                                         <div class="form-group">
-                                            <h1><input type="checkbox" name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검</h1>
+                                            <input type="checkbox"  name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검
                                         </div>
                                         <div class="form-group">
-                                            <h1><input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검</h1>
+                                            <input type="checkbox"  name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검
                                         </div>
                                         <div class="form-group">
-                                            <h1><input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검</h1>
+                                            <input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">Next</a>
                                             </div>
                                         </div>
+                                        </h2>
                                     </form>
 
                                     <form class="p-5" id="loading_page" style='display:none;'> 
@@ -577,6 +579,7 @@
                                     </form>
                                  
                                     <form class="p-5" id="security_equipment" style='display:none;'> <!-- THIS FORM IS check for Malware attack -->
+                                        <h2>
                                         <div class="form-group">
                                             <input type="checkbox" name="attack_type" value="atk_packet" onclick='checkOne3(this)'> 패킷
                                         </div>
@@ -589,6 +592,7 @@
                                                 <a href="#" class="btn btn-primary btn-user btn-block" id="nextAttackType">Next</a>
                                             </div>
                                         </div>
+                                        </h2>
                                     </form>
 
                                     <form class="p-5" id="print_CVE_list" style='display:none;'>

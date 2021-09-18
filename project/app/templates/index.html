@@ -544,7 +544,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">Next</a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextIP">Next</a>
                                             </div>
                                         </div>
                                         </h2>
@@ -563,17 +563,17 @@
 
                                     <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
                                         <div class="form-group" id="src_input" style='display:inline;'>
-                                            <input type="text" class="form-control form-control-user"
+                                            <input type="text" class="form-control-user"
                                                 id="InputSrcIP" aria-describedby="emailHelp"
                                                 placeholder="Enter Source ip...">
                                         </div>
-                                        <div class="form-group" >
-                                            <input type="text" class="form-control form-control-user"
+                                        <div class="form-group">
+                                            <input type="text" class="form-control-user"
                                                 id="InputDstIP" placeholder="Enter Target ip...">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextCVE"> Start </a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextCVE"> Start </a>
                                             </div>
                                         </div>
                                     </form>
@@ -589,7 +589,7 @@
                                         
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextAttackType">Next</a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextAttackType">Next</a>
                                             </div>
                                         </div>
                                         </h2>
@@ -620,10 +620,10 @@
                                     	</div>
                                     	<div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                            <a href="#" class="btn btn-primary btn-user btn-block" id="prevCVE">
+                                            <a href="#" class="btn btn-primary btn-user" id="prevCVE">
                                             Prev
                                         	</a>
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextInfo">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextInfo">
                                             Next
                                         	</a>
                                                 
@@ -637,7 +637,7 @@
                                             <p id="finalDst"></p><br>
                                             <p id="finalCVE"></p><br>
 					                    </div>
-					                    <a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
+					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
                                             let's go
                                         	</a>
                                     </form>
@@ -942,7 +942,7 @@
         $(function(){ // final start event
 
         $('a#letGO').on('click',function(e){ // Event final check click!!!
-            alert("[*]  let's start!");
+            //alert("[*]  let's start!");
             e.preventDefault();
             var arTest = [];
             $("input[name='chkCVE']:checked").each(function(){
@@ -955,7 +955,7 @@
                     dst_ip: $('#InputDstIP').val(),
                     cve_id : arTest,
                 }), function(r){
-                    alert('r.status is ', r.status);
+                    //alert('r.status is ', r.status);
                     if(r.status==200){
                         go_to_report();
                     }
@@ -1047,7 +1047,7 @@
                             $('#loading_page').hide();
                     });
                 }else{
-                    alert("nono~");
+                    alert("IP 입력 형식이 틀립니다.");
                     return false;   
                 }
               });

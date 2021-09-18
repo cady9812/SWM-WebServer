@@ -6,4 +6,4 @@ kakaotrans
 pymysql
 bson
 Flask-Mail
-python-logstash
+python3-logstash

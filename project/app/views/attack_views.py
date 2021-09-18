@@ -102,6 +102,7 @@ def attack_start():
 
     for i in range(attack_cnt): # recv reports from tcp server
         reportData = sckt_utils.recv_data(sckt) # json
+        reportData = bson.loads(reportData)
         to_MySQL_result = parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
         if to_MySQL_result == "Insert ERROR":
             logger.warning(f"{loggers.RED}[ATTACK] ERROR while inserting report into MySQL{loggers.END}")

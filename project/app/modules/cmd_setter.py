@@ -11,9 +11,8 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 logger = logging.getLogger(__name__)
 
-#from private.ports import WEB_SERVER_PORT
+from private.ports import WEB_SERVER_PORT
 
-WEB_SERVER_PORT = 1010
 downloadURL = f"http://{MyIP}:{WEB_SERVER_PORT}/attack/download"
 
 
@@ -36,38 +35,39 @@ def product_command(src_ip, dst_ip, attack_id_list):
         usage = attackInfo.usage
         type = attackInfo.type
 
-        logger.info(f"\n[CMD_SETTER] product - file_name : {file_name},\
-dst_port :{dst_port}, usage : {usage}, type:{type}")
+        # logger.info(f"\n[CMD_SETTER] product - file_name : {file_name}, dst_port :{dst_port}, usage : {usage}, type:{type}")
 
-        if type=="malware":
-            chk = True
-        else:
-            chk = False
         # file_route = f"{downloadURL}/crypt/{attack_id}"
         file_route = f"{pwd}/attack_files/{file_name}"
         down_route = f"{downloadURL}/crypt/{attack_id}"
         f_size = file_size(file_route)
-
-        logger.info("\n[CMD_SETTER] product - file_route : {file_route},\
-down_route : {down_route}, f_size : {f_size}")
-
-        command.append({
-            "type":"defense",
-            "src_ip": dst_ip,
-            "attack_id":attack_id,
-            "port":dst_port
-        })
-        command.append({
-            "type":"attack_secu",
-            "malware":chk,
-            "src_ip":src_ip,
-            "dst_ip":dst_ip,
-            "dst_port":dst_port,
-            "download":down_route, # 암호화 된
-            "file_size":f_size, # bytes
-            "attack_id":attack_id,
-            "usage":usage
-        })
+        if type=="mal":
+            command.append({
+                "type":"product_malware",
+                "src_ip":dst_ip,
+                "download": down_route,
+                "attack_id":attack_id,
+                "file_size":f_size
+            })
+        else:
+            command.append({
+                "type":"defense",
+                "src_ip": dst_ip,
+                "attack_id":attack_id,
+                "port":dst_port
+            })
+            command.append({
+                "type":"product_packet",
+                "malware":False,
+                "src_ip":src_ip,
+                "dst_ip":dst_ip,
+                "dst_port":dst_port,
+                "download":down_route, # 암호화 된
+                "file_size":f_size, # bytes
+                "attack_id":attack_id,
+                "usage":usage
+            })
+        
     return command
 
 
@@ -96,7 +96,7 @@ dst_port :{dst_port}, usage : {usage}")
 down_route : {down_route}, f_size : {f_size}")
 
         command.append({
-            "type":"attack_target",
+            "type":"target",
             "src_ip":src_ip,
             "dst_ip":dst_ip,
             "dst_port":dst_port,
@@ -131,7 +131,7 @@ def malware_command(src_ip, attack_id_list):
 down_route : {down_route}, f_size : {f_size}")
 
         command.append({
-            "type":"malware",
+            "type":"endpoint",
             "src_ip":src_ip,
             "download":down_route, # 암호화 안 된
             "file_size":f_size,

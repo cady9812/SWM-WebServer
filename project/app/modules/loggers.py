@@ -8,8 +8,7 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 #logger = logging.getLogger(__name__)
 
-#from private.ports import LOGSTASH_PORT
-LOGSTASH_PORT = 901
+from private.ports import LOGSTASH_PORT
 
 END = "\033[0m"
 YELLOW = "\033[33m"

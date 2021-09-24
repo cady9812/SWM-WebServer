@@ -16,18 +16,19 @@ bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 @bp.route('/filter')
 def attack_filter():
-    type = request.args.get('type') # main category
-    # middle category
+    type1 = request.args.get('type1') # product, endpoint, malware
     src_ip = request.args.get('src_ip')
     dst_ip = request.args.get('dst_ip')
-
-    if type=='product':### 보안 장비 점검
-        attacks = Attack.query.all()
+    
+    if type1=='product':### 보안 장비 점검
+        type2 = request.args.get('type2') # atk_packet, atk+malware
+        type2 = "mal" if type2=="atk_malware" else "cve"
+        attacks = Attack.query.filter(Attack.type==type2).all()
         all_attacks = parser.attack_query_to_json(attacks)
         logger.info(f"[ATTACK] PRODUCT : {all_attacks}")
         return {"result":all_attacks}
 
-    elif type=='endpoint':### 타겟 점검
+    elif type1=='endpoint':### 타겟 점검
         sckt = sckt_utils.create_socket()
         command = {
             "type":"web",
@@ -37,7 +38,7 @@ def attack_filter():
                 "dst_ip":dst_ip
             }]
         }
-        sckt.send(bson.dumps(command))
+        sckt_utils.send_with_size(sckt, bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
         logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
         sckt.close()
@@ -48,7 +49,7 @@ def attack_filter():
         # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
         return {"result":filtered_attacks}
 
-    elif type=="malware":### endpoint 솔루션
+    elif type1=="malware":### endpoint 솔루션
         attacks = Attack.query.filter(Attack.type=="mal").all()
         all_attacks = parser.attack_query_to_json(attacks)
 
@@ -89,7 +90,8 @@ def attack_start():
     logger.info(f"[ATTACK] command : {command}")
 
     sckt = sckt_utils.create_socket()
-    sckt.send(bson.dumps(command)) # send command to tcp server
+    # send command to tcp server
+    sckt_utils.send_with_size(sckt, bson.dumps(command))
     
     try:
         pre_no = Report.query.order_by(Report.no.desc()).first().no
@@ -100,6 +102,7 @@ def attack_start():
 
     for i in range(attack_cnt): # recv reports from tcp server
         reportData = sckt_utils.recv_data(sckt) # json
+        reportData = bson.loads(reportData)
         to_MySQL_result = parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
         if to_MySQL_result == "Insert ERROR":
             logger.warning(f"{loggers.RED}[ATTACK] ERROR while inserting report into MySQL{loggers.END}")

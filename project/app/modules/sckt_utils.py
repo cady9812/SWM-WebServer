@@ -5,10 +5,14 @@ import struct
 p32 = lambda x: struct.pack("<I", x)
 u32 = lambda x: struct.unpack("<I", x)[0]
 
-#from private.ports import SOCKET_PORT
+from private.ports import SOCKET_PORT
 
 BUFSIZE = 0x1000
-SOCKET_PORT = 9000
+def send_with_size(sock: socket.socket, msg):
+    payload = p32(len(msg)) + msg
+    sock.sendall(payload)
+
+
 def create_socket():
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
@@ -24,7 +28,7 @@ def create_socket():
         "type": "introduce",
         "detail": "web",
     }
-    sckt.send(bson.dumps(introduce))
+    send_with_size(sckt, bson.dumps(introduce))
     time.sleep(1)
     
     return sckt

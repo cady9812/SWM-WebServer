@@ -109,7 +109,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" >
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -147,7 +147,7 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="report.html">Report</a>
+                        <a class="collapse-item" href="report">Report</a>
                         <a class="collapse-item" href="matrix.html">Mitre Attack</a>
                         <a class="collapse-item" href="upload-code.html">Upload Code</a>
                         <a class="collapse-item" href="kvm-manage.html">VM</a>
@@ -156,70 +156,10 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
@@ -592,20 +532,22 @@
                                     </form>
                                     
                                     <form class="p-5" id="doing_select" style='display:none;'> 
+                                        <h2>
                                         <div class="form-group">
-                                            <h1><input type="checkbox" name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검</h1>
+                                            <input type="checkbox"  name="doing" value="product" onclick='checkOne(this)'>  보안장비 점검
                                         </div>
                                         <div class="form-group">
-                                            <h1><input type="checkbox" name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검</h1>
+                                            <input type="checkbox"  name="doing" value="endpoint" onclick='checkOne(this)'> 타겟 PC 점검
                                         </div>
                                         <div class="form-group">
-                                            <h1><input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검</h1>
+                                            <input type="checkbox" name="doing" value="malware" onclick='checkOne(this)'> endpoint솔루션(백신) 점검
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextIP">Next</a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextIP">Next</a>
                                             </div>
                                         </div>
+                                        </h2>
                                     </form>
 
                                     <form class="p-5" id="loading_page" style='display:none;'> 
@@ -621,22 +563,23 @@
 
                                     <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
                                         <div class="form-group" id="src_input" style='display:inline;'>
-                                            <input type="text" class="form-control form-control-user"
+                                            <input type="text" class="form-control-user"
                                                 id="InputSrcIP" aria-describedby="emailHelp"
                                                 placeholder="Enter Source ip...">
                                         </div>
-                                        <div class="form-group" >
-                                            <input type="text" class="form-control form-control-user"
+                                        <div class="form-group">
+                                            <input type="text" class="form-control-user"
                                                 id="InputDstIP" placeholder="Enter Target ip...">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextCVE"> Start </a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextCVE"> Start </a>
                                             </div>
                                         </div>
                                     </form>
                                  
                                     <form class="p-5" id="security_equipment" style='display:none;'> <!-- THIS FORM IS check for Malware attack -->
+                                        <h2>
                                         <div class="form-group">
                                             <input type="checkbox" name="attack_type" value="atk_packet" onclick='checkOne3(this)'> 패킷
                                         </div>
@@ -646,26 +589,41 @@
                                         
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextAttackType">Next</a>
+                                                <a href="#" class="btn btn-primary btn-user" id="nextAttackType">Next</a>
                                             </div>
                                         </div>
+                                        </h2>
                                     </form>
 
                                     <form class="p-5" id="print_CVE_list" style='display:none;'>
                                     	<div class="form-group">
-                                    	<ul id="cve_form">
-                                    	<!-- IPNUT CVE LIST -->
+                                    	<!-- <ul id="cve_form"> -->
+                                    	<!-- INPUT CVE LIST -->
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>공격번호</th>
+                                                        <th>프로그램</th>
+                                                        <th>사용법</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="cve_form">
+                                                
+
+                                                </tbody>
+                                            </table>
                                     	
                                     	
                                         
-                                    	</ul>
+                                    	<!-- </ul> -->
                                     	</div>
                                     	<div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                            <a href="#" class="btn btn-primary btn-user btn-block" id="prevCVE">
+                                            <a href="#" class="btn btn-primary btn-user" id="prevCVE">
                                             Prev
                                         	</a>
-                                                <a href="#" class="btn btn-primary btn-user btn-block" id="nextInfo">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextInfo">
                                             Next
                                         	</a>
                                                 
@@ -679,7 +637,7 @@
                                             <p id="finalDst"></p><br>
                                             <p id="finalCVE"></p><br>
 					                    </div>
-					                    <a href="#" class="btn btn-primary btn-user btn-block" id="letGO">
+					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
                                             let's go
                                         	</a>
                                     </form>
@@ -984,7 +942,7 @@
         $(function(){ // final start event
 
         $('a#letGO').on('click',function(e){ // Event final check click!!!
-            alert("[*]  let's start!");
+            //alert("[*]  let's start!");
             e.preventDefault();
             var arTest = [];
             $("input[name='chkCVE']:checked").each(function(){
@@ -997,7 +955,7 @@
                     dst_ip: $('#InputDstIP').val(),
                     cve_id : arTest,
                 }), function(r){
-                    alert('r.status is ', r.status);
+                    //alert('r.status is ', r.status);
                     if(r.status==200){
                         go_to_report();
                     }
@@ -1013,32 +971,17 @@
             }
         }
         
-
+        
         function escape_filtering(data){
-            data.replace(/&/g, '&amp;')
+            data = data.replace(/&/g, '&amp;')
                       .replace(/>/g, '&gt;')
                       .replace(/</g, '&lt;')
                       .replace(/"/g, '&quot;')
                       .replace(/'/g, '&apos;');
             return data;
         }
+        
         /*
-        function showCVE(arr){
-            arr.forEach(function(e){
-                console.log('e : ',e.usage);
-                var temp = "<label>";
-                temp +="<li>";
-                temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
-                temp +="Program : " + e.program + " ";
-                temp +="Usage : " + escape_filtering(e.usage);
-                temp +="</li>";
-                temp +="</label>";
-                temp +="<br>";
-                $('#cve_form').append(temp)
-            })
-
-        }
-        */
         function showCVE(arr){
             if(isVisit == 0){
                 isVisit = 1;
@@ -1055,11 +998,30 @@
                 })
             }
         }
+        */
+
+        function showCVE(arr){
+            if(isVisit==0){
+                isVisit = 1;
+                arr.forEach(function(e){
+                    var temp = "<tr>";
+                    temp += `<td><input type="checkbox" name="chkCVE"  value="${e.attackId}"/></td>`;
+                    temp += `<td>${e.attackId}</td>`
+                    temp += `<td>${e.program}</td>`;
+                    var usage = escape_filtering(e.usage);
+                    console.log(usage)
+                    temp += `<td>${usage}</td>`;
+                    temp += `</tr>`;
+                    $('#cve_form').append(temp);
+                })
+            }
+        }
 
 
         $(function() {
             $('a#nextCVE').on('click', function(e) {                
-                if($("input:checkbox[name=doing]:checked").val() == "malware"){
+                if($("input:checkbox[name=doing]:checked").val() == "malware"
+                || $("input:checkbox[name=attack_type]:checked").val() == "atk_malware"){
                     $('#InputSrcIP').val('127.0.0.1'); 
                 }
                 
@@ -1070,10 +1032,11 @@
                     
                     $("#form_ipInput").hide();
                     $('#loading_page').show();
-                    
+
                     e.preventDefault();
                     $.getJSON('/attack/filter',{
-                        type: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        type1: $("input:checkbox[name='doing']:checked").val(),// product or endpoint
+                        type2: $("input:checkbox[name=attack_type]:checked").val(),
                         src_ip: $('#InputSrcIP').val(),
                         dst_ip: $('#InputDstIP').val(),
                     },
@@ -1084,7 +1047,7 @@
                             $('#loading_page').hide();
                     });
                 }else{
-                    alert("nono~");
+                    alert("IP 입력 형식이 틀립니다.");
                     return false;   
                 }
               });

@@ -302,11 +302,7 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-1 text-gray-800">Upload Exploit Code</h1>
-                    <p class="mb-4">Bootstrap's default utility classes can be found on the official <a
-                            href="https://getbootstrap.com/docs">Bootstrap Documentation</a> page. The custom utilities
-                        below were created to extend this theme past the default utility classes built into Bootstrap's
-                        framework.</p>
-
+                    
                     <!-- Content Row -->
                     <div class="row">
                         <div class="col-xl-8_ col-lg-7" id = 'main1'  >
@@ -339,26 +335,33 @@
                                     <form class="p-5" id="form_upload" method="post" enctype="multipart/form-data"  > 
                                         <div class="form-group">
                                             <br>
-                                            <h1>Input Contents </h1>
+                                            <h1><b>업로드할 파일</b></h1>
                                             <h2>
-                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="CVE">cve   
-                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="malware" checked="checked">malware
-                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="etc">etc<br>
-                                            <input type="text" id="targetName" name="targetName" placeholder="Software name..." ><br>  
-                                            <input type="text" id="targetVersion" name="targetVersion" placeholder="Software version..." ><br>
-                                            <input type="text" id="targetPort" name="targetPort" placeholder="port..."><br>
-                                            <input type="text" id="targetUsage" name="targetUsage" placeholder="(target ip) (target port) etc..." ><br>
-                                            <input type="text" id="targetSummary" name="targetSummary" placeholder="One line summary..." ><br>
-                                            <input type="file" id="FILE_TAG" name="FILE_TAG"><br>
-                                        </h2>
+                                                <div style="display:inline-block; margin-top:15px; margin-bottom:10px">
+                                                    <input type="checkbox" name="attackType" onclick='checkOne(this)' value="cve"> cve | 
+                                                    <input type="checkbox" name="attackType" onclick='checkOne(this)' value="malware" checked="checked"> malware | 
+                                                    <input type="checkbox" name="attackType" onclick='checkOne(this)' value="etc"> etc
+                                                </div>
+                                                <br>
+                                                <form class="form-horizontal">
+                                                    <input type="text" id="targetName" name="targetName" placeholder="service name" ><br>  
+                                                    <input type="text" id="targetVersion" name="targetVersion" placeholder="version" ><br>
+                                                    <input type="text" id="targetPort" name="targetPort" placeholder="port"><br>
+                                                    <input type="text" id="targetUsage" name="targetUsage" placeholder="usage" ><br>
+                                                    <input type="text" id="targetSummary" name="targetSummary" placeholder="summary" ><br>
+                                                    <div class="form-group form-group-sm">
+                                                        <input type="file" class="form-control-file" style="margin-left:35%; margin-top:10px" id="FILE_TAG" name="FILE_TAG">
+                                                    </div>
+                                                        <!--<input type="file" id="FILE_TAG" name="FILE_TAG"><br>-->
+                                                </form>
+                                            </h2>
                                         </div>
                                         
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
+                                        <div class="form-group" style="margin-top:-30px">
+                                            <div class="custom-control custom-checkbox small d-grid gap-2 col-4 mx-auto">
                                                 <a href="#" onclick='uploadFile()' class="btn btn-primary btn-user btn-block" id="nextIP">
-                                            Send
-                                        	</a>
-                                                
+                                                    <h3>Upload</h3>
+                                        	    </a>
                                             </div>
                                         </div>
                                     </form>

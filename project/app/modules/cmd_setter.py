@@ -136,7 +136,8 @@ down_route : {down_route}, f_size : {f_size}")
             "download":down_route, # 암호화 안 된
             "file_size":f_size,
             "attack_id":attack_id,
-            "usage":usage
+            "usage":usage,
+            "filename": file_name,
         })
     return command
          

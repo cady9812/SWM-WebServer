@@ -950,11 +950,14 @@
         
 
         $('#nextAttackType').click(function(){
-            if($("input:checkbox[name=attack_type]:checked").val() == "atk_malware") {
-                $('#src_input').hide();    
+            if($("input:checkbox[name=attack_type]").is(":checked") == true) {
+    
+                if($("input:checkbox[name=attack_type]:checked").val() == "atk_malware") {
+                    $('#src_input').hide();    
+                }
+                $("#form_ipInput").show(); 
+                $('#security_equipment').hide();
             }
-            $("#form_ipInput").show(); 
-            $('#security_equipment').hide();
         });
 
 
@@ -982,6 +985,8 @@
             
             $('#InputSrcIP').val('');
             $('#InputDstIP').val('');
+            $("input[name=attack_type]:checkbox").prop("checked", false);
+            $("input[name=doing]:checkbox").prop("checked", false);
         });
         ///////////////
         
@@ -1026,23 +1031,6 @@
                       .replace(/'/g, '&apos;');
             return data;
         }
-        /*
-        function showCVE(arr){
-            arr.forEach(function(e){
-                console.log('e : ',e.usage);
-                var temp = "<label>";
-                temp +="<li>";
-                temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
-                temp +="Program : " + e.program + " ";
-                temp +="Usage : " + escape_filtering(e.usage);
-                temp +="</li>";
-                temp +="</label>";
-                temp +="<br>";
-                $('#cve_form').append(temp)
-            })
-
-        }
-        */
         function showCVE(arr){
             if(isVisit == 0){
                 isVisit = 1;
@@ -1096,15 +1084,19 @@
               });
         });
         $('#nextIP').click(function(){
-            $('#doing_select').hide();
-            if($("input:checkbox[name=doing]:checked").val() == "malware") {
-                $('#src_input').hide();    
-            }
-            if($("input:checkbox[name=doing]:checked").val() == "product") {
-                $('#security_equipment').show();   
-            }
-            else{
-                $("#form_ipInput").show(); 
+            if($("input:checkbox[name=doing]").is(":checked") == true) {
+
+      
+                $('#doing_select').hide();
+                if($("input:checkbox[name=doing]:checked").val() == "malware") {
+                    $('#src_input').hide();    
+                }
+                if($("input:checkbox[name=doing]:checked").val() == "product") {
+                    $('#security_equipment').show();   
+                }
+                else{
+                    $("#form_ipInput").show(); 
+                }
             }
         });
 

@@ -40,6 +40,7 @@ def attack_filter():
         }
         sckt_utils.send_with_size(sckt, bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
+        recvData = bson.loads(recvData)
         logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
         sckt.close()
 

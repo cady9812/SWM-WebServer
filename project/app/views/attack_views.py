@@ -65,7 +65,7 @@ def attack_start():
     getFromFront = request.get_data().decode()
     getFromFront = json.loads(getFromFront)
 
-    logger.info(f"[ATTACK] data from front : {getFromFront}")
+    # logger.info(f"[ATTACK] data from front : {getFromFront}")
 
     attackType = getFromFront['type'] # 'product' or 'endpoint'
     src_ip = getFromFront['src_ip']

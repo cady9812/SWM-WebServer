@@ -97,6 +97,7 @@ def ssploit_save():
 
     return {
         "attack_id": attack_id,
+        "filename":str(attack_id)+".py",
 		"type": "exploit-db",
         "src_ip": src_ip,
         "dst_ip": dst_ip,

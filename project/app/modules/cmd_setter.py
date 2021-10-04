@@ -11,9 +11,8 @@ config = json.load(open(str(log_config)))
 logging.config.dictConfig(config)
 logger = logging.getLogger(__name__)
 
-#from private.ports import WEB_SERVER_PORT
+from private.ports import WEB_SERVER_PORT
 
-WEB_SERVER_PORT = 1010
 downloadURL = f"http://{MyIP}:{WEB_SERVER_PORT}/attack/download"
 
 
@@ -48,7 +47,7 @@ def product_command(src_ip, dst_ip, attack_id_list):
                 "src_ip":dst_ip,
                 "download": down_route,
                 "attack_id":attack_id,
-                "fize_size":f_size
+                "file_size":f_size
             })
         else:
             command.append({
@@ -137,7 +136,8 @@ down_route : {down_route}, f_size : {f_size}")
             "download":down_route, # 암호화 안 된
             "file_size":f_size,
             "attack_id":attack_id,
-            "usage":usage
+            "usage":usage,
+            "filename": file_name,
         })
     return command
          

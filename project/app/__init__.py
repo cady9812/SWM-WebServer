@@ -31,10 +31,11 @@ def create_app():
     from . import models
 
     # BLUEPRINT
-    from .views import main_views, attack_views, agent_views, report_views
+    from .views import main_views, attack_views, agent_views, report_views, ssploit_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(attack_views.bp)
     app.register_blueprint(agent_views.bp)
     app.register_blueprint(report_views.bp)
+    app.register_blueprint(ssploit_views.bp)
 
     return app

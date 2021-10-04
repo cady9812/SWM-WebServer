@@ -60,7 +60,7 @@ def upload():
         logger.info('[MAIN] UPLOAD SUCCESS')
         return {"status":statusCode.OK}
     else:
-        logger.warning("{RED}[MAIN] UPLOAD FAIL; that filename already exists{END}")
+        logger.warning(f"{loggers.RED}[MAIN] UPLOAD FAIL; that filename already exists{loggers.END}")
         return {"status":statusCode.SERVER_ERROR}
         
  

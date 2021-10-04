@@ -40,6 +40,7 @@ def attack_filter():
         }
         sckt_utils.send_with_size(sckt, bson.dumps(command))
         recvData = sckt_utils.recv_data(sckt)
+        recvData = bson.loads(recvData)
         logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
         sckt.close()
 
@@ -64,7 +65,7 @@ def attack_start():
     getFromFront = request.get_data().decode()
     getFromFront = json.loads(getFromFront)
 
-    logger.info(f"[ATTACK] data from front : {getFromFront}")
+    # logger.info(f"[ATTACK] data from front : {getFromFront}")
 
     attackType = getFromFront['type'] # 'product' or 'endpoint'
     src_ip = getFromFront['src_ip']
@@ -102,6 +103,7 @@ def attack_start():
 
     for i in range(attack_cnt): # recv reports from tcp server
         reportData = sckt_utils.recv_data(sckt) # json
+        reportData = bson.loads(reportData)
         to_MySQL_result = parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
         if to_MySQL_result == "Insert ERROR":
             logger.warning(f"{loggers.RED}[ATTACK] ERROR while inserting report into MySQL{loggers.END}")

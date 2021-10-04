@@ -16,6 +16,42 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+    <style type="text/css">
+        #page-top {
+          font: 8pt Roboto Slab;
+          line-height: 1.5em;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+          color: #4d4d4d;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
+        
+        .FILE_TAG_LABEL{
+            padding: 6px 25px;
+            background-color:#1E90FF;
+            margin-top:4px;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            opacity:0.9;
+        }
+
+        #upload_btn{
+            border:thick solid dodgerblue;
+            background-color:white;
+            color:dodgerblue;
+        }
+
+        #upload_btn:hover{
+            background-color:dodgerblue;
+            color:white;
+        }
+
+    </style>
 
     <!-- Custom styles for this template-->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
@@ -69,70 +105,12 @@
                         <a class="collapse-item" href="report">Report</a>
                         <a class="collapse-item" href="matrix.html">Mitre Attack</a>
                         <a class="collapse-item" href="upload-code.html">Upload Code</a>
+                        <a class="collapse-item" href="kvm-manage.html">VM</a>
+                        <a class="collapse-item" href="mail.html">Mail</a>
                     </div>
                 </div>
             </li>
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse show" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item active" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
+            
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -360,11 +338,7 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-1 text-gray-800">Upload Exploit Code</h1>
-                    <p class="mb-4">Bootstrap's default utility classes can be found on the official <a
-                            href="https://getbootstrap.com/docs">Bootstrap Documentation</a> page. The custom utilities
-                        below were created to extend this theme past the default utility classes built into Bootstrap's
-                        framework.</p>
-
+                    
                     <!-- Content Row -->
                     <div class="row">
                         <div class="col-xl-8_ col-lg-7" id = 'main1'  >
@@ -397,26 +371,38 @@
                                     <form class="p-5" id="form_upload" method="post" enctype="multipart/form-data"  > 
                                         <div class="form-group">
                                             <br>
-                                            <h1>Input Contents </h1>
-                                            <h2>
-                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="CVE">cve   
-                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="malware" checked="checked">malware
-                                            <input type="checkbox" name="attackType" onclick='checkOne(this)' value="etc">etc<br>
-                                            <input type="text" id="targetName" name="targetName" placeholder="Software name..." ><br>  
-                                            <input type="text" id="targetVersion" name="targetVersion" placeholder="Software version..." ><br>
-                                            <input type="text" id="targetPort" name="targetPort" placeholder="port..."><br>
-                                            <input type="text" id="targetUsage" name="targetUsage" placeholder="(target ip) (target port) etc..." ><br>
-                                            <input type="text" id="targetSummary" name="targetSummary" placeholder="One line summary..." ><br>
-                                            <input type="file" id="FILE_TAG" name="FILE_TAG"><br>
-                                        </h2>
+                                            <hr>
+                                            <h1><b>Upload Your Exploit Code</b></h1>
+                                            <hr>
+                                            <h3>
+                                                <div style="display:inline-block; margin-top:25px; margin-bottom:10px">
+                                                    <input type="checkbox" name="attackType" onclick='checkOne(this)' value="cve"> cve | 
+                                                    <input type="checkbox" name="attackType" onclick='checkOne(this)' value="malware" checked="checked"> malware | 
+                                                    <input type="checkbox" name="attackType" onclick='checkOne(this)' value="etc"> etc
+                                                </div>
+                                                <br>
+                                                <form class="form-horizontal">
+                                                    <input type="text" id="targetName" name="targetName" placeholder="service name" ><br>  
+                                                    <input type="text" id="targetVersion" name="targetVersion" placeholder="version" ><br>
+                                                    <input type="text" id="targetPort" name="targetPort" placeholder="port"><br>
+                                                    <input type="text" id="targetUsage" name="targetUsage" placeholder="usage" ><br>
+                                                    <input type="text" id="targetSummary" name="targetSummary" placeholder="summary" ><br>
+                                                    <div class="form-group form-group-sm">
+                                                        <label class="FILE_TAG_LABEL" for="FILE_TAG">
+                                                        파일 선택
+                                                        </label>
+                                                        <input type="file" class="form-control-file" style="display:none;" id="FILE_TAG" name="FILE_TAG">
+                                                    </div>
+                                                        <!--<input type="file" id="FILE_TAG" name="FILE_TAG"><br>-->
+                                                </form>
+                                            </h3>
                                         </div>
                                         
                                         <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <a href="#" onclick='uploadFile()' class="btn btn-primary btn-user btn-block" id="nextIP">
-                                            Send
-                                        	</a>
-                                                
+                                            <div class="custom-control custom-checkbox small d-grid gap-2 col-3 mx-auto" style="margin-top:-40px">
+                                                <a href="#" onclick='uploadFile()' class="btn btn-primary btn-user btn-block" id="upload_btn" style="font-size:20pt;font-weight: bold;"><!--id="nextIP"-->
+                                                    Upload
+                                        	    </a>
                                             </div>
                                         </div>
                                     </form>
@@ -511,7 +497,13 @@
                 //dataType : 'json',
                 processData: false,
                 success: function (returndata) {
-                    console.log(returndata)
+                    if(returndata.status==200){
+                        alert('해당 파일을 업로드했습니다.');
+                        location.reload(true);
+                    }else if(returndata.status==500){
+                        alert('동일한 이름의 파일이 존재합니다.');
+                        location.reload(true);
+                    }
                 }
             });
             return false;

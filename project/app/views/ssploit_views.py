@@ -94,10 +94,13 @@ def ssploit_save():
     f = open(tmp_path,"w")
     f.write(edited_code)
     f.close()
+    
+    filename = os.popen(f'searchsploit {attack_id} -j').read()
+    filename = json.loads(filename)
 
     return {
         "attack_id": attack_id,
-        "filename":str(attack_id)+".py",
+        "filename":filename["RESULTS_EXPLOIT"][0]["Path"].split("/")[-1],
 		"type": "exploit-db",
         "src_ip": src_ip,
         "dst_ip": dst_ip,

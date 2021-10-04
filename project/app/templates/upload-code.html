@@ -472,29 +472,15 @@
     <script>
      function uploadFile(){
                     
-            //var pictureInput = document.getElementById("FILE_TAG");
-            
-            //var myFormData = new FormData();
-            //myFormData.append('fileObj', pictureInput.files[0]);
-            //var form = $('#form_upload')[0];
-            //var myFormData = new FormData(form)
-            //console.log('myFormData : ', myFormData);
             var form = $('#form_upload')[0];
             var formData = new FormData(form)
 
-            /*
-            var formData = new FormData();
-            formData.append("targetName", $("input[id=targetName]").val());
-            formData.append("targetPort", $("input[id=targetPort]").val());
-            formData.append("FILE_TAG", $("input[name=FILE_TAG]")[0].files[0]);
-            */
             $.ajax({
                 url: '/upload/file',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 cache: false,
-                //dataType : 'json',
                 processData: false,
                 success: function (returndata) {
                     if(returndata.status==200){

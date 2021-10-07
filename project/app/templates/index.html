@@ -177,12 +177,7 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- 
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="../static/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>Sidebar Message -->
+            
 
         </ul>
         <!-- End of Sidebar -->
@@ -684,9 +679,10 @@
                                     </form>
                                     <form class="p-5" id="Confirm_attack_info" style='display:none;'>
                                 	    <div class="form-group">
-                                            <p id="finalSrc">Confrim attack information<br>
-                                            <p id="finalDst"></p><br>
-                                            <p id="finalCVE"></p><br>
+                                            <h2>Confrim attack information</h2><br><br>
+                                            <p id="finalSrc"></p>
+                                            <p id="finalDst"></p>
+                                            <p id="finalCVE"></p>
 					                    </div>
 					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
                                             let's go
@@ -759,7 +755,9 @@
                                         
                                     </form>
                                     <form class="p-5" id="nmap_result" style='display:none;'> 
-                                        <div class="form-group">
+                                        <h2>Nmap Result</h2><br><br>
+                                        <div class="form-group" id="nmap_res">
+                                        
                                                 
                                         </div>
                                         
@@ -785,9 +783,10 @@
                                     
                                     <form class="p-5" id="Confirm_attack_info" style='display:none;'>
                                 	    <div class="form-group">
-                                            <p id="finalSrc">Confrim attack information<br>
-                                            <p id="finalDst"></p><br>
-                                            <p id="finalCVE"></p><br>
+                                            <h2>Confrim attack information</h2><br><br>
+                                            <p id="finalSrc"></p>
+                                            <p id="finalDst"></p>
+                                            <p id="finalCVE"></p>
 					                    </div>
 					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
                                             let's go
@@ -878,7 +877,7 @@
                              
                                
 
-                                <form class="p-5" id="print_CVE_list" style='display:none;'>
+                                <form class="p-5" id="print_searchsploit" style='display:none;'>
                                     <div class="form-group">
                                     <!-- <ul id="cve_form"> -->
                                     <!-- INPUT CVE LIST -->
@@ -1188,9 +1187,9 @@
     
         $('#nextInfo').click(function(){
             $("#print_CVE_list").hide();
-            document.getElementById('finalSrc').textContent = $('#InputSrcIP').val();
-            document.getElementById('finalDst').textContent = $('#InputDstIP').val();
-            document.getElementById('finalCVE').textContent = $("input:checkbox[name='chkCVE']:checked").val();
+            document.getElementById('finalSrc').textContent = "Source IP : " + $('#InputSrcIP').val();
+            document.getElementById('finalDst').textContent = "Destination IP : " + $('#InputDstIP').val();
+            document.getElementById('finalCVE').textContent = "Attack :" + $("input:checkbox[name='chkCVE']:checked").val();
             $('#Confirm_attack_info').show();
     
         });
@@ -1245,8 +1244,6 @@
             $("#main1").hide();
             $("#main2").hide();
             $("#main3").show();
-
-            //$("#ex_code_view").show();
             $('#exploit_ip_input').show();
             
         });
@@ -1255,26 +1252,27 @@
             $('#exploit_ip_input').hide();
             $('#exploit_loading_page').show();
 
-            $.post('/ssploit/filter', {
+            $.post('/attack/filter', {
+                    type1 : "product_packet",
                     src_ip: $('#ex_src_ip').val(),
                     dst_ip: $('#ex_dst_ip').val(),
                     service : $('#ex_service').val(),
                 }, function(r){
-                    //alert('r.status is ', r.status);
-                    if(r.status==200){
-                        showSearchSploit(r.results);
-                        $('#exploit_loading_page').hide();
-                    }
+                    
+                    showSearchSploit(r.results);
+                    $('#print_searchsploit').show();
+                    $('#exploit_loading_page').hide();
+                    
                 }, 'json');
         });
 
         $('#ex_select').click(function(){ // After choosing searchsploit 
-            
-            $.post('/ssploit/filter',{
+            $('#print_searchsploit').hide();
+            $.post('/attack/edit',{
                 script_number: $('#ex_number').val(),
             }, function(r){
-                if(r.status == 200){
-                    $('#message').append(r);
+                if(r.status == 200){    
+                    $('#ex_code').append(r);
                     $('#ex_code_view').show();
                 }
             },'json');
@@ -1282,8 +1280,8 @@
 
 
         $('#ex_excute').click(function(){ // After choosing searchsploit 
-            
-            $.post('/ssploit/save',{
+            $('#ex_code_view').hide();
+            $.post('/attack/save',{
                 attack_id:$('#ex_number').val(),
                 src_ip: $('#ex_src_ip').val(),
                 dst_ip:$('#ex_dst_ip').val(),
@@ -1313,12 +1311,11 @@
             
             $('#nmap_ip_select').hide();
             $('#nmap_loading_page').show();
-            $.post('/nmap/scan', JSON.stringify({
-                        type: "nmap_scan",
-                        target_ip: $('#nmap_target_ip').val(),
-                    }), function(r){
-                        alert("!23123");
+            $.post('/nmap',{
+                        ip: $('#nmap_target_ip').val(),
+                    }, function(r){
                         $('#nmap_loading_page').hide();
+                        $('#nmap_res').append(r);
                         $('#nmap_result').show();
                     }, 'json');
 
@@ -1390,18 +1387,20 @@
         }
 
         function showSearchSploit(arr){
-            if(isVisit==0){
-                isVisit = 1;
+            
                 arr.forEach(function(e){
+                    
                     var temp = "<tr>";
-                    temp += `<td>${e.EDB-ID}</td>`;
+                        alert("123123");
+                    temp += "<td>"+e['EDB-ID']+"</td>";
+                    alert("123123");
                     temp += `<td>${e.Platform}</td>`;
                     var title = escape_filtering(e.Title);
                     temp += `<td>${title}</td>`;
                     temp += `</tr>`;
                     $('#exploit_form').append(temp);
+                    
                 })
-            }
         }
 
         $(function() {

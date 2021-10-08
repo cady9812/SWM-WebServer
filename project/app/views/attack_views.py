@@ -77,11 +77,13 @@ def attack_filter():
         service = getFromFront['service']
         # type1 = request.get_json()['type1']
         # src_ip = request.get_json()['src_ip']
-        # dst_ip = request.get_json()['dst_ip']
+        # dst_ipF = request.get_json()['dst_ip']
         # service = request.get_json()['service']
         print("[**]",type1, src_ip, dst_ip, service)
         r = os.popen(f'searchsploit {service} -j').read()
         r = json.loads(r)
+        # print("[****]",r["RESULTS_EXPLOIT"])
+        # print("[****]",r["RESULTS_PAPER"])
         results = r["RESULTS_EXPLOIT"]
         results.extend(r["RESULTS_PAPER"])
         return {
@@ -187,7 +189,8 @@ def product_packet_save():
     src_ip = getFromFront["src_ip"]
     dst_ip = getFromFront["dst_ip"]
 
-    logger.info(f"attack_id:{attack_id}, src_ip:{src_ip}, dst_ip:{dst_ip}, usage:{usage}")
+    # print("[---] edited_code : ", edited_code)
+    # logger.info(f"attack_id:{attack_id}, src_ip:{src_ip}, dst_ip:{dst_ip}, usage:{usage}")
 
 
     tmp_path = CURRENT_DIR+"/temp/tmp.py"
@@ -204,7 +207,7 @@ def product_packet_save():
         "command":[
             {
                 "type" : "defense",
-                "src_ip" : src_ip,
+                "src_ip" : dst_ip,
                 "attack_id" : attack_id,
                 "port": 7777,  # 7777 로 하드코딩
             },

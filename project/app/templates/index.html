@@ -22,6 +22,7 @@
 	    var src_ip='';
         var isVisit = 0;
 	</script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script> <!-- modify -->
     <style type="text/css">
@@ -113,7 +114,7 @@
 
 </head>
 
-<body id="page-top">
+<body id="page-top"  style="overflow-y:auto; overflow-x:hidden">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -176,12 +177,7 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- 
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="../static/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>Sidebar Message -->
+            
 
         </ul>
         <!-- End of Sidebar -->
@@ -422,7 +418,7 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">Attack Start</div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            <i class="fas fa-play fa-2x text-blue-800"></i>
                                         </div>
                                     </div>
                                     </a>
@@ -443,7 +439,7 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">Attack Report</div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                     </a>
@@ -490,13 +486,54 @@
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800">Upload Exploit Code</div>
                                             </div>
                                             <div class="col-auto">
-                                                <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                                <i class="fas fa-file-upload fa-2x text-gray-300"></i>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="#" id='nmapStart'>
+                                    <div  class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Earnings (Monthly)
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Nmap</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-search fa-2x fa-spin text-red-800"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-custom shadow h-100 py-2">
+                                <div class="card-body">
+                                    <a href="#" id='exploit_start'>
+                                    <div  class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Earnings (Monthly)
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Exploit-db</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-bug fa-2x fa-spin text-orange-800"></i>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     
 
@@ -511,7 +548,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Attack Start </h6>
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Start Cyber Attack Simulation</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -607,8 +644,7 @@
 
                                     <form class="p-5" id="print_CVE_list" style='display:none;'>
                                     	<div class="form-group">
-                                    	<!-- <ul id="cve_form"> -->
-                                    	<!-- INPUT CVE LIST -->
+
                                             <table class="table">
                                                 <thead>
                                                     <tr>
@@ -643,9 +679,10 @@
                                     </form>
                                     <form class="p-5" id="Confirm_attack_info" style='display:none;'>
                                 	    <div class="form-group">
-                                            <p id="finalSrc">Confrim attack information<br>
-                                            <p id="finalDst"></p><br>
-                                            <p id="finalCVE"></p><br>
+                                            <h2>Confrim attack information</h2><br><br>
+                                            <p id="finalSrc"></p>
+                                            <p id="finalDst"></p>
+                                            <p id="finalCVE"></p>
 					                    </div>
 					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
                                             let's go
@@ -659,6 +696,248 @@
                         <!-- Pie Chart -->
                         
                         </div>
+
+
+                        <!-- nmap view -->
+                        <div class="col-xl-8_ col-lg-7" id = 'main2' style='display:none;' >
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="align='center' m-0 font-weight-bold text-primary"> Nmap: the Network Mapper</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Agent List View
+
+                                            </a>
+                                            
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <!-- ADD script -->
+                           
+
+                                <div class="card-body" >
+                                    <!-- Here Add // form orignal is 'user'-->
+
+                                    <form class="p-5" id="malware_list" style='display:none;'  >  <!-- this is Agent list print form-->
+                                    </form>
+                                    
+                                    <form class="p-5" id="nmap_ip_select" style='display:none;'> 
+                                       
+                                        <div class="form-group" style='display:inline;'>
+                                            <input type="text" class="form-control-user"
+                                                id="nmap_target_ip" placeholder="Enter Target ip..."><br><br>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nmap_ip_next"> Start </a>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="p-5" id="nmap_loading_page" style='display:none;'> 
+                                        <div class="form-group">
+                                                <div id='loadingImg'>
+                                                    <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
+                                                </div>
+                                        </div>
+                                        
+                                    </form>
+                                    <form class="p-5" id="nmap_result" style='display:none;'> 
+                                        <h2>Nmap Result</h2><br><br>
+                                        <div class="form-group" id="nmap_res">
+                                        
+                                                
+                                        </div>
+                                        
+                                    </form>
+
+                                    <form class="p-5" id="form_ipInput" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
+                                        <div class="form-group" id="src_input" style='display:inline;'>
+                                            <input type="text" class="form-control-user"
+                                                id="InputSrcIP" aria-describedby="emailHelp"
+                                                placeholder="Enter Source ip...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control-user"
+                                                id="InputDstIP" placeholder="Enter Target ip...">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <a href="#" class="btn btn-primary btn-user" id="nextCVE"> Start </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                 
+                                    
+                                    <form class="p-5" id="Confirm_attack_info" style='display:none;'>
+                                	    <div class="form-group">
+                                            <h2>Confrim attack information</h2><br><br>
+                                            <p id="finalSrc"></p>
+                                            <p id="finalDst"></p>
+                                            <p id="finalCVE"></p>
+					                    </div>
+					                    <a href="#" class="btn btn-primary btn-user" id="letGO">
+                                            let's go
+                                        	</a>
+                                    </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        </div>
+
+
+                        <!-- exploit-db screen -->
+
+                    <div class="col-xl-8_ col-lg-7" id = 'main3' style='display:none;' >
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div
+                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="align='center' m-0 font-weight-bold text-primary"> Exploit Database</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">Dropdown Header:</div>
+                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target=".bd-example-modal-lg">Agent List View
+
+                                        </a>
+                                        
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card Body -->
+                            <!-- ADD script -->
+                       
+
+                            <div class="card-body" >
+                                <!-- Here Add // form orignal is 'user'-->
+
+
+                                <form class="p-5" id="exploit_loading_page" style='display:none;'> 
+                                    <div class="form-group">
+                                            <div id='loadingImg'>
+                                                <img src='../static/img/loading.svg' style='margin-left: auto; margin-right: auto; '/>
+                                            </div>
+                                            
+                                    </div>
+                                    
+                                </form>
+
+                               
+                                
+                                <form class="p-5" id="exploit_ip_input" style='display:none;'> <!-- THIS FORM IS PRODUCT AND AGENT ATTACK -->
+                                    
+                                    <table style="margin-left: auto; margin-right: auto;">
+                                        <tr>
+                                            <td>Source IP</td>
+                                            <td><input type="text" class="form-control-user"
+                                                id="ex_src_ip" aria-describedby="emailHelp"
+                                                placeholder="Enter Source ip..."></td>
+                                        </tr>
+                                        <tr> 
+                                            <td>Destination IP</td>
+                                            <td><input type="text" class="form-control-user" 
+                                                id="ex_dst_ip" placeholder="Enter Target ip..."></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service Name</td>
+                                            <td><input type="text" class="form-control-user"
+                                                id="ex_service" placeholder="Enter Service name..."></td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                 
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                            <a href="#" class="btn btn-primary btn-user" id="exploit_next"> Start </a>
+                                        </div>
+                                    </div>
+                                </form>
+                             
+                               
+
+                                <form class="p-5" id="print_searchsploit" style='display:none;'>
+                                    <div class="form-group">
+                                    <!-- <ul id="cve_form"> -->
+                                    <!-- INPUT CVE LIST -->
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Platform</th>
+                                                    <th>Title</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="exploit_form">
+                                            
+
+                                            </tbody>
+                                        </table>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <input type="text" class="form-control-user"
+                                            id="ex_number" placeholder="Input ID number...">
+                                    </div>
+                                    <!-- </ul> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                        <a href="#" class="btn btn-primary btn-user" id="ex_prev">
+                                        Prev
+                                        </a>
+                                            <a href="#" class="btn btn-primary btn-user" id="ex_select">
+                                        Next
+                                        </a>
+                                            
+                                        </div>
+                                    </div>
+
+                                </form>
+                                <form class="p-5" id="ex_code_view" style='display:none;'>
+                                    <div class="form-group" >
+<textarea style='margin-left: auto; margin-right: auto; ' style="width: 90%; height: 376px;" class="form-control prettyprint" id="ex_code" name="body" rows="12" placeholder="code" >
+</textarea>
+
+                                    </div>
+                                    <input  type="text" class="form-control-user" id="ex_commandline" placeholder="Input Command Line...">
+                                    <br><br>
+
+                                    <a href="#" id="ex_excute">
+                                        <button class="btn btn-success">Excute</button>
+                                    </a>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    </div>
+
+
+                        
                     </div>
 
                     <!-- Content Row -->
@@ -691,6 +970,11 @@
                         </div>
                         
                     </div>
+
+                    <!-- exploit-db Screen -->
+
+                
+
 
                 </div>
                 <!-- /.container-fluid -->
@@ -903,9 +1187,9 @@
     
         $('#nextInfo').click(function(){
             $("#print_CVE_list").hide();
-            document.getElementById('finalSrc').textContent = $('#InputSrcIP').val();
-            document.getElementById('finalDst').textContent = $('#InputDstIP').val();
-            document.getElementById('finalCVE').textContent = $("input:checkbox[name='chkCVE']:checked").val();
+            document.getElementById('finalSrc').textContent = "Source IP : " + $('#InputSrcIP').val();
+            document.getElementById('finalDst').textContent = "Destination IP : " + $('#InputDstIP').val();
+            document.getElementById('finalCVE').textContent = "Attack :" + $("input:checkbox[name='chkCVE']:checked").val();
             $('#Confirm_attack_info').show();
     
         });
@@ -933,10 +1217,12 @@
 
         /////////// main  bar clicked Event ~~~
         $('#attackStart').click(function() { // init
-            
-            $('#doing_select').show();
-            $("#main1").show();
             $("#main2").hide();
+            $("#main3").hide();
+            $('#doing_select').show();
+            $('#nmap_ip_select').hide();
+            $("#main1").show();
+            $('#nmap_result').hide();
             $("#form_ipInput").hide(); 
             $("#print_CVE_list").hide();
             $('#Confirm_attack_info').hide();
@@ -948,7 +1234,98 @@
             $('#InputDstIP').val('');
         });
         ///////////////
+
+
+        // exploit-db screen start!~
+        $('#exploit_start').click(function(){
+            
+            $('#doing_select').hide();
+            $('#nmap_result').hide();
+            $("#main1").hide();
+            $("#main2").hide();
+            $("#main3").show();
+            $('#exploit_ip_input').show();
+            
+        });
+
+        $('#exploit_next').click(function(){ // Print searchsploit information 
+            $('#exploit_ip_input').hide();
+            $('#exploit_loading_page').show();
+
+            $.post('/attack/filter', {
+                    type1 : "product_packet",
+                    src_ip: $('#ex_src_ip').val(),
+                    dst_ip: $('#ex_dst_ip').val(),
+                    service : $('#ex_service').val(),
+                }, function(r){
+                    
+                    showSearchSploit(r.results);
+                    $('#print_searchsploit').show();
+                    $('#exploit_loading_page').hide();
+                    
+                }, 'json');
+        });
+
+        $('#ex_select').click(function(){ // After choosing searchsploit 
+            $('#print_searchsploit').hide();
+            $.post('/attack/edit',{
+                script_number: $('#ex_number').val(),
+            }, function(r){
+                if(r.status == 200){    
+                    $('#ex_code').append(r);
+                    $('#ex_code_view').show();
+                }
+            },'json');
+        });
+
+
+        $('#ex_excute').click(function(){ // After choosing searchsploit 
+            $('#ex_code_view').hide();
+            $.post('/attack/save',{
+                attack_id:$('#ex_number').val(),
+                src_ip: $('#ex_src_ip').val(),
+                dst_ip:$('#ex_dst_ip').val(),
+                edited: $('#ex_code').val(),
+                usage:$('#ex_commandline').val(),
+            }, function(r){
+                if(r.status == 200){
+                    alert("success");
+                }
+            },'json');
+        });
+
+
+        // main screen nmap start event        
+        $('#nmapStart').click(function(){
+            $('#doing_select').hide();
+            $('#nmap_result').hide();
+            $("#main1").hide();
+            $("#main2").show();
+            $("#main3").hide();
+            $('#nmap_ip_select').show();
+
+        });
         
+        
+        $('a#nmap_ip_next').on('click',function(e){
+            
+            $('#nmap_ip_select').hide();
+            $('#nmap_loading_page').show();
+            $.post('/nmap',{
+                        ip: $('#nmap_target_ip').val(),
+                    }, function(r){
+                        $('#nmap_loading_page').hide();
+                        $('#nmap_res').append(r);
+                        $('#nmap_result').show();
+                    }, 'json');
+
+        });
+
+
+
+
+
+
         $(function(){ // final start event
 
         $('a#letGO').on('click',function(e){ // Event final check click!!!
@@ -991,24 +1368,6 @@
             return data;
         }
         
-        /*
-        function showCVE(arr){
-            if(isVisit == 0){
-                isVisit = 1;
-                arr.forEach(function(e){
-                    var temp = "<label>";
-                    temp +="<li>";
-                    temp +="<input type='checkbox' name='chkCVE'  value="+e.attackId+" />";
-                    temp +="Program : " + e.program + " ";
-                    temp +="Usage : " + escape_filtering(e.usage);
-                    temp +="</li>";
-                    temp +="</label>";
-                    temp +="<br>";
-                    $('#cve_form').append(temp)
-                })
-            }
-        }
-        */
 
         function showCVE(arr){
             if(isVisit==0){
@@ -1027,6 +1386,22 @@
             }
         }
 
+        function showSearchSploit(arr){
+            
+                arr.forEach(function(e){
+                    
+                    var temp = "<tr>";
+                        alert("123123");
+                    temp += "<td>"+e['EDB-ID']+"</td>";
+                    alert("123123");
+                    temp += `<td>${e.Platform}</td>`;
+                    var title = escape_filtering(e.Title);
+                    temp += `<td>${title}</td>`;
+                    temp += `</tr>`;
+                    $('#exploit_form').append(temp);
+                    
+                })
+        }
 
         $(function() {
             $('a#nextCVE').on('click', function(e) {                
@@ -1090,8 +1465,6 @@
             
             });
         });
-
-
         function load_agent_list(agents){
             var temp = "<ul>";
             agents.forEach(function(e){

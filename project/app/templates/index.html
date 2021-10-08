@@ -1321,11 +1321,11 @@
             
             $('#nmap_ip_select').hide();
             $('#nmap_loading_page').show();
-            $.post('/nmap',{
+            $.post('/nmap',JSON.stringify({
                         ip: $('#nmap_target_ip').val(),
-                    }, function(r){
+                    }), function(r){
                         $('#nmap_loading_page').hide();
-                        $('#nmap_res').append(r);
+                        $('#nmap_res').append(r.result);
                         $('#nmap_result').show();
                     }, 'json');
 

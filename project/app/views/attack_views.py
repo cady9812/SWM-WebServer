@@ -75,17 +75,15 @@ def attack_filter():
         src_ip = getFromFront['src_ip']
         dst_ip = getFromFront['dst_ip']
         service = getFromFront['service']
-        # type1 = request.get_json()['type1']
-        # src_ip = request.get_json()['src_ip']
-        # dst_ipF = request.get_json()['dst_ip']
-        # service = request.get_json()['service']
-        print("[**]",type1, src_ip, dst_ip, service)
+
+        logger.info(f"type1:{type1}, src_ip:{src_ip}, dst_ip:{dst_ip}, service:{service}")
+
         r = os.popen(f'searchsploit {service} -j').read()
         r = json.loads(r)
-        # print("[****]",r["RESULTS_EXPLOIT"])
-        # print("[****]",r["RESULTS_PAPER"])
+        
         results = r["RESULTS_EXPLOIT"]
-        results.extend(r["RESULTS_PAPER"])
+        if "RESULTS_PAPER" in r:
+            results.extend(r["RESULTS_PAPER"])
         return {
             "results":results
         }
@@ -188,6 +186,7 @@ def product_packet_save():
     attack_id = int(getFromFront["attack_id"])
     src_ip = getFromFront["src_ip"]
     dst_ip = getFromFront["dst_ip"]
+    target_port = int(getFromFront["tport"])
 
     # print("[---] edited_code : ", edited_code)
     # logger.info(f"attack_id:{attack_id}, src_ip:{src_ip}, dst_ip:{dst_ip}, usage:{usage}")
@@ -209,7 +208,7 @@ def product_packet_save():
                 "type" : "defense",
                 "src_ip" : dst_ip,
                 "attack_id" : attack_id,
-                "port": 7777,  # 7777 로 하드코딩
+                "port": target_port,  # 7777 로 하드코딩
             },
             {
                 "attack_id": attack_id, # exploit-db 번호
@@ -219,7 +218,7 @@ def product_packet_save():
                 "dst_ip": dst_ip,
                 "usage": usage,
                 "download": downloadURL, # X로 암호화된 api,
-                "dst_port": 7777,
+                "dst_port": target_port,
             }
         ]
     }

@@ -2,10 +2,11 @@ import bson
 import socket
 import time
 import struct
+
 p32 = lambda x: struct.pack("<I", x)
 u32 = lambda x: struct.unpack("<I", x)[0]
 
-from private.ports import SOCKET_PORT
+from private.ports import SOCKET_PORT, TCP_SERVER_IP
 
 BUFSIZE = 0x1000
 def send_with_size(sock: socket.socket, msg):
@@ -17,7 +18,7 @@ def create_socket():
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            sckt.connect(('192.168.0.172', SOCKET_PORT))
+            sckt.connect((TCP_SERVER_IP, SOCKET_PORT))
             break
         except ConnectionRefusedError as e:
             time.sleep(1)

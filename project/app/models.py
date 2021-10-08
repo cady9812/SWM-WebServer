@@ -17,3 +17,4 @@ class Report(db.Model):
     attackId = db.Column(db.Integer, db.ForeignKey('attack.attackId', ondelete='CASCADE'))
     startTime = db.Column(db.String(100), nullable=False)
     log = db.Column(db.Text(), nullable=False)
+    result = db.Column(db.Text(), nullable=True)

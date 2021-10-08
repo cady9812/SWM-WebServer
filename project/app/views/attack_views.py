@@ -20,54 +20,66 @@ downloadURL = f"http://{MyIP}:{WEB_SERVER_PORT}/ssploit/download"
 bp = Blueprint('attack', __name__, url_prefix='/attack')
 
 
-@bp.route('/filter')
+@bp.route('/filter', methods=['GET', 'POST'])
 def attack_filter():
-    type1 = request.args.get('type1') # product, endpoint, malware, product_packet
-    src_ip = request.args.get('src_ip')
-    dst_ip = request.args.get('dst_ip')
-    
-    if type1=='product':### 보안 장비 점검
-        type2 = request.args.get('type2') # atk_packet, atk+malware
-        type2 = "mal" if type2=="atk_malware" else "cve"
-        attacks = Attack.query.filter(Attack.type==type2).all()
-        all_attacks = parser.attack_query_to_json(attacks)
-        logger.info(f"[ATTACK] PRODUCT : {all_attacks}")
-        return {"result":all_attacks}
-
-    elif type1=='endpoint':### 타겟 점검
-        # 포트 스캔 (제거)
-        # sckt = sckt_utils.create_socket()
-        # command = {
-        #     "type":"web",
-        #     "command":[{
-        #         "type":"scan",
-        #         "src_ip":src_ip,
-        #         "dst_ip":dst_ip
-        #     }]
-        # }
-        # sckt_utils.send_with_size(sckt, bson.dumps(command))
-        # recvData = sckt_utils.recv_data(sckt)
-        # recvData = bson.loads(recvData)
-        # logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
-        # sckt.close()
-
-        # filtered_attacks = parser.recv_to_json(recvData)
-        # res = {"result":filtered_attacks}
-        # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
-
-        attacks = Attack.query.filter(Attack.type=="cve").all()
-        all_attacks = parser.attack_query_to_json(attacks)
-        return {"result":all_attacks}
-
-    elif type1=="malware":### endpoint 솔루션
-        attacks = Attack.query.filter(Attack.type=="mal").all()
-        all_attacks = parser.attack_query_to_json(attacks)
-
-        logger.info(f"[ATTACK] MALWARE \"result\" : {all_attacks}")
+    if request.method=='GET':
+        type1 = request.args.get('type1') # product, endpoint, malware, product_packet
+        src_ip = request.args.get('src_ip')
+        dst_ip = request.args.get('dst_ip')
         
-        return {"result":all_attacks}
-    elif type1=="product_packet":
-        service = request.args.get('service')
+        if type1=='product':### 보안 장비 점검
+            type2 = request.args.get('type2') # atk_packet, atk+malware
+            type2 = "mal" if type2=="atk_malware" else "cve"
+            attacks = Attack.query.filter(Attack.type==type2).all()
+            all_attacks = parser.attack_query_to_json(attacks)
+            logger.info(f"[ATTACK] PRODUCT : {all_attacks}")
+            return {"result":all_attacks}
+
+        elif type1=='endpoint':### 타겟 점검
+            # 포트 스캔 (제거)
+            # sckt = sckt_utils.create_socket()
+            # command = {
+            #     "type":"web",
+            #     "command":[{
+            #         "type":"scan",
+            #         "src_ip":src_ip,
+            #         "dst_ip":dst_ip
+            #     }]
+            # }
+            # sckt_utils.send_with_size(sckt, bson.dumps(command))
+            # recvData = sckt_utils.recv_data(sckt)
+            # recvData = bson.loads(recvData)
+            # logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
+            # sckt.close()
+
+            # filtered_attacks = parser.recv_to_json(recvData)
+            # res = {"result":filtered_attacks}
+            # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
+
+            attacks = Attack.query.filter(Attack.type=="cve").all()
+            all_attacks = parser.attack_query_to_json(attacks)
+            return {"result":all_attacks}
+
+        elif type1=="malware":### endpoint 솔루션
+            attacks = Attack.query.filter(Attack.type=="mal").all()
+            all_attacks = parser.attack_query_to_json(attacks)
+
+            logger.info(f"[ATTACK] MALWARE \"result\" : {all_attacks}")
+            
+            return {"result":all_attacks}
+    else:
+        getFromFront = request.get_data().decode()
+        print("[**]", getFromFront)
+        getFromFront = json.loads(getFromFront)
+        type1=getFromFront['type1']
+        src_ip = getFromFront['src_ip']
+        dst_ip = getFromFront['dst_ip']
+        service = getFromFront['service']
+        # type1 = request.get_json()['type1']
+        # src_ip = request.get_json()['src_ip']
+        # dst_ip = request.get_json()['dst_ip']
+        # service = request.get_json()['service']
+        print("[**]",type1, src_ip, dst_ip, service)
         r = os.popen(f'searchsploit {service} -j').read()
         r = json.loads(r)
         results = r["RESULTS_EXPLOIT"]
@@ -185,7 +197,7 @@ def product_packet_save():
     
     filename = os.popen(f'searchsploit {attack_id} -j').read()
     filename = json.loads(filename)
-    logger.info(f"filename:{filename}")
+    # logger.info(f"filename:{filename}")
 
     _command = {
         "type":"web",

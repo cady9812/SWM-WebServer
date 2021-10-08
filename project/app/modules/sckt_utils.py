@@ -17,7 +17,7 @@ def create_socket():
     sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            sckt.connect(('0.0.0.0', SOCKET_PORT))
+            sckt.connect(('192.168.0.172', SOCKET_PORT))
             break
         except ConnectionRefusedError as e:
             time.sleep(1)

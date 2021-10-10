@@ -30,8 +30,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" >
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -45,10 +44,10 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Dashbaord</span></a>
             </li>
 
             <!-- Divider -->
@@ -80,13 +79,13 @@
 
 
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <hr class="sidebar-divider">
+
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -270,7 +269,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">My Pages</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -323,10 +322,11 @@
                                         <tr>
                                             <th style="width: 17.0833px;">ID</th>
                                             <th style="width: 17.083px;">Type</th>
-                                            <th style="width: 200.083px;">Attack Acount</th>
-                                            <th style="width: 200.083px;">Time</th>
-                                            <!-- <th style="width: 200.083px;">Details</th> -->
-                                            <th style="width: 200.083px;">Result</th>
+                                            <th style="width: 200.083px;">Path</th>
+                                            <th style="width: 100.083px;">Attack count</th>
+                                            <th style="width: 150.083px;">Time</th>
+
+                                            <th style="width: 150.083px;">Result</th>
                                             
                                         </tr>
                                     </thead>
@@ -342,6 +342,10 @@
                                             <td>
                                                 <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
                                                 id="miter_list" href="/report/{{data['no']}}">CVE</a>
+                                            </td>
+                                            <td style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                                                <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
+                                                id="miter_list" href="/report/{{data['no']}}">/windows/meterpreter/</a>
                                             </td>
                                             <td>
                                                 <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"

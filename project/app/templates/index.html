@@ -922,6 +922,8 @@
 
                                     </div>
                                     <input  type="text" class="form-control-user" id="ex_commandline" placeholder="Input Command Line...">
+                                    <br>
+                                    <input  type="text" class="form-control-user" id="ex_commandline_port" placeholder="Target Port...">
                                     <br><br>
 
                                     <a href="#" id="ex_excute">
@@ -1286,6 +1288,7 @@
                 src_ip: $('#ex_src_ip').val(),
                 dst_ip:$('#ex_dst_ip').val(),
                 edited: $('#ex_code').val(),
+                tport: $('#ex_commandline_port').val(),
                 usage:$('#ex_commandline').val(),
             }, function(r){
                 if(r.status == 200){

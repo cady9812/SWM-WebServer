@@ -917,8 +917,11 @@
                                 </form>
                                 <form class="p-5" id="ex_code_view" style='display:none;'>
                                     <div class="form-group" >
-<textarea style='margin-left: auto; margin-right: auto; ' style="width: 90%; height: 376px;" class="form-control prettyprint" id="ex_code" name="body" rows="12" placeholder="code" >
-</textarea>
+                                    <pre>
+                                        <textarea style='margin-left: auto; margin-right: auto; ' class="form-control prettyprint" style="width: 90%; height: 376px;" id="ex_code" name="body" rows="12" placeholder="code" >
+                                        
+                                        </textarea>
+                                    </pre>
 
                                     </div>
                                     <input  type="text" class="form-control-user" id="ex_commandline" placeholder="Input Command Line...">
@@ -1254,12 +1257,12 @@
             $('#exploit_ip_input').hide();
             $('#exploit_loading_page').show();
 
-            $.post('/attack/filter', {
+            $.post('/attack/filter', JSON.stringify({
                     type1 : "product_packet",
                     src_ip: $('#ex_src_ip').val(),
                     dst_ip: $('#ex_dst_ip').val(),
                     service : $('#ex_service').val(),
-                }, function(r){
+                }), function(r){
                     
                     showSearchSploit(r.results);
                     $('#print_searchsploit').show();
@@ -1270,27 +1273,31 @@
 
         $('#ex_select').click(function(){ // After choosing searchsploit 
             $('#print_searchsploit').hide();
-            $.post('/attack/edit',{
+            $.post('/attack/edit',JSON.stringify({
                 script_number: $('#ex_number').val(),
-            }, function(r){
+            }), function(r){
+                $('#ex_code').text(r.code);
+                $('#ex_code_view').show();
+                /*
                 if(r.status == 200){    
                     $('#ex_code').append(r);
                     $('#ex_code_view').show();
                 }
+                */
             },'json');
         });
 
 
         $('#ex_excute').click(function(){ // After choosing searchsploit 
             $('#ex_code_view').hide();
-            $.post('/attack/save',{
+            $.post('/attack/save',JSON.stringify({
                 attack_id:$('#ex_number').val(),
                 src_ip: $('#ex_src_ip').val(),
                 dst_ip:$('#ex_dst_ip').val(),
                 edited: $('#ex_code').val(),
                 tport: $('#ex_commandline_port').val(),
                 usage:$('#ex_commandline').val(),
-            }, function(r){
+            }), function(r){
                 if(r.status == 200){
                     alert("success");
                 }
@@ -1314,11 +1321,11 @@
             
             $('#nmap_ip_select').hide();
             $('#nmap_loading_page').show();
-            $.post('/nmap',{
+            $.post('/nmap',JSON.stringify({
                         ip: $('#nmap_target_ip').val(),
-                    }, function(r){
+                    }), function(r){
                         $('#nmap_loading_page').hide();
-                        $('#nmap_res').append(r);
+                        $('#nmap_res').append(r.result);
                         $('#nmap_result').show();
                     }, 'json');
 
@@ -1394,9 +1401,9 @@
                 arr.forEach(function(e){
                     
                     var temp = "<tr>";
-                        alert("123123");
+                        //alert("123123");
                     temp += "<td>"+e['EDB-ID']+"</td>";
-                    alert("123123");
+                    //alert("123123");
                     temp += `<td>${e.Platform}</td>`;
                     var title = escape_filtering(e.Title);
                     temp += `<td>${title}</td>`;

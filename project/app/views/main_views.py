@@ -3,6 +3,7 @@ from flask.templating import render_template
 from app.models import Attack
 from app import redis_client, db
 import os
+import json
 
 from app.modules import loggers, statusCode
 logger = loggers.create_logger(__name__)
@@ -83,35 +84,17 @@ def utilities():
     return render_template('utilities-other.html')
 
 
+@bp.route('/nmap', methods=['POST'])
+def nmap_scan():
+    if request.method=='GET':
+        logger.warning(f"{loggers.RED}[MAIN] NOT GET{loggers.END}")
+        return {"status":statusCode.METHOD_ERROR}
+    getFromFront = request.get_data().decode()
+    getFromFront = json.loads(getFromFront)
+    ip = getFromFront['ip']
+    nmap_result = os.popen(f"nmap {ip}").read()
+    return {
+        "result":nmap_result
+    }
 
 
-
-####################################################################################
-############## FOR TEST ##############################################################
-@bp.route('/insert/db', methods=['POST'])
-def insert_into_db():
-    try:
-        if request.method=='POST':
-            data = request.get_json()
-            print(data)
-            print(data["program"], data["version"], data["port"], data["fileName"], data["usage"], data["description"])
-            attack = Attack(program=data["program"], version=data["version"], port=data["port"], fileName=data["fileName"], usage=data["usage"], description=data["description"])
-            db.session.add(attack)
-            db.session.commit()
-            return {"result":True}
-            
-    except Exception as e:
-        print('insert db Error : ', e)
-        return False
-
-
-
-
-
-
-@bp.route('/duu', methods=['POST'])
-def dumm():
-    if request.method=='POST':
-        data = request.get_data()
-        print('data : ', data)
-        return

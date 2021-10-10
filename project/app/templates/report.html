@@ -323,9 +323,9 @@
                                         <tr>
                                             <th style="width: 17.0833px;">ID</th>
                                             <th style="width: 17.083px;">Type</th>
-                                            <th style="width: 200.083px;">Time</th>
                                             <th style="width: 200.083px;">Attack Acount</th>
-                                            <th style="width: 200.083px;">Details</th>
+                                            <th style="width: 200.083px;">Time</th>
+                                            <!-- <th style="width: 200.083px;">Details</th> -->
                                             <th style="width: 200.083px;">Result</th>
                                             
                                         </tr>
@@ -337,16 +337,25 @@
                                         <tr>
                                             <td>
                                                 <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
-                                                id="miter_list" href="/report/{{data['no']}}">{{data['no']}}</a></td>
+                                                id="miter_list" href="/report/{{data['no']}}">{{data['no']}}</a>
+                                            </td>
                                             <td>
                                                 <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
-                                                id="miter_list" href="/report/{{data['no']}}">{{ data['attack_id']|join(',') }}</a></td>
+                                                id="miter_list" href="/report/{{data['no']}}">CVE</a>
+                                            </td>
                                             <td>
                                                 <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
-                                                id="miter_list" href="/report/{{data['no']}}">{{data['start_time']}}</a></td>
-                                            <td> </td>
-                                            <td> </td>
-                                            <td> </td>
+                                                id="miter_list" href="/report/{{data['no']}}">{{ data['attack_id']|join(',') }}</a>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
+                                                id="miter_list" href="/report/{{data['no']}}">{{data['start_time']}}</a>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#exampleModalCenter" onclick="write_func('{{a}}');"
+                                                id="miter_list" href="/report/{{data['no']}}">{{data['result']}}</a>                                            
+                                            </td>
+                                            <!-- <td> </td> -->
                                         </tr>
                                         {% endfor %}
                                     </tbody>

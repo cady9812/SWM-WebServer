@@ -881,6 +881,7 @@
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Platform</th>
+                                                    <th>Path</th>
                                                     <th>Title</th>
                                                 </tr>
                                             </thead>
@@ -1390,7 +1391,10 @@
                 })
             }
         }
-
+        function split_str(data){
+            const arr = data.split('/exploits/');
+            return arr[1];
+        }
         function showSearchSploit(arr){
             
                 arr.forEach(function(e){
@@ -1400,6 +1404,9 @@
                     temp += "<td>"+e['EDB-ID']+"</td>";
                     //alert("123123");
                     temp += `<td>${e.Platform}</td>`;
+                    
+                    var tmp_str = split_str(e.Path);
+                    temp += `<td>${tmp_str}</td>`;
                     var title = escape_filtering(e.Title);
                     temp += `<td>${title}</td>`;
                     temp += `</tr>`;

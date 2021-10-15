@@ -69,7 +69,8 @@ def attack_filter():
             return {"result":all_attacks}
     else:
         getFromFront = request.get_data().decode()
-        print("[**]", getFromFront)
+        logger.info(f"data from front : {getFromFront}")
+        
         getFromFront = json.loads(getFromFront)
         type1=getFromFront['type1']
         src_ip = getFromFront['src_ip']
@@ -168,7 +169,7 @@ def product_packet_edit():
     os.system(f"cp {ssploit_path} {new_path}")
 
     code = os.popen(f"cat {ssploit_path}").read()
-    print(code)
+    logger.info(f"code to edit : {code}")
 
     return {
         "code": code

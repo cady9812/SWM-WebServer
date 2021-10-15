@@ -50,6 +50,7 @@ def save_report_to_MySQL(pre_no, attack_start_time, reportData):
         decoded_sendPkts=[]
         decoded_recvPkts=[]
 
+        # base64 decode
         for _pkt in sendPkts:
             _pkt = base64.b64decode(_pkt.decode('utf-8'))
             try:
@@ -66,16 +67,17 @@ def save_report_to_MySQL(pre_no, attack_start_time, reportData):
                 pass
             decoded_recvPkts.append(_pkt)
         
+        # send, recv 비교
         if set(decoded_sendPkts)==set(decoded_recvPkts):
             result = "success"
         else:
             result = "fail"
         
+        # list -> str
         decoded_sendPkts = str(decoded_sendPkts)
         decoded_recvPkts = str(decoded_recvPkts)
 
         log = f"{send_ip} sent\n{decoded_sendPkts}\n\n{recv_ip} received\n{decoded_recvPkts}"
-        # logger.info(log)
     elif reportType=="malware":
         attackName = Attack.query.filter(Attack.attackId==attack_id).first().fileName
         infected = reportData["infected"] # bool

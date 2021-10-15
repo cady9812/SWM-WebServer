@@ -23,7 +23,7 @@ def report():
         report_attackId = report[1]
         report_startTime = report[2]
         report_result = report[3]
-        print(f"[**] report_no:{report_no}, report_attackId:{report_attackId}, report_startTime:{report_startTime}, report_result:{report_result}")
+        logger.info(f"report_no:{report_no}, report_attackId:{report_attackId}, report_startTime:{report_startTime}, report_result:{report_result}")
         if report_no not in dict_report.keys():
             dict_report[report_no]=[[report_attackId], report_startTime, 0]
         else:
@@ -39,8 +39,7 @@ def report():
             "start_time":dict_report[d][1],
             "result":f"{dict_report[d][2]} of {attack_id_cnt} succeed"
         })
-    # print(arranged_reports)
-    logger.info(f"[REPORT] GET ALL REPORTS")
+    
     return render_template("report.html", sql_data = {
 	    "data":arranged_reports
     })
@@ -57,7 +56,6 @@ def show_one_report(reportNo):
             "time":report.startTime,
             "log":report.log
         })
-    logger.info(f"[REPORT] ONE REPORT IN DETAIL")
     return {
         "data":arranged_reports
     }

@@ -14,7 +14,7 @@ class Attack(db.Model):
 class Report(db.Model):
     reportId = db.Column(db.Integer, primary_key=True)
     no = db.Column(db.Integer, nullable=False)
-    attackId = db.Column(db.Integer, db.ForeignKey('attack.attackId', ondelete='CASCADE'))
+    attackId = db.Column(db.Integer, nullable=False)
     startTime = db.Column(db.String(100), nullable=False)
     log = db.Column(db.Text(), nullable=False)
     result = db.Column(db.Text(), nullable=True)

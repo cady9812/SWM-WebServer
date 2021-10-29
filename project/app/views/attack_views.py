@@ -1,364 +1,354 @@
-from flask import Blueprint, request, send_file
-from flask.templating import render_template
+from flask import Blueprint, request, send_file, current_app
+from app.models import Attack, Report
+from flask_mail import Mail, Message
+from private import email_info
+
+import os, bson, json
 import time
-from werkzeug.utils import secure_filename
-from app.models import Attack
-from app import redis_client, MyIP, db
-import os
+import datetime
 
-from app.modules import crawler
+from app.modules import loggers, statusCode, parser, sckt_utils, cmd_setter
+logger = loggers.create_logger(__name__)
 
-bp = Blueprint('attack', __name__, url_prefix='/')
+from app import MyIP
+from private.ports import WEB_SERVER_PORT
+
+CURRENT_DIR = os.path.abspath(os.getcwd())
+downloadURL = f"http://{MyIP}:{WEB_SERVER_PORT}/ssploit/download"
 
 
+bp = Blueprint('attack', __name__, url_prefix='/attack')
 
-# 메인페이지
-@bp.route('/')
-def index():
-    redis_client.flushdb()
-    redis_client.set("n", 0)
-    redis_command_keys = redis_client.keys("command*")
-    redis_command_keys = [k.decode() for k in redis_command_keys]
-    for key in redis_command_keys:
-        redis_client.delete(key)
-    redis_client.set("flag", 0)
-    return render_template('index.html')
 
-# Show MITRE ATT&CK matrix
-@bp.route('/upload')
-def matrix():
-    return render_template('./upload-code.html')
-
-# Upload  Customed Attack file from User
-@bp.route('/upload/file',methods=['POST'])
-def upload():
-    if request.method == 'POST':
-        file = request.files['FILE_TAG']
-        fileName = file.filename
-        print("[**]     ", fileName)
-        targetName = request.form['targetName']
-        targetVersion = request.form['targetVersion']
-        targetPort = request.form['targetPort']
-        targetUsage = request.form['targetUsage']
-        targetSummary = request.form['targetSummary']
-        
-        print('[**]     ', targetName)
-        print('[**]     ', targetVersion)
-        print('[**]     ', targetPort)
-        print('[**]     ', targetUsage)
-        print('[**]     ', targetSummary)
-
-        if Attack.query.filter(Attack.fileName==fileName).first()==None:
-            file.save(os.path.join('./attack_files', fileName))
-            attack = Attack(program=targetName, version=targetVersion, port=targetPort, fileName=fileName, usage=targetUsage, description=targetSummary)
-            db.session.add(attack)
-            db.session.commit()
-            print('file upload success')
-            return {
-                "result":True
-            }
-        else:
-            print('file upload failed')
-            return {
-                "result":False
-            }
-        
-        
-
-@bp.route('/<string:html>')
-def convert_html(html):
-    #print("[**]",html)
-    if ".html" in html:
-        return render_template(html.split('.')[0]+".html")
-    return render_template(html+".html")
-
-# 스캔 결과 받아서 공격 필터링
-@bp.route('/scan-result', methods=['GET', 'POST'])
-def get_scan_result():
-    if request.method == 'POST':
-        try:
-            scan_result = request.get_json() # 에이전트에서 보낸 포트 스캔 결과(json)
-            print('scan_result : ', scan_result)
-            filtered_attack = set() # 프론트로 보낼 db에 있는 공격들
-            if type(scan_result) == dict:
-                scan_result = [ scan_result ]
-
-            for result in scan_result:
-                #attacks = Attack.query.filter((Attack.program==result["service_product"])|(Attack.port==result["port"])).all()
-                try:
-                    attacks = Attack.query.filter(Attack.program==result["service_product"]).with_entities(Attack.attackId).all()
-                except:
-                    continue
-                print('attacks : ', attacks)
-                if attacks:
-                    for attack in attacks:
-                        print('attack : ', attack)
-                        filtered_attack.add(attack.attackId)
-                for attack_id in filtered_attack:
-                    redis_client.sadd("attackList", attack_id)
-            # redis_client.delete(f"command{src_ip_n}")
-            redis_client.set("flag", 1)
-            # res = redis_client.smembers("attackList")
-            return { "status":200, "result":"redis에 attackList set type으로 저장 완료" }
-            # redis에 attackList set type으로 저장 완료
-        except Exception as e:
-            print('/scan-result Error : ', e)
-            return { "status":600, "result" : "공격 코드 필터링 server error"}
-    else:
-        return "attack_views.py get_scan_result function \"get\""
-
-# agent가 자신 ip 알려주기
-@bp.route('/agent/info', methods=['POST'])
-def getAgentId():
-    if request.method == 'POST':
-        try:
-            getData = request.get_json()
-            agentIP = getData["ip"]
-            redis_n = int(redis_client.get('n').decode())
-            if redis_client.hget('agent_ip_list', agentIP) == None: # 아직 저장하지 않은 ip라면
-                redis_n += 1
-                redis_client.hset('agent_ip_list', agentIP, str(redis_n)) # agent_ip_list에 {ip : n} 추가
-                redis_client.set('n', str(redis_n)) # n update
-            redis_agent_id = redis_client.hget('agent_ip_list', agentIP).decode()
-            return {
-                "agent_id" : redis_agent_id
-            }
-        except Exception as e:
-            print('/agent/info Error : ', e)
-            return
-
-# nextCVE 버튼 클릭시 
-@bp.route('/cve/filter')
-def nextCVEButtonClicked():
-    try:
-        type = request.args.get('type') # 'product' or 'endpoint'
+@bp.route('/filter', methods=['GET', 'POST'])
+def attack_filter():
+    if request.method=='GET':
+        type1 = request.args.get('type1') # product, endpoint, malware, product_packet
         src_ip = request.args.get('src_ip')
         dst_ip = request.args.get('dst_ip')
-        filtered_attack = []
-        if type=='product': # 보안장비 점검
-            attacks = Attack.query.all()
-            for attack in attacks:
-                filtered_attack.append({
-                    "attackId":attack.attackId,
-                    "program":attack.program,
-                    "version":attack.version,
-                    "port":attack.port,
-                    "fileName":attack.fileName,
-                    "usage":attack.usage
-                })
-            return {"result":filtered_attack}
-            # return jsonify({'data': render_template('index.html', CVE_list=filtered_attack)})
-        else: # target 점검
-            # src_ip에게 dst_ip를 포트스캔하라 명령 저장
-            redis_client.set("flag", 0)
-            if redis_client.hget('agent_ip_list', src_ip) == None:
-                return "this src_ip is not stored in Redis"
-            src_ip_n = int(redis_client.hget('agent_ip_list', src_ip).decode())
-            redis_client.hmset(f'command{src_ip_n}', {
-                "type":"scan",
-                "target_ip":dst_ip
-            })
-
-            while int(redis_client.get("flag").decode())==0:
-                time.sleep(3)
-            # flag가 1로 바뀌어서 반복문에서 벗어남
-            # flag 다시 세팅, attack_list가 redis에 저장되어있는 상태
-            redis_client.set("flag", 0)
-            attackList = redis_client.smembers("attackList")
-            print('attackList from redis : ', attackList)
-            filtered_attack = []
-            for attackId in attackList:
-                attack_id = int(attackId.decode())
-                attacks = Attack.query.filter(Attack.attackId==attack_id).all()
-
-                for attack in attacks:
-                    filtered_attack.append({
-                    "attackId":attack.attackId,
-                    "program":attack.program,
-                    "version":attack.version,
-                    "port":attack.port,
-                    "fileName":attack.fileName,
-                    "usage":attack.usage
-                })
-            return {"result":filtered_attack}
-            # return render_template('index.html', CVE_list=filtered_attack)
-            # comm = redis_client.hgetall(f'command{src_ip_n}')
-            # comm = { key.decode(): val.decode() for key, val in comm.items() }
-            # #print(comm)
-            # return comm
-            # return redirect(url_for('attack._list'))
-    except Exception as e:
-        print('/cve/filter Error : ', e)
-        return {
-            "status":"600"
-        }
-
-
-# attackStart 버튼 클릭 시 
-@bp.route('/attack/start')
-def attackStartButtonClicked():
-    try:
-        attackType = request.args.get('type') # 'product' or 'endpoint'
-        src_ip = request.args.get('src_ip')
-        dst_ip = request.args.get('dst_ip')
-        # 백에서 받은 db에 저장된 attackIdx 그대로 다시 돌려줘야함.
-        attackIdx = request.args.get('cve_id')
         
-        if redis_client.hget('agent_ip_list', src_ip) == None: # src는 무조건 agent, dst는 agent일 수도 target일 수도
-            return "this src_ip or dst_ip is not stored in Redis"
-        src_ip_n = int(redis_client.hget('agent_ip_list', src_ip).decode())
-        redis_all_keys = redis_client.keys("*")
-        redis_all_keys = [ i.decode() for i in redis_all_keys]
-        attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
-        print('attackInfo.port : ', type(attackInfo.port))
-        attackName = attackInfo.fileName
-        if f"command{src_ip_n}" in redis_all_keys: # 이미 할당된 명령 ex.scan이 있으면 삭제해버리기
-            redis_client.delete(f"command{src_ip_n}")
+        if type1=='product':### 보안 장비 점검
+            type2 = request.args.get('type2') # atk_packet, atk+malware
+            type2 = "mal" if type2=="atk_malware" else "cve"
+            attacks = Attack.query.filter(Attack.type==type2).all()
+            all_attacks = parser.attack_query_to_json(attacks)
+            logger.info(f"[ATTACK] PRODUCT : {all_attacks}")
+            return {"result":all_attacks}
 
-        if attackType == "target": # target 공격
-            redis_client.hmset(f'command{src_ip_n}', {
-                "type":"attack_target",
-                "download": f"http://{MyIP}:5000/download/{attackName}",
-                "target_ip": dst_ip,
-                "target_port": attackInfo.port,
-                "usage": attackInfo.usage
-            })
-        else: # product 공격
-            redis_client.hmset(f'command{src_ip_n}', {
-                "type":"attack_secu",
-                "download": f"http://{MyIP}:5000/download/{attackName}",
-                "target_ip": dst_ip,
-                "target_port": attackInfo.port,
-                "usage": attackInfo.usage
-            })
+        elif type1=='endpoint':### 타겟 점검
+            # 포트 스캔 (제거)
+            # sckt = sckt_utils.create_socket()
+            # command = {
+            #     "type":"web",
+            #     "command":[{
+            #         "type":"scan",
+            #         "src_ip":src_ip,
+            #         "dst_ip":dst_ip
+            #     }]
+            # }
+            # sckt_utils.send_with_size(sckt, bson.dumps(command))
+            # recvData = sckt_utils.recv_data(sckt)
+            # recvData = bson.loads(recvData)
+            # logger.info(f"[ATTACK] ENDPOINT \"scan_result\" : {recvData}")
+            # sckt.close()
 
-            dst_ip_n = int(redis_client.hget('agent_ip_list', dst_ip).decode())
-            redis_client.hmset(f'command{dst_ip_n}', {
-                "type":"defense"
-            })
-        return {
-            "result":200
-        }
-    except Exception as e:
-        print('/attack/start Error : ', e)
-        return {
-            "result":600
-        }
+            # filtered_attacks = parser.recv_to_json(recvData)
+            # res = {"result":filtered_attacks}
+            # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
 
+            attacks = Attack.query.filter(Attack.type=="cve").all()
+            all_attacks = parser.attack_query_to_json(attacks)
+            return {"result":all_attacks}
 
-@bp.route('/utilities-other.html')
-def utilities():
-    return render_template('utilities-other.html')
+        elif type1=="malware":### endpoint 솔루션
+            attacks = Attack.query.filter(Attack.type=="mal").all()
+            all_attacks = parser.attack_query_to_json(attacks)
 
-
-@bp.route('/command/<int:agentId>')
-def commandToAgent(agentId):
-    redis_all_keys = redis_client.keys("*")
-    redis_all_keys = [ i.decode() for i in redis_all_keys]
-    if f"command{agentId}" in redis_all_keys:
-        comm = redis_client.hgetall(f'command{agentId}')
-        comm = { key.decode(): val.decode() for key, val in comm.items() }
-        # print('comm : ', comm)
-        redis_client.delete(f"command{agentId}")
-        return comm
+            logger.info(f"[ATTACK] MALWARE \"result\" : {all_attacks}")
+            
+            return {"result":all_attacks}
     else:
+        getFromFront = request.get_data().decode()
+        logger.info(f"data from front : {getFromFront}")
+        
+        getFromFront = json.loads(getFromFront)
+        type1=getFromFront['type1']
+        src_ip = getFromFront['src_ip']
+        dst_ip = getFromFront['dst_ip']
+        service = getFromFront['service']
+
+        logger.info(f"type1:{type1}, src_ip:{src_ip}, dst_ip:{dst_ip}, service:{service}")
+
+        r = os.popen(f'searchsploit {service} -j').read()
+        r = json.loads(r)
+        
+        results = r["RESULTS_EXPLOIT"]
+        if "RESULTS_PAPER" in r:
+            results.extend(r["RESULTS_PAPER"])
         return {
-            "type":"no command"
+            "results":results
         }
 
-# # 공격 코드 다운받는 링크
-# @bp.route('/download/<int:attackIdx>/', methods=['GET'])
-# def download_attack_code(attackIdx):
-#     attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
-#     attackName = attackInfo.fileName
 
-#     pwd = os.getcwd()
-#     file_name = f"{pwd}\\attack_files\\{attackName}" # 공격 파일 경로
-#     print('/download file_name : ', file_name)
-#     if os.path.isfile(file_name):
-#         return send_file(file_name,
-#             attachment_filename=f"{attackName}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
-#             as_attachment=True)
-#     else:
-#         return "wrong attackName"
+@bp.route('/start', methods=['POST'])
+def attack_start():
+    getFromFront = request.get_data().decode()
+    getFromFront = json.loads(getFromFront)
+
+    # logger.info(f"[ATTACK] data from front : {getFromFront}")
+
+    attackType = getFromFront['type'] # 'product' or 'endpoint'
+    src_ip = getFromFront['src_ip']
+    try:
+        dst_ip = getFromFront['dst_ip']
+    except:
+        pass
+    attack_id_list = getFromFront["cve_id"]
+    attack_cnt = len(attack_id_list)
+
+    command = {"type":"web"}
+
+    if attackType=="product": # (attack & defense) & remote malware
+        _command = cmd_setter.product_command(src_ip, dst_ip, attack_id_list)
+    elif attackType=="endpoint": # target
+        _command = cmd_setter.target_command(src_ip, dst_ip, attack_id_list)
+    elif attackType=="malware": # local malware
+        _command = cmd_setter.malware_command(dst_ip, attack_id_list)
+    
+    command["command"]=_command
+
+    logger.info(f"[ATTACK] attack info : {attackType}, {src_ip}, {dst_ip}, {attack_id_list}")
+    logger.info(f"[ATTACK] command : {command}")
+
+    sckt = sckt_utils.create_socket()
+    # send command to tcp server
+    sckt_utils.send_with_size(sckt, bson.dumps(command))
+    
+    try:
+        pre_no = Report.query.order_by(Report.no.desc()).first().no
+    except:
+        pre_no = -1
+    now = datetime.datetime.now()
+    attack_start_time = now.strftime('%Y-%m-%d %H:%M:%S')
+
+    for i in range(attack_cnt): # recv reports from tcp server
+        reportData = sckt_utils.recv_data(sckt) # json
+        reportData = bson.loads(reportData)
+        to_MySQL_result = parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
+        if to_MySQL_result == "Insert ERROR":
+            logger.warning(f"{loggers.RED}[ATTACK] ERROR while inserting report into MySQL{loggers.END}")
+        time.sleep(1)
+    sckt.close()
+
+    ### popup alert
+
+    return {
+        "status": statusCode.OK
+    }
+
+@bp.route('/edit', methods=['POST'])
+def product_packet_edit():
+    if request.method=='GET':
+        logger.warning(f"{loggers.RED}[ATTACK] NOT GET{loggers.END}")
+        return {"status":statusCode.METHOD_ERROR}
+    getFromFront = request.get_data().decode()
+    getFromFront = json.loads(getFromFront)
+    script_number = getFromFront['script_number']
+
+    # searchsploit에서 파일 위치 가져오기
+    ssploit_res = os.popen(f"searchsploit -p {script_number} -j").read()
+    ssploit_res = ssploit_res.split("\n")
+    for i in ssploit_res:
+        if "Path" in i:
+            ssploit_path = i
+            break
+    ssploit_path = ssploit_path.split(":")[1].replace(" ","")
+    new_path = CURRENT_DIR+"/temp/tmp.py"
+    
+    # 해당 파일 temp 밑으로 복사
+    os.system(f"cp {ssploit_path} {new_path}")
+
+    code = os.popen(f"cat {ssploit_path}").read()
+    logger.info(f"code to edit : {code}")
+
+    return {
+        "code": code
+    }
+
+@bp.route("/save", methods=['POST'])
+def product_packet_save():
+    if request.method=='GET':
+        logger.warning(f"{loggers.RED}[ATTACK] NOT GET{loggers.END}")
+        return {"status":statusCode.METHOD_ERROR}
+    getFromFront = request.get_data().decode()
+    getFromFront = json.loads(getFromFront)
+    edited_code = getFromFront['edited']
+    usage = getFromFront["usage"]
+    attack_id = int(getFromFront["attack_id"])
+    src_ip = getFromFront["src_ip"]
+    dst_ip = getFromFront["dst_ip"]
+    target_port = int(getFromFront["tport"])
+
+    # print("[---] edited_code : ", edited_code)
+    # logger.info(f"attack_id:{attack_id}, src_ip:{src_ip}, dst_ip:{dst_ip}, usage:{usage}")
 
 
-# 공격 코드 다운받는 링크
-@bp.route('/download/<string:attackName>/', methods=['GET'])
-def download_attack_code(attackName):
-    attackInfo = Attack.query.filter(Attack.fileName==attackName).first()
-    attackName = attackInfo.fileName
+    tmp_path = CURRENT_DIR+"/temp/tmp.py"
+    f = open(tmp_path,"w")
+    f.write(edited_code)
+    f.close()
+    
+    filename = os.popen(f'searchsploit {attack_id} -j').read()
+    filename = json.loads(filename)
+    # logger.info(f"filename:{filename}")
+
+    _command = {
+        "type":"web",
+        "command":[
+            {
+                "type" : "defense",
+                "src_ip" : dst_ip,
+                "attack_id" : attack_id,
+                "port": target_port,  # 7777 로 하드코딩
+            },
+            {
+                "attack_id": attack_id, # exploit-db 번호
+                "filename": filename["RESULTS_EXPLOIT"][0]["Path"].split("/")[-1],
+                "type": "product_packet", # exploit-db 대신 product_packet 사용
+                "src_ip": src_ip,
+                "dst_ip": dst_ip,
+                "usage": usage,
+                "download": downloadURL, # X로 암호화된 api,
+                "dst_port": target_port,
+            }
+        ]
+    }
+
+
+    sckt = sckt_utils.create_socket()
+    # send command to tcp server
+    sckt_utils.send_with_size(sckt, bson.dumps(_command))
+
+    reportData = sckt_utils.recv_data(sckt) # json
+    reportData = bson.loads(reportData)
+    logger.info(f"[ATTACK] SSPLOIT \"report\" : {reportData}")
+    sckt.close()
+
+    try:
+        pre_no = Report.query.order_by(Report.no.desc()).first().no
+    except:
+        pre_no = -1
+    now = datetime.datetime.now()
+    attack_start_time = now.strftime('%Y-%m-%d %H:%M:%S')
+
+    to_MySQL_result = parser.save_report_to_MySQL(pre_no, attack_start_time, reportData)
+    if to_MySQL_result == "Insert ERROR":
+        logger.warning(f"{loggers.RED}[ATTACK] ERROR while inserting report into MySQL{loggers.END}")
+    
+    return {
+        "status": statusCode.OK
+    }
+
+    # filtered_attacks = parser.recv_to_json(recvData)
+    # res = {"result":filtered_attacks}
+    # logger.info(f"[ATTACK] ENDPOINT \"filtered_attacks\" : {res}")
+
+
+    
+
+    # return {
+    #     "attack_id": attack_id,
+    #     "filename":filename["RESULTS_EXPLOIT"][0]["Path"].split("/")[-1],
+	# 	"type": "exploit-db",
+    #     "src_ip": src_ip,
+    #     "dst_ip": dst_ip,
+    #     "usage": usage,
+    #     "code": downloadURL
+	# }
+
+# 암호화 된
+@bp.route('/download/crypt/<int:attackIdx>/', methods=['GET'])
+def attack_download_enc(attackIdx):
+    attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
+    f_name = attackInfo.fileName
 
     pwd = os.getcwd()
-    file_name = f"{pwd}\\attack_files\\{attackName}" # 공격 파일 경로
-    print('/download file_name : ', file_name)
-    if os.path.isfile(file_name):
-        return send_file(file_name,
-            attachment_filename=f"{attackName}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
+    file_route = f"{pwd}/attack_files/{f_name}" # 공격 파일 경로
+
+    logger.info(f"[ATTACK] local file route : {file_route}")
+    
+    file_bytes = bytearray(open(file_route, 'rb').read())
+    f_size = cmd_setter.file_size(file_route)
+    encoded = bytearray(f_size)
+
+    for i in range(f_size):
+        encoded[i] = file_bytes[i]^ord('X')
+    
+    logger.info(f"[ATTACK] encoded content of encrypted file({attackIdx}) : {encoded}")
+
+    return encoded
+
+
+
+# 암호화 안 된
+@bp.route('/download/<int:attackIdx>/', methods=['GET'])
+def attack_download(attackIdx):
+    attackInfo = Attack.query.filter(Attack.attackId==attackIdx).first()
+    file_name = attackInfo.fileName
+
+    pwd = os.getcwd()
+    file_route = f"{pwd}/attack_files/{file_name}" # 공격 파일 경로
+
+    logger.info(f"[ATTACK] local file route : {file_route}")
+
+    if os.path.isfile(file_route):
+        return send_file(file_route,
+            attachment_filename=f"{file_route}",# 다운받아지는 파일 이름 -> 경로 지정할 수 있나?
             as_attachment=True)
     else:
-        return "wrong attackName"
+        return {"status":statusCode.SERVER_ERROR}
 
 
-@bp.route('/report/<int:agentId>', methods=["POST"])
-def report(agentId):
-    try:
-        if request.method == 'POST':
-            data = request.get_json()
-            pkts = data["pkts"]
-            print("agentId : ", agentId)
-            print("pkts : ", pkts)
-            # pkts가 binary로 오던데 어떻게 받을 것인가. 오는 형태를 봐야할 듯.
-            try:
-                link = data["link"]
-                print("link : ", link)
-                attackName = link.split('/')[-1]
-                attackName = attackName.split('.')[0]
+@bp.route('/mail', methods=['POST'])
+def attack_mail():
+    if request.method=='GET':
+        logger.warning(f"{loggers.RED}[ATTACK] NOT GET{loggers.END}")
+        return {"status":statusCode.METHOD_ERROR}
+    
+    sender_email = email_info.email
+    sender_pw = email_info.passwd
 
-                crawled_description = crawler.crawl(attackName)
-                if crawled_description == None:
-                    #return "crawling error!"
-                    print("crawling error!")
-                    return {"result":"good"}
-                else:
-                    #return crawled_description
-                    print(crawled_description)
-                    return {"result":"good"}
-            except:
-                pass
-            # 프론트로 어떻게 리턴할 것인지는 아직
-        return {"result":"good"}
-    except Exception as e:
-        print('report Error : ',e)
-        return
+    logger.info(f"[ATTACK] sender_email :{sender_email}, sender_pw :{sender_pw}")
+    # logger.info(f"[ATTACK] /mail - request.form : {request.form}")
+    # logger.info(f"[ATTACK] /mail - request.files : {request.files}")
+    
+    recver_email = request.form.getlist('recver_email')[0]
+    file_title = request.form.getlist('title')[0]
+    file_body = request.form.getlist('body')[0]
+    file_name = request.files.getlist('attachment')[0]
+    fileName = file_name.filename
+    
+    logger.info(f"[ATTACK] recver_email : {recver_email}, file_title : {file_title}, file_body : {file_body}, fileName : {fileName}")
+    
 
+    # hard coding OK...
+    smtp_type = sender_email.split('@')[1]
 
-####################################################################################
-############## FOR US ##############################################################
-@bp.route('/insert/db', methods=['POST'])
-def insert_into_db():
-    try:
-        if request.method=='POST':
-            data = request.get_json()
-            print(data)
-            print(data["program"], data["version"], data["port"], data["fileName"], data["usage"], data["description"])
-            attack = Attack(program=data["program"], version=data["version"], port=data["port"], fileName=data["fileName"], usage=data["usage"], description=data["description"])
-            db.session.add(attack)
-            db.session.commit()
-            return {"result":True}
-            
-    except Exception as e:
-        print('insert db Error : ', e)
-        return False
+    current_app.config['MAIL_SERVER']=f"smtp.{smtp_type}" # smtp.naver.com / smtp.gmail.com / smtp.daum.net
+    current_app.config['MAIL_PORT']=465
+    current_app.config['MAIL_USERNAME']=sender_email
+    current_app.config['MAIL_PASSWORD']=sender_pw
+    current_app.config['MAIL_USE_TLS']=False
+    current_app.config['MAIL_USE_SSL']=True
+
+    mail = Mail(current_app)
+    msg = Message(subject=file_title, sender=sender_email, recipients=[recver_email])
+    msg.body = f"{file_body}"
+    with current_app.open_resource(f"../attack_files/{fileName}") as fp:
+        msg.attach(f"{fileName}", "text/plain", fp.read())
+    mail.send(msg)
+    return {"status":statusCode.OK}
 
 
 
-
-
-
-@bp.route('/duu', methods=['POST'])
-def dumm():
-    if request.method=='POST':
-        data = request.get_data()
-        print('data : ', data)
-        return
+    

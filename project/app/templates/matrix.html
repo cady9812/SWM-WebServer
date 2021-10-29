@@ -19,37 +19,40 @@
 
     <!-- Custom styles for this template-->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .attack_type {
+            color: dodgerblue; /*goood*/
+            font-weight: bold;
+        }
+    </style>
 
 </head>
 
 <body id="page-top">
-    
- 
-
 
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar" >
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">BASCope</div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Dashbaord</span></a>
             </li>
 
             <!-- Divider -->
@@ -65,87 +68,29 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Pages</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="report">Report</a>
+                        <a class="collapse-item" href="matrix.html">Mitre Attack</a>
+                        <a class="collapse-item" href="upload-code.html">Upload Code</a>
+                        <a class="collapse-item" href="kvm-manage.html">VM</a>
+                        <a class="collapse-item" href="mail.html">Mail</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse show" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item active" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -327,9 +272,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">My Pages</span>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -364,7 +307,7 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-1 text-gray-800">MITRE ATT&CK matrix</h1>
-                    <p class="mb-4">test222222</p>
+                    <p class="mb-3"> </p>
 
                     <!-- Content Row -->
                     <div class="card shadow mb-4">
@@ -375,68 +318,61 @@
                         
 
                         <div class="card-body">
-                            
-                           <ul class="cateCols" style=" list-style:none; text-align: center;">
-                               <li><p>Reconnaissance </p></li>
-                               <li >
-                                <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"  value='1'>Active Scanning </a>
-                               </li>
-                               <li>
-                                <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg" value='2'>Vulnerability Scanning</a>
-                               </li>
-                               <li>
-                                <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg" vlaue='3'>Gather Victim Host<br>Information </a>
-                               </li>
-                               <li>
-                                <a   class="btn btn-default btn-lg"  data-toggle="modal">Gather Victim Network<br>Information </a>
-                               </li>
-                           </ul>
-                           <ul class="cateCols" style=" list-style:none; text-align: center;">
-                            <li><p>Initial Access</p></li>
-                            <li >
-                             <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"   >External Remote Services</a>
-                            </li>
-                            <li>
-                             <a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-default btn-lg"  >Default Accounts</a>
-                            </li>
-                            <li>
-                             <a id="task111" class="btn btn-default btn-lg"  data-toggle="modal">Domain Accounts </a>
-                            </li>
-                            <li>
-                             <a id="task111" class="btn btn-default btn-lg"   data-toggle="modal">Phishing </a>
-                            </li>
-                        </ul>
-                           <ul class="cateCols" style=" list-style:none; text-align: center">
-                                <li><p>Persistence</p></li>
-                                <li >
-                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Account Manipulation</a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Create Account</a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg"   data-toggle="modal">Port Monitors </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Plist Modification</a>
-                                </li>
+                            <ul class="cateCols" style=" list-style:none; text-align: center;">
+                                <li><hr><p><h3 class="attack_type">Reconnaissance </h3></p></li><hr>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  value='1'>Active Scanning </a></li>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block" value='2'>Gather Victim Host Information</a></li>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block" value='3'>Gather Victim Identity Information </a></li>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block">Gather Victim Identity Information </a></li>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block">Gather Victim Network Information</a></li>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block">Search Vimtim-Owned Websites</a></li>
+                            </ul>
+                            <ul class="cateCols" style=" list-style:none; text-align: center;">
+                                <li><hr><p><h3 class="attack_type">Initial Access</h3></p></li><hr>
+                                <li ><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block">External Remote Services</a></li>
+                                <li><a data-toggle="modal" data-target="#exampleModalCenter" id="miter_list" class="btn btn-outline-primary btn-lg btn-block">Valid Accounts</a></li>
+                                <li><a id="task111" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Supply Chain Compromise</a></li>
+                                <li><a id="task111" class="btn btn-outline-primary btn-lg btn-block"   data-toggle="modal">Phishing</a></li>
+                                <li><a id="task111" class="btn btn-outline-primary btn-lg btn-block"   data-toggle="modal">Exploit Public-Facing Applications</a></li>
+                            </ul>
+                            <ul class="cateCols" style=" list-style:none; text-align: center">
+                                <li><hr><p><h3 class="attack_type">Persistence</h3></p></li><hr>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Account Manipulation</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Boot or Login Autostart Execution</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Compromise Client Software Binary</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Create Account</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">External Remote Services</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Hijack Execution Flow</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Pre-OS Boot</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Scheduled Task/Job</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Valid Accounts</a></li>
                             </ul>
                             <ul class="cateCols" style=" list-style:none; text-align: center" >
-                                <li><p>Privilege Escalation</p></li>
-                                <li >
-                                <a id="miter_list" class="btn btn-default btn-lg"  data-toggle="modal">Setuid and Setgid </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg"   data-toggle="modal">Access Token Manipulation </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Create Process with Token </a>
-                                </li>
-                                <li>
-                                <a id="miter_list" class="btn btn-default btn-lg" data-toggle="modal">Boot or Logon <br>Initialization Scripts </a>
-                                </li>
+                                <li><hr><p><h3 class="attack_type">Credential Access</h3></p></li><hr>
+                                <li ><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Brute Force</a></li>
+                                <li ><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Credentials from Password Stores</a></li>
+                                <li ><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Man-in-the-Middle</a></li>
+                                <li ><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">OS Credential Dumping</a></li>
+                                <li ><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Steal or Forge Kerberos Tickets</a></li>
+                                <li ><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Unsecured Credentials</a></li>
                             </ul>
-
+                            <ul class="cateCols" style=" list-style:none; text-align: center" >
+                                <li><hr><p><h3 class="attack_type">Privilege Escalation</h3></p></li><hr>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Setuid and Setgid</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"   data-toggle="modal">Access Token Manipulation </a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Create Process with Token </a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Boot or Logon Initialization Scripts </a></li>
+                            </ul>
+                            <ul class="cateCols" style=" list-style:none; text-align: center" >
+                                <li><hr><p><h3 class="attack_type">Lateral Movement</h3></p></li><hr>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"  data-toggle="modal">Exploitation of Remote Services</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block"   data-toggle="modal">Remote Service Session Hijacking</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Remote Services(SMB, RDP)</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Use Alternate Authentication Material</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Internal Spearphishing</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Lateral Tool Transfer</a></li>
+                                <li><a id="miter_list" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal">Taint Shared Content</a></li>
+                            </ul>
                         </ul>
                         </div>
                     </div>
